@@ -1,726 +1,374 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>archiveVersion</key>
-	<string>1</string>
-	<key>classes</key>
-	<dict/>
-	<key>objectVersion</key>
-	<string>46</string>
-	<key>objects</key>
-	<dict>
-		<key>4C15C74FB6FB4D089657D0A5</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.xcconfig</string>
-			<key>name</key>
-			<string>Pods.xcconfig</string>
-			<key>path</key>
-			<string>Pods/Pods.xcconfig</string>
-			<key>sourceTree</key>
-			<string>SOURCE_ROOT</string>
-		</dict>
-		<key>56065EF316A3701100C4BA83</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>56065F0816A3701100C4BA83</string>
-				<string>56065F0116A3701100C4BA83</string>
-				<string>56065EFF16A3701100C4BA83</string>
-				<string>4C15C74FB6FB4D089657D0A5</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065EF516A3701100C4BA83</key>
-		<dict>
-			<key>attributes</key>
-			<dict>
-				<key>CLASSPREFIX</key>
-				<string>PokerBasic</string>
-				<key>LastUpgradeCheck</key>
-				<string>0450</string>
-			</dict>
-			<key>buildConfigurationList</key>
-			<string>56065EF816A3701100C4BA83</string>
-			<key>compatibilityVersion</key>
-			<string>Xcode 3.2</string>
-			<key>developmentRegion</key>
-			<string>English</string>
-			<key>hasScannedForEncodings</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXProject</string>
-			<key>knownRegions</key>
-			<array>
-				<string>en</string>
-			</array>
-			<key>mainGroup</key>
-			<string>56065EF316A3701100C4BA83</string>
-			<key>productRefGroup</key>
-			<string>56065EFF16A3701100C4BA83</string>
-			<key>projectDirPath</key>
-			<string></string>
-			<key>projectReferences</key>
-			<array/>
-			<key>projectRoot</key>
-			<string></string>
-			<key>targets</key>
-			<array>
-				<string>56065EFD16A3701100C4BA83</string>
-			</array>
-		</dict>
-		<key>56065EF816A3701100C4BA83</key>
-		<dict>
-			<key>buildConfigurations</key>
-			<array>
-				<string>56065F2016A3701100C4BA83</string>
-				<string>56065F2116A3701100C4BA83</string>
-			</array>
-			<key>defaultConfigurationIsVisible</key>
-			<string>0</string>
-			<key>defaultConfigurationName</key>
-			<string>Release</string>
-			<key>isa</key>
-			<string>XCConfigurationList</string>
-		</dict>
-		<key>56065EFA16A3701100C4BA83</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>56065F0F16A3701100C4BA83</string>
-				<string>56065F1316A3701100C4BA83</string>
-				<string>56065F1F16A3701100C4BA83</string>
-			</array>
-			<key>isa</key>
-			<string>PBXSourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>56065EFB16A3701100C4BA83</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>56065F0316A3701100C4BA83</string>
-				<string>56065F0516A3701100C4BA83</string>
-				<string>56065F0716A3701100C4BA83</string>
-				<string>9D01B520BBE14D2F85EC1F66</string>
-			</array>
-			<key>isa</key>
-			<string>PBXFrameworksBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>56065EFC16A3701100C4BA83</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>56065F0D16A3701100C4BA83</string>
-				<string>56065F1516A3701100C4BA83</string>
-				<string>56065F1716A3701100C4BA83</string>
-				<string>56065F1916A3701100C4BA83</string>
-				<string>56065F1C16A3701100C4BA83</string>
-			</array>
-			<key>isa</key>
-			<string>PBXResourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>56065EFD16A3701100C4BA83</key>
-		<dict>
-			<key>buildConfigurationList</key>
-			<string>56065F2216A3701100C4BA83</string>
-			<key>buildPhases</key>
-			<array>
-				<string>56065EFA16A3701100C4BA83</string>
-				<string>56065EFB16A3701100C4BA83</string>
-				<string>56065EFC16A3701100C4BA83</string>
-				<string>8A2228A21EF74A7584380478</string>
-			</array>
-			<key>buildRules</key>
-			<array/>
-			<key>dependencies</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXNativeTarget</string>
-			<key>name</key>
-			<string>PokerBasic</string>
-			<key>productName</key>
-			<string>PokerBasic</string>
-			<key>productReference</key>
-			<string>56065EFE16A3701100C4BA83</string>
-			<key>productType</key>
-			<string>com.apple.product-type.application</string>
-		</dict>
-		<key>56065EFE16A3701100C4BA83</key>
-		<dict>
-			<key>explicitFileType</key>
-			<string>wrapper.application</string>
-			<key>includeInIndex</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>path</key>
-			<string>PokerBasic.app</string>
-			<key>sourceTree</key>
-			<string>BUILT_PRODUCTS_DIR</string>
-		</dict>
-		<key>56065EFF16A3701100C4BA83</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>56065EFE16A3701100C4BA83</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Products</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F0116A3701100C4BA83</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>56065F0216A3701100C4BA83</string>
-				<string>56065F0416A3701100C4BA83</string>
-				<string>56065F0616A3701100C4BA83</string>
-				<string>A3CA2507CA594C6098E8D837</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Frameworks</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F0216A3701100C4BA83</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>UIKit.framework</string>
-			<key>path</key>
-			<string>System/Library/Frameworks/UIKit.framework</string>
-			<key>sourceTree</key>
-			<string>SDKROOT</string>
-		</dict>
-		<key>56065F0316A3701100C4BA83</key>
-		<dict>
-			<key>fileRef</key>
-			<string>56065F0216A3701100C4BA83</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>56065F0416A3701100C4BA83</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>Foundation.framework</string>
-			<key>path</key>
-			<string>System/Library/Frameworks/Foundation.framework</string>
-			<key>sourceTree</key>
-			<string>SDKROOT</string>
-		</dict>
-		<key>56065F0516A3701100C4BA83</key>
-		<dict>
-			<key>fileRef</key>
-			<string>56065F0416A3701100C4BA83</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>56065F0616A3701100C4BA83</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>CoreGraphics.framework</string>
-			<key>path</key>
-			<string>System/Library/Frameworks/CoreGraphics.framework</string>
-			<key>sourceTree</key>
-			<string>SDKROOT</string>
-		</dict>
-		<key>56065F0716A3701100C4BA83</key>
-		<dict>
-			<key>fileRef</key>
-			<string>56065F0616A3701100C4BA83</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>56065F0816A3701100C4BA83</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>56065F1116A3701100C4BA83</string>
-				<string>56065F1216A3701100C4BA83</string>
-				<string>56065F1A16A3701100C4BA83</string>
-				<string>56065F1D16A3701100C4BA83</string>
-				<string>56065F1E16A3701100C4BA83</string>
-				<string>56065F0916A3701100C4BA83</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>path</key>
-			<string>PokerBasic</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F0916A3701100C4BA83</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>56065F0A16A3701100C4BA83</string>
-				<string>56065F0B16A3701100C4BA83</string>
-				<string>56065F0E16A3701100C4BA83</string>
-				<string>56065F1016A3701100C4BA83</string>
-				<string>56065F1416A3701100C4BA83</string>
-				<string>56065F1616A3701100C4BA83</string>
-				<string>56065F1816A3701100C4BA83</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Supporting Files</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F0A16A3701100C4BA83</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.plist.xml</string>
-			<key>path</key>
-			<string>PokerBasic-Info.plist</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F0B16A3701100C4BA83</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>56065F0C16A3701100C4BA83</string>
-			</array>
-			<key>isa</key>
-			<string>PBXVariantGroup</string>
-			<key>name</key>
-			<string>InfoPlist.strings</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F0C16A3701100C4BA83</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.plist.strings</string>
-			<key>name</key>
-			<string>en</string>
-			<key>path</key>
-			<string>en.lproj/InfoPlist.strings</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F0D16A3701100C4BA83</key>
-		<dict>
-			<key>fileRef</key>
-			<string>56065F0B16A3701100C4BA83</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>56065F0E16A3701100C4BA83</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>path</key>
-			<string>main.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F0F16A3701100C4BA83</key>
-		<dict>
-			<key>fileRef</key>
-			<string>56065F0E16A3701100C4BA83</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>56065F1016A3701100C4BA83</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>path</key>
-			<string>PokerBasic-Prefix.pch</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F1116A3701100C4BA83</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>path</key>
-			<string>PokerBasicAppDelegate.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F1216A3701100C4BA83</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>path</key>
-			<string>PokerBasicAppDelegate.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F1316A3701100C4BA83</key>
-		<dict>
-			<key>fileRef</key>
-			<string>56065F1216A3701100C4BA83</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>56065F1416A3701100C4BA83</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>image.png</string>
-			<key>path</key>
-			<string>Default.png</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F1516A3701100C4BA83</key>
-		<dict>
-			<key>fileRef</key>
-			<string>56065F1416A3701100C4BA83</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>56065F1616A3701100C4BA83</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>image.png</string>
-			<key>path</key>
-			<string>Default@2x.png</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F1716A3701100C4BA83</key>
-		<dict>
-			<key>fileRef</key>
-			<string>56065F1616A3701100C4BA83</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>56065F1816A3701100C4BA83</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>image.png</string>
-			<key>path</key>
-			<string>Default-568h@2x.png</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F1916A3701100C4BA83</key>
-		<dict>
-			<key>fileRef</key>
-			<string>56065F1816A3701100C4BA83</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>56065F1A16A3701100C4BA83</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>56065F1B16A3701100C4BA83</string>
-			</array>
-			<key>isa</key>
-			<string>PBXVariantGroup</string>
-			<key>name</key>
-			<string>MainStoryboard.storyboard</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F1B16A3701100C4BA83</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>file.storyboard</string>
-			<key>name</key>
-			<string>en</string>
-			<key>path</key>
-			<string>en.lproj/MainStoryboard.storyboard</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F1C16A3701100C4BA83</key>
-		<dict>
-			<key>fileRef</key>
-			<string>56065F1A16A3701100C4BA83</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>56065F1D16A3701100C4BA83</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>path</key>
-			<string>PokerBasicViewController.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F1E16A3701100C4BA83</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>path</key>
-			<string>PokerBasicViewController.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>56065F1F16A3701100C4BA83</key>
-		<dict>
-			<key>fileRef</key>
-			<string>56065F1E16A3701100C4BA83</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>56065F2016A3701100C4BA83</key>
-		<dict>
-			<key>buildSettings</key>
-			<dict>
-				<key>ALWAYS_SEARCH_USER_PATHS</key>
-				<string>NO</string>
-				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
-				<string>gnu++0x</string>
-				<key>CLANG_CXX_LIBRARY</key>
-				<string>libc++</string>
-				<key>CLANG_ENABLE_OBJC_ARC</key>
-				<string>YES</string>
-				<key>CLANG_WARN_EMPTY_BODY</key>
-				<string>YES</string>
-				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
-				<string>YES</string>
-				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
-				<string>iPhone Developer</string>
-				<key>COPY_PHASE_STRIP</key>
-				<string>NO</string>
-				<key>GCC_C_LANGUAGE_STANDARD</key>
-				<string>gnu99</string>
-				<key>GCC_DYNAMIC_NO_PIC</key>
-				<string>NO</string>
-				<key>GCC_OPTIMIZATION_LEVEL</key>
-				<string>0</string>
-				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
-				<array>
-					<string>DEBUG=1</string>
-					<string>$(inherited)</string>
-				</array>
-				<key>GCC_SYMBOLS_PRIVATE_EXTERN</key>
-				<string>NO</string>
-				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNUSED_VARIABLE</key>
-				<string>YES</string>
-				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
-				<string>6.0</string>
-				<key>ONLY_ACTIVE_ARCH</key>
-				<string>YES</string>
-				<key>SDKROOT</key>
-				<string>iphoneos</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Debug</string>
-		</dict>
-		<key>56065F2116A3701100C4BA83</key>
-		<dict>
-			<key>buildSettings</key>
-			<dict>
-				<key>ALWAYS_SEARCH_USER_PATHS</key>
-				<string>NO</string>
-				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
-				<string>gnu++0x</string>
-				<key>CLANG_CXX_LIBRARY</key>
-				<string>libc++</string>
-				<key>CLANG_ENABLE_OBJC_ARC</key>
-				<string>YES</string>
-				<key>CLANG_WARN_EMPTY_BODY</key>
-				<string>YES</string>
-				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
-				<string>YES</string>
-				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
-				<string>iPhone Developer</string>
-				<key>COPY_PHASE_STRIP</key>
-				<string>YES</string>
-				<key>GCC_C_LANGUAGE_STANDARD</key>
-				<string>gnu99</string>
-				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNUSED_VARIABLE</key>
-				<string>YES</string>
-				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
-				<string>6.0</string>
-				<key>OTHER_CFLAGS</key>
-				<string>-DNS_BLOCK_ASSERTIONS=1</string>
-				<key>SDKROOT</key>
-				<string>iphoneos</string>
-				<key>VALIDATE_PRODUCT</key>
-				<string>YES</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Release</string>
-		</dict>
-		<key>56065F2216A3701100C4BA83</key>
-		<dict>
-			<key>buildConfigurations</key>
-			<array>
-				<string>56065F2316A3701100C4BA83</string>
-				<string>56065F2416A3701100C4BA83</string>
-			</array>
-			<key>defaultConfigurationIsVisible</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>XCConfigurationList</string>
-		</dict>
-		<key>56065F2316A3701100C4BA83</key>
-		<dict>
-			<key>baseConfigurationReference</key>
-			<string>4C15C74FB6FB4D089657D0A5</string>
-			<key>buildSettings</key>
-			<dict>
-				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
-				<string>YES</string>
-				<key>GCC_PREFIX_HEADER</key>
-				<string>PokerBasic/PokerBasic-Prefix.pch</string>
-				<key>INFOPLIST_FILE</key>
-				<string>PokerBasic/PokerBasic-Info.plist</string>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>WRAPPER_EXTENSION</key>
-				<string>app</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Debug</string>
-		</dict>
-		<key>56065F2416A3701100C4BA83</key>
-		<dict>
-			<key>baseConfigurationReference</key>
-			<string>4C15C74FB6FB4D089657D0A5</string>
-			<key>buildSettings</key>
-			<dict>
-				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
-				<string>YES</string>
-				<key>GCC_PREFIX_HEADER</key>
-				<string>PokerBasic/PokerBasic-Prefix.pch</string>
-				<key>INFOPLIST_FILE</key>
-				<string>PokerBasic/PokerBasic-Info.plist</string>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>WRAPPER_EXTENSION</key>
-				<string>app</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Release</string>
-		</dict>
-		<key>8A2228A21EF74A7584380478</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array/>
-			<key>inputPaths</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXShellScriptBuildPhase</string>
-			<key>name</key>
-			<string>Copy Pods Resources</string>
-			<key>outputPaths</key>
-			<array/>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-			<key>shellPath</key>
-			<string>/bin/sh</string>
-			<key>shellScript</key>
-			<string>"${SRCROOT}/Pods/Pods-resources.sh"
-</string>
-			<key>showEnvVarsInLog</key>
-			<string>1</string>
-		</dict>
-		<key>9D01B520BBE14D2F85EC1F66</key>
-		<dict>
-			<key>fileRef</key>
-			<string>A3CA2507CA594C6098E8D837</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict/>
-		</dict>
-		<key>A3CA2507CA594C6098E8D837</key>
-		<dict>
-			<key>explicitFileType</key>
-			<string>archive.ar</string>
-			<key>includeInIndex</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>name</key>
-			<string>libPods.a</string>
-			<key>path</key>
-			<string>libPods.a</string>
-			<key>sourceTree</key>
-			<string>BUILT_PRODUCTS_DIR</string>
-		</dict>
-	</dict>
-	<key>rootObject</key>
-	<string>56065EF516A3701100C4BA83</string>
-</dict>
-</plist>
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		56065F0316A3701100C4BA83 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56065F0216A3701100C4BA83 /* UIKit.framework */; };
+		56065F0516A3701100C4BA83 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56065F0416A3701100C4BA83 /* Foundation.framework */; };
+		56065F0716A3701100C4BA83 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56065F0616A3701100C4BA83 /* CoreGraphics.framework */; };
+		56065F0D16A3701100C4BA83 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 56065F0B16A3701100C4BA83 /* InfoPlist.strings */; };
+		56065F0F16A3701100C4BA83 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 56065F0E16A3701100C4BA83 /* main.m */; };
+		56065F1316A3701100C4BA83 /* PokerBasicAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 56065F1216A3701100C4BA83 /* PokerBasicAppDelegate.m */; };
+		56065F1516A3701100C4BA83 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 56065F1416A3701100C4BA83 /* Default.png */; };
+		56065F1716A3701100C4BA83 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 56065F1616A3701100C4BA83 /* Default@2x.png */; };
+		56065F1916A3701100C4BA83 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 56065F1816A3701100C4BA83 /* Default-568h@2x.png */; };
+		56065F1C16A3701100C4BA83 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56065F1A16A3701100C4BA83 /* MainStoryboard.storyboard */; };
+		56065F1F16A3701100C4BA83 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56065F1E16A3701100C4BA83 /* LoginViewController.m */; };
+		56C2868416B226DA00DEEA09 /* GameState.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C2868316B226DA00DEEA09 /* GameState.m */; };
+		56C2868C16B22DCC00DEEA09 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C2868B16B22DCC00DEEA09 /* Player.m */; };
+		56D2E94616B0DF01007F3413 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D2E94516B0DF01007F3413 /* GameViewController.m */; };
+		56D2E95616B0E968007F3413 /* PokerHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D2E95516B0E968007F3413 /* PokerHTTPClient.m */; };
+		56DF866016B21C3F00A9A604 /* Bot.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF865F16B21C3F00A9A604 /* Bot.m */; };
+		9D01B520BBE14D2F85EC1F66 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A3CA2507CA594C6098E8D837 /* libPods.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4C15C74FB6FB4D089657D0A5 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		56065EFE16A3701100C4BA83 /* PokerBasic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PokerBasic.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		56065F0216A3701100C4BA83 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		56065F0416A3701100C4BA83 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		56065F0616A3701100C4BA83 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		56065F0A16A3701100C4BA83 /* PokerBasic-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PokerBasic-Info.plist"; sourceTree = "<group>"; };
+		56065F0C16A3701100C4BA83 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		56065F0E16A3701100C4BA83 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		56065F1016A3701100C4BA83 /* PokerBasic-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PokerBasic-Prefix.pch"; sourceTree = "<group>"; };
+		56065F1116A3701100C4BA83 /* PokerBasicAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PokerBasicAppDelegate.h; sourceTree = "<group>"; };
+		56065F1216A3701100C4BA83 /* PokerBasicAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PokerBasicAppDelegate.m; sourceTree = "<group>"; };
+		56065F1416A3701100C4BA83 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		56065F1616A3701100C4BA83 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		56065F1816A3701100C4BA83 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		56065F1B16A3701100C4BA83 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		56065F1D16A3701100C4BA83 /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		56065F1E16A3701100C4BA83 /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		56C2868216B226DA00DEEA09 /* GameState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameState.h; sourceTree = "<group>"; };
+		56C2868316B226DA00DEEA09 /* GameState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameState.m; sourceTree = "<group>"; };
+		56C2868A16B22DCC00DEEA09 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		56C2868B16B22DCC00DEEA09 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Player.m; sourceTree = "<group>"; };
+		56D2E94416B0DF01007F3413 /* GameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
+		56D2E94516B0DF01007F3413 /* GameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
+		56D2E95416B0E968007F3413 /* PokerHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PokerHTTPClient.h; sourceTree = "<group>"; };
+		56D2E95516B0E968007F3413 /* PokerHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PokerHTTPClient.m; sourceTree = "<group>"; };
+		56DF865E16B21C3F00A9A604 /* Bot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bot.h; path = ../Bot.h; sourceTree = "<group>"; };
+		56DF865F16B21C3F00A9A604 /* Bot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Bot.m; path = ../Bot.m; sourceTree = "<group>"; };
+		A3CA2507CA594C6098E8D837 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		56065EFB16A3701100C4BA83 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56065F0316A3701100C4BA83 /* UIKit.framework in Frameworks */,
+				56065F0516A3701100C4BA83 /* Foundation.framework in Frameworks */,
+				56065F0716A3701100C4BA83 /* CoreGraphics.framework in Frameworks */,
+				9D01B520BBE14D2F85EC1F66 /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		56065EF316A3701100C4BA83 = {
+			isa = PBXGroup;
+			children = (
+				56C2868016B2257C00DEEA09 /* Classes */,
+				56D2E95F16B0F423007F3413 /* Networking Extensions */,
+				56065F0816A3701100C4BA83 /* PokerBasic */,
+				56065F0116A3701100C4BA83 /* Frameworks */,
+				56065EFF16A3701100C4BA83 /* Products */,
+				4C15C74FB6FB4D089657D0A5 /* Pods.xcconfig */,
+			);
+			sourceTree = "<group>";
+		};
+		56065EFF16A3701100C4BA83 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				56065EFE16A3701100C4BA83 /* PokerBasic.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		56065F0116A3701100C4BA83 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				56065F0216A3701100C4BA83 /* UIKit.framework */,
+				56065F0416A3701100C4BA83 /* Foundation.framework */,
+				56065F0616A3701100C4BA83 /* CoreGraphics.framework */,
+				A3CA2507CA594C6098E8D837 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		56065F0816A3701100C4BA83 /* PokerBasic */ = {
+			isa = PBXGroup;
+			children = (
+				56065F1116A3701100C4BA83 /* PokerBasicAppDelegate.h */,
+				56065F1216A3701100C4BA83 /* PokerBasicAppDelegate.m */,
+				56065F1A16A3701100C4BA83 /* MainStoryboard.storyboard */,
+				56D2E94416B0DF01007F3413 /* GameViewController.h */,
+				56D2E94516B0DF01007F3413 /* GameViewController.m */,
+				56065F1D16A3701100C4BA83 /* LoginViewController.h */,
+				56065F1E16A3701100C4BA83 /* LoginViewController.m */,
+				56065F0916A3701100C4BA83 /* Supporting Files */,
+			);
+			path = PokerBasic;
+			sourceTree = "<group>";
+		};
+		56065F0916A3701100C4BA83 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				56065F0A16A3701100C4BA83 /* PokerBasic-Info.plist */,
+				56065F0B16A3701100C4BA83 /* InfoPlist.strings */,
+				56065F0E16A3701100C4BA83 /* main.m */,
+				56065F1016A3701100C4BA83 /* PokerBasic-Prefix.pch */,
+				56065F1416A3701100C4BA83 /* Default.png */,
+				56065F1616A3701100C4BA83 /* Default@2x.png */,
+				56065F1816A3701100C4BA83 /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		56C2868016B2257C00DEEA09 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				56DF865E16B21C3F00A9A604 /* Bot.h */,
+				56DF865F16B21C3F00A9A604 /* Bot.m */,
+				56C2868A16B22DCC00DEEA09 /* Player.h */,
+				56C2868B16B22DCC00DEEA09 /* Player.m */,
+				56C2868216B226DA00DEEA09 /* GameState.h */,
+				56C2868316B226DA00DEEA09 /* GameState.m */,
+			);
+			name = Classes;
+			path = PokerBasic;
+			sourceTree = "<group>";
+		};
+		56D2E95F16B0F423007F3413 /* Networking Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				56D2E95416B0E968007F3413 /* PokerHTTPClient.h */,
+				56D2E95516B0E968007F3413 /* PokerHTTPClient.m */,
+			);
+			name = "Networking Extensions";
+			path = PokerBasic;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		56065EFD16A3701100C4BA83 /* PokerBasic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 56065F2216A3701100C4BA83 /* Build configuration list for PBXNativeTarget "PokerBasic" */;
+			buildPhases = (
+				56065EFA16A3701100C4BA83 /* Sources */,
+				56065EFB16A3701100C4BA83 /* Frameworks */,
+				56065EFC16A3701100C4BA83 /* Resources */,
+				8A2228A21EF74A7584380478 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PokerBasic;
+			productName = PokerBasic;
+			productReference = 56065EFE16A3701100C4BA83 /* PokerBasic.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		56065EF516A3701100C4BA83 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = PokerBasic;
+				LastUpgradeCheck = 0450;
+			};
+			buildConfigurationList = 56065EF816A3701100C4BA83 /* Build configuration list for PBXProject "PokerBasic" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 56065EF316A3701100C4BA83;
+			productRefGroup = 56065EFF16A3701100C4BA83 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				56065EFD16A3701100C4BA83 /* PokerBasic */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		56065EFC16A3701100C4BA83 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56065F0D16A3701100C4BA83 /* InfoPlist.strings in Resources */,
+				56065F1516A3701100C4BA83 /* Default.png in Resources */,
+				56065F1716A3701100C4BA83 /* Default@2x.png in Resources */,
+				56065F1916A3701100C4BA83 /* Default-568h@2x.png in Resources */,
+				56065F1C16A3701100C4BA83 /* MainStoryboard.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8A2228A21EF74A7584380478 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		56065EFA16A3701100C4BA83 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56065F0F16A3701100C4BA83 /* main.m in Sources */,
+				56065F1316A3701100C4BA83 /* PokerBasicAppDelegate.m in Sources */,
+				56065F1F16A3701100C4BA83 /* LoginViewController.m in Sources */,
+				56D2E94616B0DF01007F3413 /* GameViewController.m in Sources */,
+				56D2E95616B0E968007F3413 /* PokerHTTPClient.m in Sources */,
+				56DF866016B21C3F00A9A604 /* Bot.m in Sources */,
+				56C2868416B226DA00DEEA09 /* GameState.m in Sources */,
+				56C2868C16B22DCC00DEEA09 /* Player.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		56065F0B16A3701100C4BA83 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				56065F0C16A3701100C4BA83 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		56065F1A16A3701100C4BA83 /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				56065F1B16A3701100C4BA83 /* en */,
+			);
+			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		56065F2016A3701100C4BA83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		56065F2116A3701100C4BA83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		56065F2316A3701100C4BA83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4C15C74FB6FB4D089657D0A5 /* Pods.xcconfig */;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PokerBasic/PokerBasic-Prefix.pch";
+				INFOPLIST_FILE = "PokerBasic/PokerBasic-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		56065F2416A3701100C4BA83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4C15C74FB6FB4D089657D0A5 /* Pods.xcconfig */;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PokerBasic/PokerBasic-Prefix.pch";
+				INFOPLIST_FILE = "PokerBasic/PokerBasic-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		56065EF816A3701100C4BA83 /* Build configuration list for PBXProject "PokerBasic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56065F2016A3701100C4BA83 /* Debug */,
+				56065F2116A3701100C4BA83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		56065F2216A3701100C4BA83 /* Build configuration list for PBXNativeTarget "PokerBasic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56065F2316A3701100C4BA83 /* Debug */,
+				56065F2416A3701100C4BA83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 56065EF516A3701100C4BA83 /* Project object */;
+}
