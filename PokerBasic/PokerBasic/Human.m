@@ -8,21 +8,19 @@
 
 #import "Human.h"
 
-@implementation Human : Player
+@implementation Human
 
 - (id)initWithAttributes:(NSDictionary *)attributes {
     
-    self = [super init];
+    self = [super initWithAttributes:attributes];
     if (!self) {
         return nil;
     }
     
-    _name = [attributes valueForKeyPath:@"Name"];
-    _holeCards = [attributes valueForKeyPath:@"HoleCards"];
-    _stack = [[attributes valueForKeyPath:@"Stack"] integerValue];
+    self.name = [attributes valueForKeyPath:@"Name"];
     _overallResult = [[attributes valueForKeyPath:@"OverallResult"] integerValue];
     _validMoves = [attributes valueForKeyPath:@"ValidMoves"];    
-    _currentStageContribution = [[attributes valueForKeyPath:@"CurrentStageContribution"] integerValue];
+
     
     return self;
     

@@ -10,4 +10,11 @@
 
 @interface Player : NSObject
 
+@property NSString *name;
+@property (readonly) NSArray *holeCards;
+@property (readonly) NSUInteger stack;
+@property (readonly) NSUInteger currentStageContribution;
+
+- (id)initWithAttributes:(NSDictionary *)attributes;
+
 @end

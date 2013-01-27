@@ -6,15 +6,12 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+#import "Player.h"
 
-@interface Bot : NSObject
+@interface Bot : Player
 
-@property (readonly) NSString *name;
-@property (readonly) NSUInteger currentStageContribution;
-@property (readonly) NSArray *holeCards;
 @property (readonly) NSArray *lastAction;
-@property (readonly) NSUInteger stack;
+
 
 - (id)initWithAttributes:(NSDictionary *)attributes;
 

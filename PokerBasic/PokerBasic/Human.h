@@ -6,17 +6,13 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+#import "Player.h"
 
-@interface Human : NSObject
+@interface Human : Player
 
-
-@property (readonly) NSString *name;
-@property (readonly) NSArray *holeCards;
-@property (readonly) NSUInteger stack;
 @property (readonly) NSUInteger overallResult;
 @property (readonly) NSArray *validMoves;
-@property (readonly) NSUInteger currentStageContribution;
+
 
 
 - (id)initWithAttributes:(NSDictionary *)attributes;

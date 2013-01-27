@@ -10,4 +10,18 @@
 
 @implementation Player
 
+- (id)initWithAttributes:(NSDictionary *)attributes {
+    
+    self = [super init];
+    if (!self) {
+        return nil;
+    }
+    
+    _holeCards = [attributes valueForKeyPath:@"HoleCards"];
+    _stack = [[attributes valueForKeyPath:@"Stack"] integerValue];
+    _currentStageContribution = [[attributes valueForKeyPath:@"CurrentStageContribution"] integerValue];    
+    
+    return self;
+}
+
 @end

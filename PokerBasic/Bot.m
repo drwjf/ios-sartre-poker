@@ -12,19 +12,15 @@
 
 - (id)initWithAttributes:(NSDictionary *)attributes {
     
-    self = [super init];
+    self = [super initWithAttributes:attributes];
     if (!self) {
         return nil;
     }
     
-    _currentStageContribution = [[attributes valueForKeyPath:@"CurrentStageContribution"] integerValue];    
-    _holeCards = [attributes valueForKeyPath:@"HoleCards"];    
-    _lastAction = [attributes valueForKeyPath:@"LastAction"];    
-    _stack = [[attributes valueForKeyPath:@"Stack"] integerValue];
-    _name = @"Sartre";
+    _lastAction = [attributes valueForKeyPath:@"LastAction"];
+    self.name = @"Sartre";
     
     return self;
-    
 }
 
 - (NSString*) toString {
