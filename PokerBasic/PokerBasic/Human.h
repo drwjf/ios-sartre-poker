@@ -8,13 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Bot : NSObject
+@interface Human : NSObject
+
 
 @property (readonly) NSString *name;
-@property (readonly) NSUInteger currentStageContribution;
 @property (readonly) NSArray *holeCards;
-@property (readonly) NSArray *lastAction;
 @property (readonly) NSUInteger stack;
+@property (readonly) NSUInteger overallResult;
+@property (readonly) NSArray *validMoves;
+@property (readonly) NSUInteger currentStageContribution;
+
 
 - (id)initWithAttributes:(NSDictionary *)attributes;
 
@@ -23,3 +26,14 @@
 //+ (void)globalTimelinePostsWithBlock:(void (^)(NSArray *posts, NSError *error))block;
 
 @end
+
+/*
+ "Player":{
+ "Name":"tester32",
+ "HoleCards":["8h","8s"],
+ "Stack":998,
+ "OverallResult":2,
+ "ValidMoves":["Raise","Call"],
+ "CurrentStageContribution":2
+ },
+ */

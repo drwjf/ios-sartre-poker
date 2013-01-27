@@ -12,7 +12,7 @@
 #import "LoginViewController.h"
 //#import "Bot.h"
 
-static NSString * const pokerBaseUrl = @"nothing";
+//static NSString * const pokerBaseUrl = @"nothing";
 static NSString * const pokerBaseURLString = @"http://localhost:8080/poker/mobile/limit/";
 
 @implementation PokerHTTPClient

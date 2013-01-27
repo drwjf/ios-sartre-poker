@@ -21,6 +21,7 @@
     _holeCards = [attributes valueForKeyPath:@"HoleCards"];    
     _lastAction = [attributes valueForKeyPath:@"LastAction"];    
     _stack = [[attributes valueForKeyPath:@"Stack"] integerValue];
+    _name = @"Sartre";
     
     return self;
     

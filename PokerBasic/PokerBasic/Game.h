@@ -8,8 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-@interface GameState : NSObject
+static NSString * const _bot = @"BOT";
+static NSString * const _player = @"PLAYER";
 
+@interface Game : NSObject
+
+//typedef enum {
+//    Player,
+//    Bot
+//} Dealer;
 
 @property (readonly) NSString *dealer;
 @property (readonly) NSString *gameType;

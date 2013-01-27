@@ -12,7 +12,5 @@
 @interface GameViewController : UIViewController
 @property (strong, nonatomic) NSString *loginNameText;
 @property (strong, nonatomic) PokerHTTPClient *client;
-@property (weak, nonatomic) IBOutlet UILabel *commCardsLabel;
-@property (weak, nonatomic) IBOutlet UILabel *holeCardsLabel;
 
 @end

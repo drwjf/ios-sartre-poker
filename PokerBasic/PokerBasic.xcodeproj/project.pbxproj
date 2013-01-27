@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5603F42016B4B10B00064EE8 /* State.m in Sources */ = {isa = PBXBuildFile; fileRef = 5603F41F16B4B10B00064EE8 /* State.m */; };
+		5603F42516B4EBD100064EE8 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 5603F42416B4EBD100064EE8 /* Player.m */; };
 		56065F0316A3701100C4BA83 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56065F0216A3701100C4BA83 /* UIKit.framework */; };
 		56065F0516A3701100C4BA83 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56065F0416A3701100C4BA83 /* Foundation.framework */; };
 		56065F0716A3701100C4BA83 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56065F0616A3701100C4BA83 /* CoreGraphics.framework */; };
@@ -18,8 +20,8 @@
 		56065F1916A3701100C4BA83 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 56065F1816A3701100C4BA83 /* Default-568h@2x.png */; };
 		56065F1C16A3701100C4BA83 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56065F1A16A3701100C4BA83 /* MainStoryboard.storyboard */; };
 		56065F1F16A3701100C4BA83 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56065F1E16A3701100C4BA83 /* LoginViewController.m */; };
-		56C2868416B226DA00DEEA09 /* GameState.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C2868316B226DA00DEEA09 /* GameState.m */; };
-		56C2868C16B22DCC00DEEA09 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C2868B16B22DCC00DEEA09 /* Player.m */; };
+		56C2868416B226DA00DEEA09 /* Game.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C2868316B226DA00DEEA09 /* Game.m */; };
+		56C2868C16B22DCC00DEEA09 /* Human.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C2868B16B22DCC00DEEA09 /* Human.m */; };
 		56D2E94616B0DF01007F3413 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D2E94516B0DF01007F3413 /* GameViewController.m */; };
 		56D2E95616B0E968007F3413 /* PokerHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D2E95516B0E968007F3413 /* PokerHTTPClient.m */; };
 		56DF866016B21C3F00A9A604 /* Bot.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF865F16B21C3F00A9A604 /* Bot.m */; };
@@ -28,6 +30,11 @@
 
 /* Begin PBXFileReference section */
 		4C15C74FB6FB4D089657D0A5 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		5603F41E16B4B10B00064EE8 /* State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = State.h; sourceTree = "<group>"; };
+		5603F41F16B4B10B00064EE8 /* State.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = State.m; sourceTree = "<group>"; };
+		5603F42216B4EB9E00064EE8 /* Human.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Human.h; sourceTree = "<group>"; };
+		5603F42316B4EBD100064EE8 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		5603F42416B4EBD100064EE8 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Player.m; sourceTree = "<group>"; };
 		56065EFE16A3701100C4BA83 /* PokerBasic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PokerBasic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56065F0216A3701100C4BA83 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		56065F0416A3701100C4BA83 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -44,10 +51,9 @@
 		56065F1B16A3701100C4BA83 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
 		56065F1D16A3701100C4BA83 /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		56065F1E16A3701100C4BA83 /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
-		56C2868216B226DA00DEEA09 /* GameState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameState.h; sourceTree = "<group>"; };
-		56C2868316B226DA00DEEA09 /* GameState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameState.m; sourceTree = "<group>"; };
-		56C2868A16B22DCC00DEEA09 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
-		56C2868B16B22DCC00DEEA09 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Player.m; sourceTree = "<group>"; };
+		56C2868216B226DA00DEEA09 /* Game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Game.h; sourceTree = "<group>"; };
+		56C2868316B226DA00DEEA09 /* Game.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Game.m; sourceTree = "<group>"; };
+		56C2868B16B22DCC00DEEA09 /* Human.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Human.m; sourceTree = "<group>"; };
 		56D2E94416B0DF01007F3413 /* GameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
 		56D2E94516B0DF01007F3413 /* GameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
 		56D2E95416B0E968007F3413 /* PokerHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PokerHTTPClient.h; sourceTree = "<group>"; };
@@ -106,6 +112,8 @@
 		56065F0816A3701100C4BA83 /* PokerBasic */ = {
 			isa = PBXGroup;
 			children = (
+				5603F41E16B4B10B00064EE8 /* State.h */,
+				5603F41F16B4B10B00064EE8 /* State.m */,
 				56065F1116A3701100C4BA83 /* PokerBasicAppDelegate.h */,
 				56065F1216A3701100C4BA83 /* PokerBasicAppDelegate.m */,
 				56065F1A16A3701100C4BA83 /* MainStoryboard.storyboard */,
@@ -137,10 +145,12 @@
 			children = (
 				56DF865E16B21C3F00A9A604 /* Bot.h */,
 				56DF865F16B21C3F00A9A604 /* Bot.m */,
-				56C2868A16B22DCC00DEEA09 /* Player.h */,
-				56C2868B16B22DCC00DEEA09 /* Player.m */,
-				56C2868216B226DA00DEEA09 /* GameState.h */,
-				56C2868316B226DA00DEEA09 /* GameState.m */,
+				5603F42216B4EB9E00064EE8 /* Human.h */,
+				56C2868B16B22DCC00DEEA09 /* Human.m */,
+				56C2868216B226DA00DEEA09 /* Game.h */,
+				56C2868316B226DA00DEEA09 /* Game.m */,
+				5603F42316B4EBD100064EE8 /* Player.h */,
+				5603F42416B4EBD100064EE8 /* Player.m */,
 			);
 			name = Classes;
 			path = PokerBasic;
@@ -246,8 +256,10 @@
 				56D2E94616B0DF01007F3413 /* GameViewController.m in Sources */,
 				56D2E95616B0E968007F3413 /* PokerHTTPClient.m in Sources */,
 				56DF866016B21C3F00A9A604 /* Bot.m in Sources */,
-				56C2868416B226DA00DEEA09 /* GameState.m in Sources */,
-				56C2868C16B22DCC00DEEA09 /* Player.m in Sources */,
+				56C2868416B226DA00DEEA09 /* Game.m in Sources */,
+				56C2868C16B22DCC00DEEA09 /* Human.m in Sources */,
+				5603F42016B4B10B00064EE8 /* State.m in Sources */,
+				5603F42516B4EBD100064EE8 /* Player.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

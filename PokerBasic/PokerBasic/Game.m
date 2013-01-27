@@ -6,9 +6,9 @@
 //
 //
 
-#import "GameState.h"
+#import "Game.h"
 
-@implementation GameState
+@implementation Game
 
 - (id)initWithAttributes:(NSDictionary *)attributes {
     
@@ -16,13 +16,11 @@
     if (!self) {
         return nil;
     }
-    
- 
-    
     _dealer = [attributes valueForKeyPath:@"Dealer"];
     _gameType = [attributes valueForKeyPath:@"GameType"];
     _gameStage = [attributes valueForKeyPath:@"GameStage"];
-    _gameHasEnded = (Boolean)[attributes valueForKeyPath:@"GameHasEnded"];
+//  _gameHasEnded = (Boolean)[attributes valueForKeyPath:@"GameHasEnded"];
+    _gameHasEnded = [[attributes valueForKeyPath:@"GameHasEnded"] boolValue]; //test this for when satre folds right at the start
     _communityCards = [attributes valueForKeyPath:@"CommunityCards"];
     _pot = [[attributes valueForKeyPath:@"Pot"] integerValue];
     
@@ -38,7 +36,8 @@
 - (NSString*) toString {
     NSString *state;
     
-    state = [NSString stringWithFormat:@"Game State \n Dealer is: %@ \n Game Stage is : %@ \n Community Cards are : %@ \n", self.dealer, self.gameStage, self.communityCards ];
+    state = [NSString stringWithFormat:@"Game has ended: %@ \n Game State \n Dealer is: %@ \n Game Stage is : %@ \n Community Cards are : %@ \n",
+             self.gameHasEnded ? @"YES" : @"NO", self.dealer, self.gameStage, self.communityCards ];
     
     return state;
 }
