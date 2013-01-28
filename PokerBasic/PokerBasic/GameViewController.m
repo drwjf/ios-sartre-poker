@@ -30,11 +30,15 @@
 @property (weak, nonatomic) IBOutlet UIButton *checkCallButton;
 @property (weak, nonatomic) IBOutlet UIButton *betRaiseButton;
 @property (weak, nonatomic) IBOutlet UIButton *foldButton;
-
-- (IBAction)actionButtonPress:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *nextGameButton;
 
 @property State *currentState;
 @property State *prevState;
+
+
+- (IBAction)actionButtonPress:(id)sender;
+- (IBAction)nextGameButtonPress:(id)sender;
+
 
 @end
 
@@ -57,18 +61,14 @@
     self.infoTextView.editable = false;
     
     NSString *logoutButtonText = [NSString stringWithFormat:@"Logout %@", self.loginNameText];
-    //self.logoutButton.titleLabel = logoutButtonText;
     [self.logoutButton setTitle:logoutButtonText forState:UIControlStateNormal];
     
     self.infoTextView.text = [self.client description];
     //[self.client showState];
     
-    
     [self.client loadState:^(NSDictionary *JSON) {
-
         self.currentState = [[State alloc]initWithAttributes:JSON];
         [self newGame];
-        
     }failure:^{
         NSLog(@"Failure in loadState block from gamecontroller");
     }];
@@ -88,14 +88,20 @@
     State *state = self.currentState;
     self.nameOnServerLabel.text = state.player.name;
     
-    //self.dealerLabel.text = dealer.name;
-    self.dealerLabel.text = state.game.dealer;
+    //self.dealerLabel.text = dealer.name; 1st try
+    //self.dealerLabel.text = state.game.dealer; 2nd try
+    //3rd try
+    if (state.game.botIsDealer) {
+        self.dealerLabel.text = state.bot.name;
+    } else {
+        self.dealerLabel.text = state.player.name;
+    }
     
     self.gameStageLabel.text = state.game.gameStage;
     //self.commCardsLabel.text = @"XX XX XX | XX | XX";
     
-    NSString *newString = [[[state.game.communityCards description] componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
-    self.commCardsLabel.text = newString;
+    NSString *commCards = [[[state.game.communityCards description] componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
+    self.commCardsLabel.text = commCards;
     
     //pay blinds
     self.botBetAmountLabel.text = [NSString stringWithFormat:@"%d", state.bot.currentStageContribution];
@@ -126,23 +132,24 @@
 }
 
 - (void)newGame {
-    
+    self.nextGameButton.hidden = true;
     self.prevState = nil;
+    
     State *state = self.currentState;
     [self setLabels];
     
     //set dealer
     Player *dealer;
     Player *bigBlind;
-    Boolean botIsDealer;
-    if ([state.game.dealer isEqualToString:_BOT]) {
+
+    if (state.game.botIsDealer) {
         dealer = state.bot;
         bigBlind = state.player;
-        botIsDealer = true;
+
     } else {
         dealer = state.player;
         bigBlind = state.bot;
-        botIsDealer = false;
+
     }
     NSString *dealerString = [NSString stringWithFormat:@"Dealer is %@", dealer.name];
     [self setInfoText:dealerString];
@@ -152,12 +159,24 @@
     [self setInfoText:anteString];
     
     //If Satre goes first:
-    if (botIsDealer) {
+    if (state.game.botIsDealer) {
+        
+        //Game has ended
+        if (state.game.gameHasEnded) {
+            [self setInfoText:self.currentState.game.gameStage];
+            self.nextGameButton.hidden = false;
+            [self setInfoText:@"ENDED ON NEW GAME"]; //this worked monday 28/1/2013
+            return;
+        }
+        
         if ([[state.bot.lastAction objectAtIndex:0] isEqualToString:_RAISE] ) {
             NSString *actionString = [NSString stringWithFormat:@"%@ %@s to %@", state.bot.name, [state.bot.lastAction objectAtIndex:0], [state.bot.lastAction objectAtIndex:1]];
             [self setInfoText:actionString];
         }
     }
+    
+
+    
     [self displayMoves];
 
 }
@@ -195,29 +214,45 @@
     NSLog(@"End of actionButtonPress");
 }
 
+- (IBAction)nextGameButtonPress:(id)sender {
+    [self startNewHand];
+}
+
 -(void) playerActed {
+    
+    [self setLabels];
+    
     //Game has ended
     if (self.currentState.game.gameHasEnded) {
         [self setInfoText:self.currentState.game.gameStage];
-        [self startNewHand];
+        self.nextGameButton.hidden = false;
         return;
     }
     
-    [self setLabels];
+    //else game has not ended
     [self displayMoves];
     
     if ([self.currentState.game.gameStage isEqualToString:self.prevState.game.gameStage]) {
         //Bot checked
         if (self.currentState.bot.currentStageContribution == self.prevState.bot.currentStageContribution) {
             [self setInfoText:@"Bot checks. This can't happen. If bot checks we have changed state"];
-        }
-        if (self.currentState.bot.currentStageContribution > self.prevState.bot.currentStageContribution) {
+        } else if (self.currentState.bot.currentStageContribution > self.prevState.bot.currentStageContribution) {
             [self setInfoText:@"Bot raises."];
+        } else { //
+            //can't Happen
+            [self setInfoText:@"can't get here. current stage contribution decrease."];
         }
+    } else {
+        //next Stage
+        [self setInfoText:self.currentState.game.gameStage];
     }
 }
 
+
+
 -(void) startNewHand {
+    
+    
     [self.client newGame:^(NSDictionary *JSON) {
         
         self.currentState = [[State alloc]initWithAttributes:JSON];

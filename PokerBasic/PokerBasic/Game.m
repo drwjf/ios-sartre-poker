@@ -16,7 +16,7 @@
     if (!self) {
         return nil;
     }
-    _dealer = [attributes valueForKeyPath:@"Dealer"];
+    _botIsDealer = [[attributes valueForKeyPath:@"Dealer"] isEqualToString:_BOT] ? true : false;
     _gameType = [attributes valueForKeyPath:@"GameType"];
     _gameStage = [attributes valueForKeyPath:@"GameStage"];
 //  _gameHasEnded = (Boolean)[attributes valueForKeyPath:@"GameHasEnded"];
@@ -36,8 +36,8 @@
 - (NSString*) toString {
     NSString *state;
     
-    state = [NSString stringWithFormat:@"Game has ended: %@ \n Game State \n Dealer is: %@ \n Game Stage is : %@ \n Community Cards are : %@ \n",
-             self.gameHasEnded ? @"YES" : @"NO", self.dealer, self.gameStage, self.communityCards ];
+    state = [NSString stringWithFormat:@"Game has ended: %@ \n Game State \n Bot is Dealer: %@ \n Game Stage is : %@ \n Community Cards are : %@ \n",
+             self.gameHasEnded ? @"YES" : @"NO", self.botIsDealer ? @"YES" : @"NO", self.gameStage, self.communityCards ];
     
     return state;
 }

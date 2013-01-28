@@ -18,7 +18,7 @@ static NSString * const _PLAYER = @"PLAYER";
 //    Bot
 //} Dealer;
 
-@property (readonly) NSString *dealer;
+@property (readonly) Boolean botIsDealer;
 @property (readonly) NSString *gameType;
 @property (readonly) NSString *gameStage;
 @property (readonly) Boolean gameHasEnded;
@@ -35,7 +35,7 @@ static NSString * const _PLAYER = @"PLAYER";
 
 /*
  "GameState":{
- "Dealer":"BOT",
+ "Dealer":"BOT", or "PLAYER"
  "GameType":"Limit",
  "GameStage":"PREFLOP",
  "GameHasEnded":false,
