@@ -42,13 +42,34 @@ static NSString * const pokerBaseURLString = @"http://localhost:8080/poker/mobil
     return self;
 }
 
+-(void)newGame:(void(^)(NSDictionary *))successBlock failure:(void (^)(void))failureBlock {
+    ///poker/mobile/limit/PokerLimitMobileServlet?gameend=true
+    [self setDefaultHeader:@"Accept" value:@"application/json"];
+    [self getPath:@"PokerLimitMobileServlet?gameend=true" parameters:nil success:^(AFHTTPRequestOperation *operation, id JSON) {
+        successBlock(JSON);
+    } failure: ^(AFHTTPRequestOperation *operation, NSError *error){
+        NSLog(@"FAILING in PokerHttpClient: newGame");
+    }];
+}
+
+- (void)playerMove:(NSString *)move success: (void(^)(NSDictionary *))successBlock failure:(void (^)(void))failureBlock {
+    [self setDefaultHeader:@"Accept" value:@"application/json"];
+    
+    NSString *path = [NSString stringWithFormat:@"PokerLimitMobileServlet?humanPlayerBettingAction=%@", move];
+    [self getPath:path parameters:nil success:^(AFHTTPRequestOperation *operation, id JSON) {
+        successBlock(JSON);
+    } failure: ^(AFHTTPRequestOperation *operation, NSError *error){
+        NSLog(@"FAILING in PokerHttpClient: playerMove");
+    }];
+}
+
 - (void)loadState:(void(^)(NSDictionary *))successBlock failure:(void (^)(void))failureBlock {
 
     [self setDefaultHeader:@"Accept" value:@"application/json"];
-    [self getPath:@"PokerLimitMobileGameStateServlet " parameters:nil success:^(AFHTTPRequestOperation *operation, id JSON) {
+    [self getPath:@"PokerLimitMobileGameStateServlet" parameters:nil success:^(AFHTTPRequestOperation *operation, id JSON) {
         successBlock(JSON);
     } failure: ^(AFHTTPRequestOperation *operation, NSError *error){
-        NSLog(@"FAILING in PokerHttpClient:");
+        NSLog(@"FAILING in PokerHttpClient: loadState");
     }];
 }
 
@@ -83,7 +104,6 @@ static NSString * const pokerBaseURLString = @"http://localhost:8080/poker/mobil
         NSLog(@"App.net Global Stream: %@", JSON);
     } failure:nil
      ];
-    
 }
 
 //    [self getPath:@"LoginLimitMobileServlet" parameters:@"username=SAM" success:^(AFHTTPRequestOperation *operation, id JSON) {

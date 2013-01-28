@@ -8,6 +8,8 @@
 
 #import "Player.h"
 
+static NSString * const _RAISE = @"Raise";
+
 @interface Bot : Player
 
 @property (readonly) NSArray *lastAction;

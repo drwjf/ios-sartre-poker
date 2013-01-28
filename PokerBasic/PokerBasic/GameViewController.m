@@ -27,11 +27,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *playerHoleCardsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *playerStackLabel;
 
-@property (weak, nonatomic) IBOutlet UIButton *checkButton;
-@property (weak, nonatomic) IBOutlet UIButton *callButton;
-@property (weak, nonatomic) IBOutlet UIButton *betButton;
-@property (weak, nonatomic) IBOutlet UIButton *raiseButton;
+@property (weak, nonatomic) IBOutlet UIButton *checkCallButton;
+@property (weak, nonatomic) IBOutlet UIButton *betRaiseButton;
 @property (weak, nonatomic) IBOutlet UIButton *foldButton;
+
+- (IBAction)actionButtonPress:(id)sender;
 
 @property State *currentState;
 @property State *prevState;
@@ -62,6 +62,8 @@
     
     self.infoTextView.text = [self.client description];
     //[self.client showState];
+    
+    
     [self.client loadState:^(NSDictionary *JSON) {
 
         self.currentState = [[State alloc]initWithAttributes:JSON];
@@ -81,17 +83,21 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)newGame {
+-(void)setLabels {
     
     State *state = self.currentState;
     self.nameOnServerLabel.text = state.player.name;
     
-    //pay blinds - set dealer
+    //self.dealerLabel.text = dealer.name;
     self.dealerLabel.text = state.game.dealer;
-    self.gameStageLabel.text = state.game.gameStage;
-    self.commCardsLabel.text = @"XX XX XX | XX | XX";
     
-    //pay blinds    
+    self.gameStageLabel.text = state.game.gameStage;
+    //self.commCardsLabel.text = @"XX XX XX | XX | XX";
+    
+    NSString *newString = [[[state.game.communityCards description] componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
+    self.commCardsLabel.text = newString;
+    
+    //pay blinds
     self.botBetAmountLabel.text = [NSString stringWithFormat:@"%d", state.bot.currentStageContribution];
     self.playerBetAmountLabel.text = [NSString stringWithFormat:@"%d", state.player.currentStageContribution];
     
@@ -102,27 +108,61 @@
     //pay blinds - update pot
     self.potLabel.text = [NSString stringWithFormat:@"%d", state.game.pot];
     
-    NSString *anteString;
-    NSString *dealerString;
-    if ([state.game.dealer isEqualToString:_bot]) {
-        dealerString = [NSString stringWithFormat:@"Dealer is %@", state.bot.name];
-        anteString = [NSString stringWithFormat:@"%@ pays small blind of 1\n%@ pays big blind of 2.", state.bot.name, state.player.name];
-    } else {
-        dealerString = [NSString stringWithFormat:@"Dealer is %@", state.player.name];
-        anteString = [NSString stringWithFormat:@"%@ pays small blind of 1\n%@ pays big blind of 2", state.player.name, state.bot.name];
-    }
-    [self setInfoText:dealerString];
-    [self setInfoText:anteString];
-
     //deal cards
     //self.playerHoleCardsLabel.text = [state.player.holeCards objectAtIndex:0];
     self.playerHoleCardsLabel.text = [state.player.holeCards description];
-    
-    
-    
 }
 
-- (void) setInfoText:(NSString *)text {
+-(void)displayMoves {
+//    NSString *availableMoves = [NSString stringWithFormat:@"Fold, %@", [state.player.validMoves description]];
+//    [self setInfoText:availableMoves];
+    State *state = self.currentState;
+    [self.checkCallButton setTitle:[state.player.validMoves objectAtIndex:0] forState:UIControlStateNormal];
+    [self.betRaiseButton setTitle:[state.player.validMoves objectAtIndex:1] forState:UIControlStateNormal];
+    
+    self.betRaiseButton.enabled = true;
+    self.checkCallButton.enabled = true;
+    self.foldButton.enabled = true;
+}
+
+- (void)newGame {
+    
+    self.prevState = nil;
+    State *state = self.currentState;
+    [self setLabels];
+    
+    //set dealer
+    Player *dealer;
+    Player *bigBlind;
+    Boolean botIsDealer;
+    if ([state.game.dealer isEqualToString:_BOT]) {
+        dealer = state.bot;
+        bigBlind = state.player;
+        botIsDealer = true;
+    } else {
+        dealer = state.player;
+        bigBlind = state.bot;
+        botIsDealer = false;
+    }
+    NSString *dealerString = [NSString stringWithFormat:@"Dealer is %@", dealer.name];
+    [self setInfoText:dealerString];
+    
+    //pay blinds
+    NSString *anteString = [NSString stringWithFormat:@"%@ pays small blind of 1\n%@ pays big blind of 2.", dealer.name, bigBlind.name];
+    [self setInfoText:anteString];
+    
+    //If Satre goes first:
+    if (botIsDealer) {
+        if ([[state.bot.lastAction objectAtIndex:0] isEqualToString:_RAISE] ) {
+            NSString *actionString = [NSString stringWithFormat:@"%@ %@s to %@", state.bot.name, [state.bot.lastAction objectAtIndex:0], [state.bot.lastAction objectAtIndex:1]];
+            [self setInfoText:actionString];
+        }
+    }
+    [self displayMoves];
+
+}
+
+- (void)setInfoText:(NSString *)text {
     NSString *one = self.infoTextView.text;
     NSString *new = [NSString stringWithFormat:@"%@\n%@", one, text];
     self.infoTextView.text = new;
@@ -131,4 +171,61 @@
    
 }
 
+- (IBAction)actionButtonPress:(id)sender {
+    
+    self.betRaiseButton.enabled = false;
+    self.checkCallButton.enabled = false;
+    self.foldButton.enabled = false;
+    
+    if (![sender isKindOfClass:[UIButton class]])
+        return;
+    NSString *move = [sender currentTitle];
+    
+    [self setInfoText:[NSString stringWithFormat:@"%@ %@s", self.currentState.player.name, move]];
+    
+    self.prevState = self.currentState;
+    [self.client playerMove:move success:^(NSDictionary *JSON) {
+        
+        self.currentState = [[State alloc]initWithAttributes:JSON];
+        [self playerActed];
+        
+    }failure:^{
+        NSLog(@"Failure in loadState block from gamecontroller");
+    }];
+    NSLog(@"End of actionButtonPress");
+}
+
+-(void) playerActed {
+    //Game has ended
+    if (self.currentState.game.gameHasEnded) {
+        [self setInfoText:self.currentState.game.gameStage];
+        [self startNewHand];
+        return;
+    }
+    
+    [self setLabels];
+    [self displayMoves];
+    
+    if ([self.currentState.game.gameStage isEqualToString:self.prevState.game.gameStage]) {
+        //Bot checked
+        if (self.currentState.bot.currentStageContribution == self.prevState.bot.currentStageContribution) {
+            [self setInfoText:@"Bot checks. This can't happen. If bot checks we have changed state"];
+        }
+        if (self.currentState.bot.currentStageContribution > self.prevState.bot.currentStageContribution) {
+            [self setInfoText:@"Bot raises."];
+        }
+    }
+}
+
+-(void) startNewHand {
+    [self.client newGame:^(NSDictionary *JSON) {
+        
+        self.currentState = [[State alloc]initWithAttributes:JSON];
+        [self newGame];
+        
+    }failure:^{
+        NSLog(@"Failure in loadState block from gamecontroller");
+    }];
+}
+    
 @end

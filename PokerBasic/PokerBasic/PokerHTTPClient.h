@@ -21,4 +21,8 @@
 
 - (void)loadState:(void(^)(NSDictionary *))successBlock failure:(void (^)(void))failureBlock;
 
+- (void)playerMove:(NSString *)move success: (void(^)(NSDictionary *))successBlock failure:(void (^)(void))failureBlock;
+
+-(void)newGame:(void(^)(NSDictionary *))successBlock failure:(void (^)(void))failureBlock;
+
 @end

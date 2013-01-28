@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-static NSString * const _bot = @"BOT";
-static NSString * const _player = @"PLAYER";
+static NSString * const _BOT = @"BOT";
+static NSString * const _PLAYER = @"PLAYER";
 
 @interface Game : NSObject
 
