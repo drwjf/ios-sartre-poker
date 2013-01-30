@@ -17,4 +17,20 @@
 
 - (id)initWithAttributes:(NSDictionary *)attributes;
 
+typedef enum playerActionTypes
+{
+    NONE,
+    CHECK,
+    CALL,
+    BET,
+    RAISE,
+    FOLD
+} PlayerAction;
+
+@end
+
+
+@interface NSString (EnumParser)
+- (PlayerAction)PlayerActionEnumFromString;
++ (NSString*)PlayerActionStringFromEnum:(NSUInteger)key;
 @end

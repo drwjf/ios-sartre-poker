@@ -12,7 +12,10 @@ static NSString * const _RAISE = @"Raise";
 
 @interface Bot : Player
 
-@property (readonly) NSArray *lastAction;
+@property (readonly) NSArray* lastAction;
+@property (readonly) NSString* lastActionString;
+@property (readonly) PlayerAction lastActionEnum;
+@property (readonly) NSUInteger lastActionAmount;
 
 
 - (id)initWithAttributes:(NSDictionary *)attributes;

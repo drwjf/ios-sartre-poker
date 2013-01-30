@@ -10,6 +10,8 @@
 
 static NSString * const _BOT = @"BOT";
 static NSString * const _PLAYER = @"PLAYER";
+static NSString * const _PREFLOP = @"PREFLOP";
+static NSString * const _FLOP = @"FLOP";
 
 @interface Game : NSObject
 

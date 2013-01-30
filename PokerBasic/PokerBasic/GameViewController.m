@@ -19,6 +19,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *botStackLabel;
 @property (weak, nonatomic) IBOutlet UILabel *botBetAmountLabel;
+@property (weak, nonatomic) IBOutlet UILabel *botHoleCardsLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel *potLabel;
 @property (weak, nonatomic) IBOutlet UILabel *commCardsLabel;
@@ -41,6 +42,7 @@
 
 
 @end
+
 
 @implementation GameViewController
 
@@ -74,7 +76,7 @@
     }];
     
     //NSLog(self.currentState.player.name, @"HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    NSLog(@"HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    NSLog(@"END of View Controller View Did Load");
 }
 
 - (void)didReceiveMemoryWarning
@@ -116,6 +118,7 @@
     
     //deal cards
     //self.playerHoleCardsLabel.text = [state.player.holeCards objectAtIndex:0];
+    self.botHoleCardsLabel.text = [state.bot.holeCards description];
     self.playerHoleCardsLabel.text = [state.player.holeCards description];
 }
 
@@ -132,13 +135,18 @@
 }
 
 - (void)newGame {
+    NSLog(@"Start of new game");
+    
     self.nextGameButton.hidden = true;
     self.prevState = nil;
+    
+    self.betRaiseButton.enabled = false;
+    self.checkCallButton.enabled = false;
+    self.foldButton.enabled = false;
     
     State *state = self.currentState;
     [self setLabels];
     
-    //set dealer
     Player *dealer;
     Player *bigBlind;
 
@@ -158,27 +166,80 @@
     NSString *anteString = [NSString stringWithFormat:@"%@ pays small blind of 1\n%@ pays big blind of 2.", dealer.name, bigBlind.name];
     [self setInfoText:anteString];
     
-    //If Satre goes first:
-    if (state.game.botIsDealer) {
-        
-        //Game has ended
-        if (state.game.gameHasEnded) {
-            [self setInfoText:self.currentState.game.gameStage];
-            self.nextGameButton.hidden = false;
-            [self setInfoText:@"ENDED ON NEW GAME"]; //this worked monday 28/1/2013
-            return;
-        }
-        
-        if ([[state.bot.lastAction objectAtIndex:0] isEqualToString:_RAISE] ) {
-            NSString *actionString = [NSString stringWithFormat:@"%@ %@s to %@", state.bot.name, [state.bot.lastAction objectAtIndex:0], [state.bot.lastAction objectAtIndex:1]];
-            [self setInfoText:actionString];
-        }
+    [self getOpponentLastActions:NONE];
+    //NSString* botLastAction = [NSString PlayerActionStringFromEnum:self.currentState.bot.lastAction];
+    //[self setInfoText:[NSString stringWithFormat:@"AAXX%@ %@s", self.currentState.bot.name, botLastAction]];
+    
+    if (!state.game.gameHasEnded) {
+        [self displayMoves];
     }
-    
 
-    
-    [self displayMoves];
+}
 
+-(void) getOpponentLastActions:(PlayerAction)humanLastAction {
+    State *state = self.currentState;
+    Boolean stateChanged = ![self.currentState.game.gameStage isEqualToString:self.prevState.game.gameStage];
+    
+    //Game has ended
+    if (state.game.gameHasEnded) {
+        if (state.bot.lastActionEnum == CALL) {
+            [self setInfoText:[NSString stringWithFormat:@"1 %@ %@s", state.bot.name, state.bot.lastActionString]];
+        }
+        [self setInfoText:state.game.gameStage];
+        self.nextGameButton.hidden = false;
+        
+        return;
+    }
+    else if (state.game.botIsDealer) //bot goes first preflop, human goes first postflop
+    {
+        if ([state.game.gameStage isEqualToString:_PREFLOP]) {
+            [self setInfoText:[NSString stringWithFormat:@"1 %@ %@s", state.bot.name, state.bot.lastActionString]];
+        }
+        else if ([self.prevState.game.gameStage isEqualToString:_PREFLOP] && [state.game.gameStage isEqualToString:_FLOP]) {
+            if (humanLastAction == RAISE || humanLastAction == BET) {
+                [self setInfoText:[NSString stringWithFormat:@"1 %@ %@s", state.bot.name, state.bot.lastActionString]];
+            }
+            [self setInfoText:state.game.gameStage];
+        }
+        else if (stateChanged) {
+            if ((humanLastAction == CALL || humanLastAction == CHECK) && state.bot.lastActionEnum != CHECK) {
+                [self setInfoText:state.game.gameStage];
+            } else {
+                [self setInfoText:[NSString stringWithFormat:@"1 %@ %@s", state.bot.name, state.bot.lastActionString]];
+                [self setInfoText:state.game.gameStage];
+            }
+        }
+        else { //else normal hand postflop with no stateChange
+            [self setInfoText:[NSString stringWithFormat:@"1 %@ %@s", state.bot.name, state.bot.lastActionString]];
+        }
+        
+        return;
+    }
+    else //Human is dealer. human goes first preflop, bot goes first postflop
+    {
+        if (!self.prevState || humanLastAction == NONE) { //ie player makes very first move    
+            return; //don't need to show bots last action. ie "Last Action: Big Blind""
+        }
+        else if ([self.prevState.game.gameStage isEqualToString:_PREFLOP] && [state.game.gameStage isEqualToString:_FLOP]) {
+            if (humanLastAction == BET || humanLastAction == RAISE) {
+                [self setInfoText:[NSString stringWithFormat:@"22 %@ %@s", state.bot.name, @"Calls"]];
+            } else if (humanLastAction == CALL && self.prevState.bot.lastActionEnum != BET && self.prevState.bot.lastActionEnum != RAISE) { //special preflop case
+                [self setInfoText:[NSString stringWithFormat:@"24 %@ %@s bot prev state last action %@ %@", state.bot.name, @"Checks", self.prevState.bot.lastActionString, [NSString PlayerActionStringFromEnum:self.prevState.bot.lastActionEnum]]];
+            }
+            [self setInfoText:state.game.gameStage];
+        }
+        else if (stateChanged) {
+            if (humanLastAction == BET || humanLastAction == RAISE) {
+                [self setInfoText:[NSString stringWithFormat:@"27 %@ %@s", state.bot.name, @"Calls"]];
+            }
+            [self setInfoText:state.game.gameStage];           
+        }
+        
+        //then always show bots last move (unless player makes very first move)
+        [self setInfoText:[NSString stringWithFormat:@"1 %@ %@s", state.bot.name, state.bot.lastActionString]];
+        
+        return;
+    }
 }
 
 - (void)setInfoText:(NSString *)text {
@@ -206,7 +267,7 @@
     [self.client playerMove:move success:^(NSDictionary *JSON) {
         
         self.currentState = [[State alloc]initWithAttributes:JSON];
-        [self playerActed];
+        [self playerActed:move];
         
     }failure:^{
         NSLog(@"Failure in loadState block from gamecontroller");
@@ -218,37 +279,23 @@
     [self startNewHand];
 }
 
--(void) playerActed {
+-(void) playerActed:(NSString *)move {
     
     [self setLabels];
     
+    //else game has not ended
+    
+    [self getOpponentLastActions:[move PlayerActionEnumFromString]];
+    
     //Game has ended
     if (self.currentState.game.gameHasEnded) {
-        [self setInfoText:self.currentState.game.gameStage];
+        //[self setInfoText:self.currentState.game.gameStage];
         self.nextGameButton.hidden = false;
         return;
-    }
-    
-    //else game has not ended
-    [self displayMoves];
-    
-    if ([self.currentState.game.gameStage isEqualToString:self.prevState.game.gameStage]) {
-        //Bot checked
-        if (self.currentState.bot.currentStageContribution == self.prevState.bot.currentStageContribution) {
-            [self setInfoText:@"Bot checks. This can't happen. If bot checks we have changed state"];
-        } else if (self.currentState.bot.currentStageContribution > self.prevState.bot.currentStageContribution) {
-            [self setInfoText:@"Bot raises."];
-        } else { //
-            //can't Happen
-            [self setInfoText:@"can't get here. current stage contribution decrease."];
-        }
     } else {
-        //next Stage
-        [self setInfoText:self.currentState.game.gameStage];
+        [self displayMoves];
     }
 }
-
-
 
 -(void) startNewHand {
     

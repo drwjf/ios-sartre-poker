@@ -36,7 +36,7 @@
 - (NSString*) toString {
     NSString *state;
     
-    state = [NSString stringWithFormat:@"Game has ended: %@ \n Game State \n Bot is Dealer: %@ \n Game Stage is : %@ \n Community Cards are : %@ \n",
+    state = [NSString stringWithFormat:@"Game State \n Game has ended: %@ \n Bot is Dealer: %@ \n Game Stage is : %@ \n Community Cards are : %@ \n",
              self.gameHasEnded ? @"YES" : @"NO", self.botIsDealer ? @"YES" : @"NO", self.gameStage, self.communityCards ];
     
     return state;

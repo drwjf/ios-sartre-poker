@@ -13,7 +13,9 @@
 //#import "Bot.h"
 
 //static NSString * const pokerBaseUrl = @"nothing";
-static NSString * const pokerBaseURLString = @"http://localhost:8080/poker/mobile/limit/";
+//static NSString * const pokerBaseURLString = @"http://localhost:8080/poker/mobile/limit/";
+static NSString * const pokerBaseURLString = @"http://130.216.36.82:8080/poker/mobile/limit/";
+//
 
 @implementation PokerHTTPClient
 
