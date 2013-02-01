@@ -8,6 +8,7 @@
 
 #import "GameViewController.h"
 #import "State.h"
+#import "PokerTableViewController.h"
 
 @interface GameViewController ()
 @property (weak, nonatomic) IBOutlet UITextView *infoTextView;
@@ -32,6 +33,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *betRaiseButton;
 @property (weak, nonatomic) IBOutlet UIButton *foldButton;
 @property (weak, nonatomic) IBOutlet UIButton *nextGameButton;
+
+@property PokerTableViewController *pokerTable;
+@property (weak, nonatomic) IBOutlet UIImageView *tableImage;
 
 @property State *currentState;
 @property State *prevState;
@@ -60,6 +64,13 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    
+    self.pokerTable = [[PokerTableViewController alloc] initWithImage:self.tableImage];
+    [self.pokerTable setUp];
+    [self.pokerTable deal:nil];
+    
     self.infoTextView.editable = false;
     
     NSString *logoutButtonText = [NSString stringWithFormat:@"Logout %@", self.loginNameText];
@@ -68,9 +79,10 @@
     self.infoTextView.text = [self.client description];
     //[self.client showState];
     
-    [self.client loadState:^(NSDictionary *JSON) {
+    [self.client loadInitialState:^(NSDictionary *JSON) {
         self.currentState = [[State alloc]initWithAttributes:JSON];
         [self newGame];
+        NSLog(@"Initial state: \n %@", JSON);
     }failure:^{
         NSLog(@"Failure in loadState block from gamecontroller");
     }];
@@ -90,8 +102,6 @@
     State *state = self.currentState;
     self.nameOnServerLabel.text = state.player.name;
     
-    //self.dealerLabel.text = dealer.name; 1st try
-    //self.dealerLabel.text = state.game.dealer; 2nd try
     //3rd try
     if (state.game.botIsDealer) {
         self.dealerLabel.text = state.bot.name;
@@ -100,7 +110,6 @@
     }
     
     self.gameStageLabel.text = state.game.gameStage;
-    //self.commCardsLabel.text = @"XX XX XX | XX | XX";
     
     NSString *commCards = [[[state.game.communityCards description] componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
     self.commCardsLabel.text = commCards;
@@ -117,32 +126,34 @@
     self.potLabel.text = [NSString stringWithFormat:@"%d", state.game.pot];
     
     //deal cards
-    //self.playerHoleCardsLabel.text = [state.player.holeCards objectAtIndex:0];
     self.botHoleCardsLabel.text = [state.bot.holeCards description];
     self.playerHoleCardsLabel.text = [state.player.holeCards description];
 }
 
 -(void)displayMoves {
-//    NSString *availableMoves = [NSString stringWithFormat:@"Fold, %@", [state.player.validMoves description]];
-//    [self setInfoText:availableMoves];
     State *state = self.currentState;
-    [self.checkCallButton setTitle:[state.player.validMoves objectAtIndex:0] forState:UIControlStateNormal];
-    [self.betRaiseButton setTitle:[state.player.validMoves objectAtIndex:1] forState:UIControlStateNormal];
-    
-    self.betRaiseButton.enabled = true;
-    self.checkCallButton.enabled = true;
-    self.foldButton.enabled = true;
+    int arrayLength = [state.player.validMoves count];
+    if (arrayLength == 2) {
+        [self.checkCallButton setTitle:[state.player.validMoves objectAtIndex:0] forState:UIControlStateNormal];
+        [self.betRaiseButton setTitle:[state.player.validMoves objectAtIndex:1] forState:UIControlStateNormal];
+        self.betRaiseButton.hidden = false;
+        self.checkCallButton.hidden = false;
+        self.foldButton.hidden = false;
+    }
+    else
+    {
+        [self setInfoText:[NSString stringWithFormat:@"Error. Valid moves not returned. Array length:%d, Array: %@", arrayLength, [state.player.validMoves description]]];
+    }
 }
 
 - (void)newGame {
-    NSLog(@"Start of new game");
     
     self.nextGameButton.hidden = true;
     self.prevState = nil;
     
-    self.betRaiseButton.enabled = false;
-    self.checkCallButton.enabled = false;
-    self.foldButton.enabled = false;
+    self.betRaiseButton.hidden = true;
+    self.checkCallButton.hidden = true;
+    self.foldButton.hidden = true;
     
     State *state = self.currentState;
     [self setLabels];
@@ -167,20 +178,17 @@
     [self setInfoText:anteString];
     
     [self getOpponentLastActions:NONE];
-    //NSString* botLastAction = [NSString PlayerActionStringFromEnum:self.currentState.bot.lastAction];
-    //[self setInfoText:[NSString stringWithFormat:@"AAXX%@ %@s", self.currentState.bot.name, botLastAction]];
     
     if (!state.game.gameHasEnded) {
         [self displayMoves];
     }
-
 }
 
 -(void) getOpponentLastActions:(PlayerAction)humanLastAction {
     State *state = self.currentState;
     Boolean stateChanged = ![self.currentState.game.gameStage isEqualToString:self.prevState.game.gameStage];
     
-    //Game has ended
+    //3 way condition. Game has ended, bot is dealer, or human is dealer.
     if (state.game.gameHasEnded) {
         if (state.bot.lastActionEnum == CALL) {
             [self setInfoText:[NSString stringWithFormat:@"1 %@ %@s", state.bot.name, state.bot.lastActionString]];
@@ -253,9 +261,9 @@
 
 - (IBAction)actionButtonPress:(id)sender {
     
-    self.betRaiseButton.enabled = false;
-    self.checkCallButton.enabled = false;
-    self.foldButton.enabled = false;
+    self.betRaiseButton.hidden = true;
+    self.checkCallButton.hidden = true;
+    self.foldButton.hidden = true;
     
     if (![sender isKindOfClass:[UIButton class]])
         return;
@@ -265,14 +273,13 @@
     
     self.prevState = self.currentState;
     [self.client playerMove:move success:^(NSDictionary *JSON) {
-        
+        NSLog(@"Player move: %@ \n Game State after player move: \n %@", move, JSON);
         self.currentState = [[State alloc]initWithAttributes:JSON];
         [self playerActed:move];
         
     }failure:^{
         NSLog(@"Failure in loadState block from gamecontroller");
     }];
-    NSLog(@"End of actionButtonPress");
 }
 
 - (IBAction)nextGameButtonPress:(id)sender {
@@ -298,8 +305,6 @@
 }
 
 -(void) startNewHand {
-    
-    
     [self.client newGame:^(NSDictionary *JSON) {
         
         self.currentState = [[State alloc]initWithAttributes:JSON];

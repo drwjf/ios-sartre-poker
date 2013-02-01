@@ -15,11 +15,11 @@
 
 - (void)login:(NSString *)username success:(void (^) (NSString *response))successBlock failure:(void (^)(void))failureBlock;
 
-- (void)showState;
+//- (void)showState;
 
 - (void)logout:(void(^)(NSString *))successBlock failure:(void (^)(void))failureBlock;
 
-- (void)loadState:(void(^)(NSDictionary *))successBlock failure:(void (^)(void))failureBlock;
+- (void)loadInitialState:(void(^)(NSDictionary *))successBlock failure:(void (^)(void))failureBlock;
 
 - (void)playerMove:(NSString *)move success: (void(^)(NSDictionary *))successBlock failure:(void (^)(void))failureBlock;
 

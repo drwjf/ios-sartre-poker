@@ -21,9 +21,10 @@
     self.bot = [[Bot alloc]initWithAttributes:botData];
     self.game = [[Game alloc]initWithAttributes:gameData];
     
-    NSLog(self.game.toString);
-    NSLog(self.player.toString);
-    NSLog(self.bot.toString);
+//    NSLog(self.game.toString);
+//    NSLog(self.player.toString);
+//    NSLog(self.bot.toString);
+    
     
     return self;
 }

@@ -14,7 +14,8 @@
 
 //static NSString * const pokerBaseUrl = @"nothing";
 //static NSString * const pokerBaseURLString = @"http://localhost:8080/poker/mobile/limit/";
-static NSString * const pokerBaseURLString = @"http://130.216.36.82:8080/poker/mobile/limit/";
+//static NSString * const pokerBaseURLString = @"http://130.216.36.82:8080/poker/mobile/limit/";
+static NSString * const pokerBaseURLString = @"https://cs.auckland.ac.nz/poker/mobile/limit/";
 //
 
 @implementation PokerHTTPClient
@@ -48,7 +49,12 @@ static NSString * const pokerBaseURLString = @"http://130.216.36.82:8080/poker/m
     ///poker/mobile/limit/PokerLimitMobileServlet?gameend=true
     [self setDefaultHeader:@"Accept" value:@"application/json"];
     [self getPath:@"PokerLimitMobileServlet?gameend=true" parameters:nil success:^(AFHTTPRequestOperation *operation, id JSON) {
+        
+        NSLog(@"\n\nStart of new game:");
+        NSLog(@"Starting state: \n %@", JSON);
+        
         successBlock(JSON);
+        
     } failure: ^(AFHTTPRequestOperation *operation, NSError *error){
         NSLog(@"FAILING in PokerHttpClient: newGame");
     }];
@@ -65,7 +71,7 @@ static NSString * const pokerBaseURLString = @"http://130.216.36.82:8080/poker/m
     }];
 }
 
-- (void)loadState:(void(^)(NSDictionary *))successBlock failure:(void (^)(void))failureBlock {
+- (void)loadInitialState:(void(^)(NSDictionary *))successBlock failure:(void (^)(void))failureBlock {
 
     [self setDefaultHeader:@"Accept" value:@"application/json"];
     [self getPath:@"PokerLimitMobileGameStateServlet" parameters:nil success:^(AFHTTPRequestOperation *operation, id JSON) {
@@ -100,6 +106,8 @@ static NSString * const pokerBaseURLString = @"http://130.216.36.82:8080/poker/m
      ];
 }
 
+//never used. replaced by loadState
+/*
 - (void) showState {
     [self setDefaultHeader:@"Accept" value:@"application/json"];
     [self getPath:@"PokerLimitMobileGameStateServlet " parameters:nil success:^(AFHTTPRequestOperation *operation, id JSON) {
@@ -107,29 +115,10 @@ static NSString * const pokerBaseURLString = @"http://130.216.36.82:8080/poker/m
     } failure:nil
      ];
 }
-
-//    [self getPath:@"LoginLimitMobileServlet" parameters:@"username=SAM" success:^(AFHTTPRequestOperation *operation, id JSON) {
-//        NSLog(@"App.net Global Stream: %@", JSON);
-//        NSArray *postsFromResponse = [JSON valueForKeyPath:@"data"];
-//        NSMutableArray *mutablePosts = [NSMutableArray arrayWithCapacity:[postsFromResponse count]];
-//        for (NSDictionary *attributes in postsFromResponse) {
-//            Post *post = [[Post alloc] initWithAttributes:attributes];
-//            [mutablePosts addObject:post];
-//        }
-//        
-//        if (block) {
-//            block([NSArray arrayWithArray:mutablePosts], nil);
-//        }
-//    } failure:nil
-//     ^(AFHTTPRequestOperation *operation, NSError *error) {
-//        if (block) {
-//            block([NSArray array], error);
-//        }
-//    }
-//     ];
+ */
 
 
-
+//example code
 /*
 + (void)globalTimelinePostsWithBlock:(void (^)(NSArray *posts, NSError *error))block {
     [[AFAppDotNetAPIClient sharedClient] getPath:@"stream/0/posts/stream/global" parameters:nil success:^(AFHTTPRequestOperation *operation, id JSON) {
