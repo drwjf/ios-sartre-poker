@@ -10,9 +10,10 @@
 
 @interface PokerTableViewController : NSObject//UIViewController
 
-- (void) setUp;
 - (id)initWithImage:(UIImageView *) tableImage;
-- (IBAction)deal:(id)sender;
-- (IBAction)newGame:(id)sender;
+- (void)deal:(NSArray*) communityCards;
+- (void)newGame:(NSArray*)holecards dealer:(Boolean)botIsDealer;
+-(void)bet;
+
 
 @end
