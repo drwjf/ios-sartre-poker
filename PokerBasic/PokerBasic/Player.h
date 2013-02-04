@@ -8,14 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Player : NSObject
-
-@property NSString *name;
-@property (readonly) NSArray *holeCards;
-@property (readonly) NSUInteger stack;
-@property (readonly) NSUInteger currentStageContribution;
-
-- (id)initWithAttributes:(NSDictionary *)attributes;
 
 typedef enum playerActionTypes
 {
@@ -26,6 +18,17 @@ typedef enum playerActionTypes
     RAISE,
     FOLD
 } PlayerAction;
+
+
+
+@interface Player : NSObject
+
+@property NSString *name;
+@property (readonly) NSArray *holeCards;
+@property (readonly) NSUInteger stack;
+@property (readonly) NSUInteger currentStageContribution;
+
+- (id)initWithAttributes:(NSDictionary *)attributes;
 
 @end
 

@@ -15,13 +15,14 @@ static NSString * const _FLOP = @"FLOP";
 static NSString * const _TURN = @"TURN";
 static NSString * const _RIVER = @"RIVER";
 
-
 @interface Game : NSObject
 
 //typedef enum {
 //    Player,
 //    Bot
 //} Dealer;
+
+//from Game.h
 
 @property (readonly) Boolean botIsDealer;
 @property (readonly) NSString *gameType;

@@ -10,6 +10,7 @@
 
 @implementation Player
 
+
 - (id)initWithAttributes:(NSDictionary *)attributes {
     
     self = [super init];

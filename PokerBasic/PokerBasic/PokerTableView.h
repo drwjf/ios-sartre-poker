@@ -8,12 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PokerTableViewController : NSObject//UIViewController
+@interface PokerTableView : NSObject//UIView
 
 - (id)initWithImage:(UIImageView *) tableImage;
 - (void)deal:(NSArray*) communityCards;
 - (void)newGame:(NSArray*)holecards dealer:(Boolean)botIsDealer;
--(void)bet;
-
+- (void)animate:(NSEnumerator *)enumerator;
 
 @end

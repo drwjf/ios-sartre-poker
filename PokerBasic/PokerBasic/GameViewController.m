@@ -8,7 +8,9 @@
 
 #import "GameViewController.h"
 #import "State.h"
-#import "PokerTableViewController.h"
+#import "PokerTableView.h"
+#import "PlayerMove.h"
+
 
 @interface GameViewController ()
 @property (weak, nonatomic) IBOutlet UITextView *infoTextView;
@@ -35,7 +37,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *foldButton;
 @property (weak, nonatomic) IBOutlet UIButton *nextGameButton;
 
-@property PokerTableViewController *pokerTable;
+@property PokerTableView *pokerTable;
+@property NSMutableArray *moveQueue;
 @property (weak, nonatomic) IBOutlet UIImageView *tableImage;
 
 @property State *currentState;
@@ -62,7 +65,7 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     NSLog(@"In GVC vDL: frame:%@, bounds:%@", NSStringFromCGRect(self.tableImage.frame), NSStringFromCGRect(self.tableImage.bounds));
-    self.pokerTable = [[PokerTableViewController alloc] initWithImage:self.tableImage];
+    self.pokerTable = [[PokerTableView alloc] initWithImage:self.tableImage];
     
     [self.client loadInitialState:^(NSDictionary *JSON) {
         self.currentState = [[State alloc]initWithAttributes:JSON];
@@ -72,6 +75,9 @@
         NSLog(@"Failure in loadState block from gamecontroller");
     }];
     NSLog(@"END of View Controller View Did Load");
+    
+    self.moveQueue = [NSMutableArray arrayWithCapacity:5];
+
 }
 
 - (void)viewDidLoad
@@ -95,6 +101,8 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
 
 -(void)setLabels {
     
@@ -187,6 +195,17 @@
     if (!state.game.gameHasEnded) {
         [self displayMoves];
     }
+    
+    
+    for (int i =0; i<3; i++) {
+        PlayerMove *move = [[PlayerMove alloc]init];
+        move.seatNumber = i;
+        move.betAmount = i+((i+1)*2);
+        move.action = BET;
+        [self.moveQueue addObject:move];
+    }
+    NSEnumerator *e = [self.moveQueue objectEnumerator];
+    [self.pokerTable animate:e];
 }
 
 -(void) getOpponentLastActions:(PlayerAction)humanLastAction {
@@ -257,8 +276,8 @@
         //return;
     }
     
-    for (id thing in actions) {
-        [self setInfoText:thing];
+    for (id action in actions) {
+        [self setInfoText:action];
     }
 }
 
@@ -331,5 +350,9 @@
         NSLog(@"Failure in loadState block from gamecontroller");
     }];
 }
+
+-(void)testBet {
+    
+   }
     
 @end
