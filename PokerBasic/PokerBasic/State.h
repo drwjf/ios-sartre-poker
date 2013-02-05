@@ -7,14 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+
+#import "Game.h"
 #import "Bot.h"
 #import "Human.h"
-#import "Game.h"
 
 @interface State : NSObject
 
-@property Bot *bot;
-@property Human *player;
+@property NSDictionary* playerStateDict;
 @property Game *game;
 
 

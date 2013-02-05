@@ -7,6 +7,8 @@
 //
 
 #import "Player.h"
+#import "PlayerMove.h"
+
 
 static NSString * const _RAISE = @"Raise";
 
@@ -16,6 +18,7 @@ static NSString * const _RAISE = @"Raise";
 @property (readonly) NSString* lastActionString;
 @property (readonly) PlayerAction lastActionEnum;
 @property (readonly) NSUInteger lastActionAmount;
+
 
 
 - (id)initWithAttributes:(NSDictionary *)attributes;

@@ -17,12 +17,15 @@
         return nil;
     }
     
+    
     _lastAction = [attributes valueForKeyPath:@"LastAction"];
     _lastActionString = [_lastAction objectAtIndex:0];
     _lastActionEnum = [_lastActionString PlayerActionEnumFromString];    
     _lastActionAmount = [[_lastAction objectAtIndex:1] integerValue];
 
     self.name = @"Sartre";
+    self.seat = 0;
+    
     
     return self;
 }

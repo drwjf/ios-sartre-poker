@@ -17,8 +17,10 @@
     NSDictionary *botData = [JSON valueForKeyPath:@"Bot"];
     
     
-    self.player = [[Human alloc]initWithAttributes:playerData];
-    self.bot = [[Bot alloc]initWithAttributes:botData];
+    Human *human = [[Human alloc]initWithAttributes:playerData];
+    Bot *bot = [[Bot alloc]initWithAttributes:botData];
+    
+    _playerStateDict = [NSDictionary dictionaryWithObjectsAndKeys: bot, @0, human, @1, nil];
     self.game = [[Game alloc]initWithAttributes:gameData];
     
 //    NSLog(self.game.toString);

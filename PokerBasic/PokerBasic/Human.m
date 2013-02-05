@@ -18,6 +18,7 @@
     }
     
     self.name = [attributes valueForKeyPath:@"Name"];
+    self.seat = 1;
     _overallResult = [[attributes valueForKeyPath:@"OverallResult"] integerValue];
     _validMoves = [attributes valueForKeyPath:@"ValidMoves"];    
 
