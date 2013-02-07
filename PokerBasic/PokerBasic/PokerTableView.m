@@ -159,6 +159,11 @@ static int distanceOfDealerButtonFromPlayer = 100;
                 break;
             case FOLD:
                 [self fold:seat];
+            case RAISE:
+            case BET:
+            case CALL:
+                [self bet:amount seat:seat];
+                break;
             default:
                 break;                
         }

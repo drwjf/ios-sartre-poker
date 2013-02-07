@@ -38,6 +38,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *nextGameButton;
 
 @property State *prevState;
+
+@property NSNumber *dealerSeatNumber;
 @property NSNumber *humanSeatNumber;
 @property NSNumber *botSeatNumber;
 
@@ -122,17 +124,18 @@
     
     [self setLabels];
     
-    Player *dealer;
     Player *bigBlind;
+    Player *dealer;
     
     if (state.game.botIsDealer) {
-        dealer = bot;
+        self.dealerSeatNumber = bot.seat;
         bigBlind = human;
         
     } else {
-        dealer = human;
+        self.dealerSeatNumber = human.seat;
         bigBlind = bot;
     }
+    dealer = [state.playerStateDict objectForKey:self.dealerSeatNumber];
     
     //pay blinds
     NSInteger sb = 1;
@@ -171,14 +174,13 @@
     
     State *state = self.currentState;
     Bot *bot = [state.playerStateDict objectForKey:self.botSeatNumber];
+    Player *dealer = [state.playerStateDict objectForKey:self.dealerSeatNumber];
     
     Boolean stateChanged = ![self.currentState.game.gameStage isEqualToString:self.prevState.game.gameStage];
     
     //3 way condition. Game has ended, bot is dealer, or human is dealer.
     if (state.game.gameHasEnded) {
         if (bot.lastActionEnum == CALL) {
-            //[self setInfoText:[NSString stringWithFormat:@"1 %@ %@s", state.bot.name, state.bot.lastActionString]];
-            //[actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
             [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
         }
         //[actions addObject:state.game.gameStage]; !!!!!!!!!!! need to do something here
@@ -189,12 +191,10 @@
     else if (state.game.botIsDealer) //bot goes first preflop, human goes first postflop
     {
         if ([state.game.gameStage isEqualToString:_PREFLOP]) {
-            //[actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
             [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
         }
         else if ([self.prevState.game.gameStage isEqualToString:_PREFLOP] && [state.game.gameStage isEqualToString:_FLOP]) {
             if (humanLastAction == RAISE || humanLastAction == BET) {
-                //[actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
                 [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
             }
             //[actions addObject:state.game.gameStage];!!!!!!!!!!! need to do something here
@@ -203,13 +203,11 @@
             if ((humanLastAction == CALL || humanLastAction == CHECK) && bot.lastActionEnum != CHECK) {
                 [actions addObject:state.game.gameStage];
             } else {
-                //[actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
                 [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
                 //[actions addObject:state.game.gameStage]; !!!!!!!!!!! need to do something here
             }
         }
         else { //else normal hand postflop with no stateChange
-            //[actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
             [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
         }
         
@@ -309,26 +307,26 @@
 }
 
 - (IBAction)actionButtonPress:(id)sender {
-    
+    if (![sender isKindOfClass:[UIButton class]])
+        return;    
     Player *human = [self.currentState.playerStateDict objectForKey:self.humanSeatNumber];
-    Bot *bot = [self.currentState.playerStateDict objectForKey:self.botSeatNumber];
+    NSString *move = [sender currentTitle];  
     
     self.betRaiseButton.hidden = true;
     self.checkCallButton.hidden = true;
     self.foldButton.hidden = true;
     
-    if (![sender isKindOfClass:[UIButton class]])
-        return;
-    NSString *move = [sender currentTitle];
+    NSMutableArray *actions = [NSMutableArray array]; //capactiy???
     
-    [self setInfoText:[NSString stringWithFormat:@"%@ %@s", human.name, move]];
+    PlayerAction action = [move PlayerActionEnumFromString];
+    [actions addObject:[PlayerMove moveWithSeat:human.seat action:action amount:nil]];
+    [self.pokerTable animate:[actions objectEnumerator]];
     
     self.prevState = self.currentState;
     [self.client playerMove:move success:^(NSDictionary *JSON) {
         NSLog(@"Player move: %@ \n Game State after player move: \n %@", move, JSON);
         self.currentState = [[State alloc]initWithAttributes:JSON];
-        [self playerActed:move];
-        
+        [self playerActed:move];        
     }failure:^{
         NSLog(@"Failure in loadState block from gamecontroller");
     }];
@@ -347,6 +345,7 @@
     NSMutableArray *actions = [NSMutableArray array];
     
     [self getOpponentLastActions:[move PlayerActionEnumFromString] actionArray:actions];
+    [self.pokerTable animate:[actions objectEnumerator]];
     
     //Game has ended
     if (self.currentState.game.gameHasEnded) {
@@ -404,10 +403,12 @@
             text = [NSString stringWithFormat:@"%@ pays %@ of %d.", player.name, actionString, amount];
             break;
         case DEAL:
-            text = [NSString stringWithFormat:@"%@ deals.", player.name];
-            break;
         case FOLD:
-            text = [NSString stringWithFormat:@"%@ folds.", player.name];
+        case BET:
+        case RAISE:
+        case CALL:
+        case CHECK:
+            text = [NSString stringWithFormat:@"%@ %@s.", player.name, actionString];
             break;
         default:
             break;
