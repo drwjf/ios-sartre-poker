@@ -144,7 +144,7 @@ static int distanceOfDealerButtonFromPlayer = 100;
         NSNumber* seat = move.seat;
         NSInteger amount = move.betAmount;
         PlayerAction action = move.action;
-        NSLog(@"Doing animation for %d", action);
+        NSLog(@"Doing animation for %@", [NSString PlayerActionStringFromEnum:action]);
         
         switch (action) {
             case SET_DEALER:
@@ -157,6 +157,8 @@ static int distanceOfDealerButtonFromPlayer = 100;
             case DEAL:
                 [self holeCards];
                 break;
+            case FOLD:
+                [self fold:seat];
             default:
                 break;                
         }
@@ -165,6 +167,20 @@ static int distanceOfDealerButtonFromPlayer = 100;
     } else {
         NSLog(@"BUTTONS!!!");
     }
+}
+
+- (void)fold:(NSNumber*) seat {
+    
+    playerInfo* player = [self.playerInfoDict objectForKey:seat];
+    CGPoint playerCenter = player.centre;
+    CGPoint buttonLocation = CGPointMake(playerCenter.x - distanceOfDealerButtonFromPlayer, playerCenter.y);
+    [UIView animateWithDuration:1.0 delay:0  options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [player.card1 setAlpha:0];
+        [player.card2 setAlpha:0];
+    }completion:^(BOOL done) {
+        [self doAnimations];
+    }];
+    
 }
 
 - (void)setDealer:(NSNumber*) seat {

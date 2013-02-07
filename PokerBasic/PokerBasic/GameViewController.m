@@ -73,8 +73,9 @@
     self.pokerTable = [[PokerTableView alloc] initWithImage:self.tableImage scene:self];    
     [self.client loadInitialState:^(NSDictionary *JSON) {
         self.currentState = [[State alloc]initWithAttributes:JSON];
-        [self newGame];
         NSLog(@"Initial state: \n %@", JSON);
+        [self newGame];
+        
     }failure:^{
         NSLog(@"Failure in loadState block from gamecontroller");
     }];
@@ -107,7 +108,6 @@
 }
 
 - (void)newGame {
-    NSMutableArray *actions = [NSMutableArray arrayWithCapacity:10]; //capactiy???
     
     State *state = self.currentState;
     Player *human = [state.playerStateDict objectForKey:self.humanSeatNumber];
@@ -138,16 +138,18 @@
     NSInteger sb = 1;
     NSInteger bb = 2;
     
+    NSMutableArray *actions = [NSMutableArray array]; //capactiy???
     [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:SET_DEALER amount:nil]];
     [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:SMALLBLIND amount:sb]];
     [actions addObject:[PlayerMove moveWithSeat:bigBlind.seat action:BIGBLIND amount:bb]];
     [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:DEAL amount:nil]];
+    [self getOpponentLastActions:NONE actionArray:actions];
     
     [self.pokerTable animate:[actions objectEnumerator]];
     
-    NSLog(@"getting last actions");
-    [self getOpponentLastActions:NONE];
-    NSLog(@"got last actions");
+//    NSLog(@"getting last actions");
+//    [self getOpponentLastActions:NONE];
+//    NSLog(@"got last actions");
     
     if (!state.game.gameHasEnded) {
         [self displayMoves];
@@ -163,6 +165,91 @@
     //    }
     //    NSEnumerator *e = [self.moveQueue objectEnumerator];
     //    [self.pokerTable animate:e];
+}
+
+-(void) getOpponentLastActions:(PlayerAction)humanLastAction actionArray:(NSMutableArray*)actions {
+    
+    State *state = self.currentState;
+    Bot *bot = [state.playerStateDict objectForKey:self.botSeatNumber];
+    
+    Boolean stateChanged = ![self.currentState.game.gameStage isEqualToString:self.prevState.game.gameStage];
+    
+    //3 way condition. Game has ended, bot is dealer, or human is dealer.
+    if (state.game.gameHasEnded) {
+        if (bot.lastActionEnum == CALL) {
+            //[self setInfoText:[NSString stringWithFormat:@"1 %@ %@s", state.bot.name, state.bot.lastActionString]];
+            //[actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
+            [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
+        }
+        //[actions addObject:state.game.gameStage]; !!!!!!!!!!! need to do something here
+        self.nextGameButton.hidden = false;
+        
+        //return;
+    }
+    else if (state.game.botIsDealer) //bot goes first preflop, human goes first postflop
+    {
+        if ([state.game.gameStage isEqualToString:_PREFLOP]) {
+            //[actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
+            [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
+        }
+        else if ([self.prevState.game.gameStage isEqualToString:_PREFLOP] && [state.game.gameStage isEqualToString:_FLOP]) {
+            if (humanLastAction == RAISE || humanLastAction == BET) {
+                //[actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
+                [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
+            }
+            //[actions addObject:state.game.gameStage];!!!!!!!!!!! need to do something here
+        }
+        else if (stateChanged) {
+            if ((humanLastAction == CALL || humanLastAction == CHECK) && bot.lastActionEnum != CHECK) {
+                [actions addObject:state.game.gameStage];
+            } else {
+                //[actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
+                [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
+                //[actions addObject:state.game.gameStage]; !!!!!!!!!!! need to do something here
+            }
+        }
+        else { //else normal hand postflop with no stateChange
+            //[actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
+            [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
+        }
+        
+        //return;
+    }
+    else //Human is dealer. human goes first preflop, bot goes first postflop
+    {
+        Bot *prevBotState = [self.prevState.playerStateDict objectForKey:self.botSeatNumber];
+        if (!self.prevState || humanLastAction == NONE) { //ie player makes very first move
+            return ; //don't need to show bots last action. ie "Last Action: Big Blind""
+        }
+        else if ([self.prevState.game.gameStage isEqualToString:_PREFLOP] && [state.game.gameStage isEqualToString:_FLOP]) {
+            if (humanLastAction == BET || humanLastAction == RAISE) {
+                //[actions addObject:[NSString stringWithFormat:@"22 %@ %@s", bot.name, @"Calls"]];
+                [actions addObject:[PlayerMove moveWithSeat:bot.seat action:CALL amount:2]]; // !!!!!!!!!!!!!!!!!amount
+            } else if (humanLastAction == CALL && prevBotState.lastActionEnum != BET && prevBotState.lastActionEnum != RAISE) { //special preflop case
+                //[actions addObject:[NSString stringWithFormat:@"24 %@ %@s bot prev state last action %@ %@", bot.name, @"Checks", prevBotState.lastActionString, [NSString PlayerActionStringFromEnum:prevBotState.lastActionEnum]]];
+                [actions addObject:[PlayerMove moveWithSeat:bot.seat action:CHECK amount:nil]];
+            }
+            //[actions addObject:state.game.gameStage]; !!!!!!!!!!! need to do something here
+        }
+        else if (stateChanged) {
+            if (humanLastAction == BET || humanLastAction == RAISE) {
+                //[actions addObject:[NSString stringWithFormat:@"27 %@ %@s", bot.name, @"Calls"]];
+                [actions addObject:[PlayerMove moveWithSeat:bot.seat action:CALL amount:4]];
+            }
+            //[actions addObject:state.game.gameStage]; !!!!!!!!!!! need to do something here
+        }
+        
+        //then always show bots last move (unless player makes very first move)
+        //[actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
+        [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
+        
+        //return;
+    }
+    
+//    for (id action in actions) {
+//        [self setInfoText:action];
+//    }
+    return ;
 }
 
 -(void)setLabels {
@@ -221,128 +308,6 @@
     }
 }
 
-
-
-
-
--(void) getOpponentLastActions:(PlayerAction)humanLastAction {
-    NSMutableArray *actions = [NSMutableArray arrayWithCapacity:5];
-    
-    State *state = self.currentState;
-    Player *human = [state.playerStateDict objectForKey:self.humanSeatNumber];
-    Bot *bot = [state.playerStateDict objectForKey:self.humanSeatNumber];
-    
-    Boolean stateChanged = ![self.currentState.game.gameStage isEqualToString:self.prevState.game.gameStage];
-    
-    //3 way condition. Game has ended, bot is dealer, or human is dealer.
-    if (state.game.gameHasEnded) {
-        if (bot.lastActionEnum == CALL) {
-            //[self setInfoText:[NSString stringWithFormat:@"1 %@ %@s", state.bot.name, state.bot.lastActionString]];
-            [actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
-        }
-        [actions addObject:state.game.gameStage];
-        self.nextGameButton.hidden = false;
-        
-        //return;
-    }
-    else if (state.game.botIsDealer) //bot goes first preflop, human goes first postflop
-    {
-        if ([state.game.gameStage isEqualToString:_PREFLOP]) {
-            [actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
-        }
-        else if ([self.prevState.game.gameStage isEqualToString:_PREFLOP] && [state.game.gameStage isEqualToString:_FLOP]) {
-            if (humanLastAction == RAISE || humanLastAction == BET) {
-                [actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
-            }
-            [actions addObject:state.game.gameStage];
-        }
-        else if (stateChanged) {
-            if ((humanLastAction == CALL || humanLastAction == CHECK) && bot.lastActionEnum != CHECK) {
-                [actions addObject:state.game.gameStage];
-            } else {
-                [actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
-                [actions addObject:state.game.gameStage];
-            }
-        }
-        else { //else normal hand postflop with no stateChange
-            [actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
-        }
-        
-        //return;
-    }
-    else //Human is dealer. human goes first preflop, bot goes first postflop
-    {
-        Bot *prevBotState = [self.prevState.playerStateDict objectForKey:self.botSeatNumber];
-        if (!self.prevState || humanLastAction == NONE) { //ie player makes very first move    
-            return; //don't need to show bots last action. ie "Last Action: Big Blind""
-        }
-        else if ([self.prevState.game.gameStage isEqualToString:_PREFLOP] && [state.game.gameStage isEqualToString:_FLOP]) {
-            if (humanLastAction == BET || humanLastAction == RAISE) {
-                [actions addObject:[NSString stringWithFormat:@"22 %@ %@s", bot.name, @"Calls"]];
-            } else if (humanLastAction == CALL && prevBotState.lastActionEnum != BET && prevBotState.lastActionEnum != RAISE) { //special preflop case
-                [actions addObject:[NSString stringWithFormat:@"24 %@ %@s bot prev state last action %@ %@", bot.name, @"Checks", prevBotState.lastActionString, [NSString PlayerActionStringFromEnum:prevBotState.lastActionEnum]]];
-            }
-            [actions addObject:state.game.gameStage];
-        }
-        else if (stateChanged) {
-            if (humanLastAction == BET || humanLastAction == RAISE) {
-                [actions addObject:[NSString stringWithFormat:@"27 %@ %@s", bot.name, @"Calls"]];
-            }
-            [actions addObject:state.game.gameStage];           
-        }
-        
-        //then always show bots last move (unless player makes very first move)
-        [actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
-        
-        //return;
-    }
-    
-    for (id action in actions) {
-        [self setInfoText:action];
-    }
-}
-
-- (void)setInfoText:(NSString *)text {
-//    
-//    if ([text isEqualToString:_FLOP] || [text isEqualToString:_TURN] || [text isEqualToString:_RIVER]) {
-//        [self.pokerTable deal:self.currentState.game.communityCards];
-//    }
-    
-    NSString *one = self.infoTextView.text;
-    NSString *new = [NSString stringWithFormat:@"%@\n%@", one, text];
-    self.infoTextView.text = new;
-    [self.infoTextView scrollRangeToVisible:NSMakeRange(new.length, 0)];
-    //[TextView scrollRangeToVisible:NSMakeRange([TextView.text length], 0)];
-   
-}
-
-//- (void)setActionText:(PlayerAction)action seat:(NSNumber*)seat amount:(NSInteger)amount {
-- (void)setMoveText:(PlayerMove*)move  {
-    
-    Player *player = [self.currentState.playerStateDict objectForKey:move.seat];
-    PlayerAction action = move.action;
-    NSString *actionString = [NSString PlayerActionStringFromEnum:action];
-    NSString *seat = [move.seat description];
-    NSInteger amount = move.betAmount;
-    
-    
-    NSString *text;
-    
-    switch (action) {
-        case SET_DEALER:
-            text = [NSString stringWithFormat:@"Dealer is %@", player.name];
-            break;
-        case SMALLBLIND:
-        case BIGBLIND:
-            text = [NSString stringWithFormat:@"%@ pays %@ of %d", player.name, actionString, amount];
-            break;
-        default:
-            break;
-    }
-    [self setInfoText:text];
-    
-}
-
 - (IBAction)actionButtonPress:(id)sender {
     
     Player *human = [self.currentState.playerStateDict objectForKey:self.humanSeatNumber];
@@ -379,7 +344,9 @@
     
     //else game has not ended
     
-    [self getOpponentLastActions:[move PlayerActionEnumFromString]];
+    NSMutableArray *actions = [NSMutableArray array];
+    
+    [self getOpponentLastActions:[move PlayerActionEnumFromString] actionArray:actions];
     
     //Game has ended
     if (self.currentState.game.gameHasEnded) {
@@ -402,8 +369,50 @@
     }];
 }
 
--(void)testBet {
+- (void)setInfoText:(NSString *)text {
+    //
+    //    if ([text isEqualToString:_FLOP] || [text isEqualToString:_TURN] || [text isEqualToString:_RIVER]) {
+    //        [self.pokerTable deal:self.currentState.game.communityCards];
+    //    }
     
-   }
+    NSString *one = self.infoTextView.text;
+    NSString *new = [NSString stringWithFormat:@"%@\n%@", one, text];
+    self.infoTextView.text = new;
+    [self.infoTextView scrollRangeToVisible:NSMakeRange(new.length, 0)];
+    //[TextView scrollRangeToVisible:NSMakeRange([TextView.text length], 0)];
+    
+}
+
+//- (void)setActionText:(PlayerAction)action seat:(NSNumber*)seat amount:(NSInteger)amount {
+- (void)setMoveText:(PlayerMove*)move  {
+    
+    Player *player = [self.currentState.playerStateDict objectForKey:move.seat];
+    PlayerAction action = move.action;
+    NSString *actionString = [NSString PlayerActionStringFromEnum:action];
+//    NSString *seat = [move.seat description];
+    NSInteger amount = move.betAmount;
+    
+    
+    NSString *text;
+    
+    switch (action) {
+        case SET_DEALER:
+            text = [NSString stringWithFormat:@"Dealer is %@.", player.name];
+            break;
+        case SMALLBLIND:
+        case BIGBLIND:
+            text = [NSString stringWithFormat:@"%@ pays %@ of %d.", player.name, actionString, amount];
+            break;
+        case DEAL:
+            text = [NSString stringWithFormat:@"%@ deals.", player.name];
+            break;
+        case FOLD:
+            text = [NSString stringWithFormat:@"%@ folds.", player.name];
+            break;
+        default:
+            break;
+    }
+    [self setInfoText:text];    
+}
     
 @end
