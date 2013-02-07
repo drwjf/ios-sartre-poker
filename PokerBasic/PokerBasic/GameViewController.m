@@ -7,7 +7,7 @@
 //
 
 #import "GameViewController.h"
-#import "State.h"
+
 #import "PokerTableView.h"
 
 
@@ -37,7 +37,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *foldButton;
 @property (weak, nonatomic) IBOutlet UIButton *nextGameButton;
 
-@property State *currentState;
 @property State *prevState;
 @property NSNumber *humanSeatNumber;
 @property NSNumber *botSeatNumber;
@@ -60,8 +59,6 @@
 
 @implementation GameViewController
 
-
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -73,10 +70,7 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     NSLog(@"In GVC vDL: frame:%@, bounds:%@", NSStringFromCGRect(self.tableImage.frame), NSStringFromCGRect(self.tableImage.bounds));
-    self.pokerTable = [[PokerTableView alloc] initWithImage:self.tableImage scene:self];
-    
-//    self.moveQueue = [NSMutableArray arrayWithCapacity:5];
-    
+    self.pokerTable = [[PokerTableView alloc] initWithImage:self.tableImage scene:self];    
     [self.client loadInitialState:^(NSDictionary *JSON) {
         self.currentState = [[State alloc]initWithAttributes:JSON];
         [self newGame];
@@ -84,11 +78,7 @@
     }failure:^{
         NSLog(@"Failure in loadState block from gamecontroller");
     }];
-    NSLog(@"END of View Controller View Did Load");
-    
-    
-
-}
+    NSLog(@"END of View Controller View Did Load");}
 
 - (void)viewDidLoad
 {
@@ -116,7 +106,64 @@
     // Dispose of any resources that can be recreated.
 }
 
-
+- (void)newGame {
+    NSMutableArray *actions = [NSMutableArray arrayWithCapacity:10]; //capactiy???
+    
+    State *state = self.currentState;
+    Player *human = [state.playerStateDict objectForKey:self.humanSeatNumber];
+    Player *bot = [state.playerStateDict objectForKey:self.botSeatNumber];
+    
+    self.nextGameButton.hidden = true;
+    self.prevState = nil;
+    
+    self.betRaiseButton.hidden = true;
+    self.checkCallButton.hidden = true;
+    self.foldButton.hidden = true;
+    
+    [self setLabels];
+    
+    Player *dealer;
+    Player *bigBlind;
+    
+    if (state.game.botIsDealer) {
+        dealer = bot;
+        bigBlind = human;
+        
+    } else {
+        dealer = human;
+        bigBlind = bot;
+    }
+    
+    //pay blinds
+    NSInteger sb = 1;
+    NSInteger bb = 2;
+    
+    [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:SET_DEALER amount:nil]];
+    [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:SMALLBLIND amount:sb]];
+    [actions addObject:[PlayerMove moveWithSeat:bigBlind.seat action:BIGBLIND amount:bb]];
+    [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:DEAL amount:nil]];
+    
+    [self.pokerTable animate:[actions objectEnumerator]];
+    
+    NSLog(@"getting last actions");
+    [self getOpponentLastActions:NONE];
+    NSLog(@"got last actions");
+    
+    if (!state.game.gameHasEnded) {
+        [self displayMoves];
+    }
+    
+    
+    //    for (int i =0; i<3; i++) {
+    //        PlayerMove *move = [[PlayerMove alloc]init];
+    //        move.seatNumber = i;
+    //        move.betAmount = i+((i+1)*2);
+    //        move.action = BET;
+    //        [self.moveQueue addObject:move];
+    //    }
+    //    NSEnumerator *e = [self.moveQueue objectEnumerator];
+    //    [self.pokerTable animate:e];
+}
 
 -(void)setLabels {
     State *state = self.currentState;
@@ -138,7 +185,6 @@
 //    NSString *commCards = [[[state.game.communityCards description] componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
 //    self.commCardsLabel.text = commCards;
     
-
     self.botBetAmountLabel.text = [NSString stringWithFormat:@"%d", bot.currentStageContribution];
     self.playerBetAmountLabel.text = [NSString stringWithFormat:@"%d", human.currentStageContribution];
     
@@ -175,72 +221,7 @@
     }
 }
 
-- (void)newGame {
-    
-    
-    NSMutableArray *actions = [NSMutableArray arrayWithCapacity:10]; //capactiy???
-    
-    State *state = self.currentState;
-    Player *human = [state.playerStateDict objectForKey:self.humanSeatNumber];
-    Player *bot = [state.playerStateDict objectForKey:self.botSeatNumber];
-    
-    self.nextGameButton.hidden = true;
-    self.prevState = nil;
-    
-    self.betRaiseButton.hidden = true;
-    self.checkCallButton.hidden = true;
-    self.foldButton.hidden = true;
-    
-    [self setLabels];
-    
-    Player *dealer;
-    Player *bigBlind;
 
-    if (state.game.botIsDealer) {
-        dealer = bot;
-        bigBlind = human;
-
-    } else {
-        dealer = human;
-        bigBlind = bot;
-    }
-    
-    [self.pokerTable newGame:human.holeCards dealer:state.game.botIsDealer];
-    
-    NSString *dealerString = [NSString stringWithFormat:@"Dealer is %@", dealer.name];
-    
-    [self setInfoText:dealerString];
-    
-    //pay blinds
-    NSInteger sb = 1;
-    NSInteger bb = 2;
-    
-    [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:SMALLBLIND amount:sb]];
-    [actions addObject:[PlayerMove moveWithSeat:bigBlind.seat action:BIGBLIND amount:bb]];
-    
-    [self.pokerTable animate:[actions objectEnumerator]];
-    
-    
-//    NSString *anteString = [NSString stringWithFormat:@"%@ pays small blind of 1\n%@ pays big blind of 2.", dealer.name, bigBlind.name];
-//    [self setInfoText:anteString];
-    
-    [self getOpponentLastActions:NONE];
-    
-    if (!state.game.gameHasEnded) {
-        [self displayMoves];
-    }
-    
-    
-//    for (int i =0; i<3; i++) {
-//        PlayerMove *move = [[PlayerMove alloc]init];
-//        move.seatNumber = i;
-//        move.betAmount = i+((i+1)*2);
-//        move.action = BET;
-//        [self.moveQueue addObject:move];
-//    }
-//    NSEnumerator *e = [self.moveQueue objectEnumerator];
-//    [self.pokerTable animate:e];
-}
 
 
 
@@ -322,10 +303,10 @@
 }
 
 - (void)setInfoText:(NSString *)text {
-    
-    if ([text isEqualToString:_FLOP] || [text isEqualToString:_TURN] || [text isEqualToString:_RIVER]) {
-        [self.pokerTable deal:self.currentState.game.communityCards];
-    }
+//    
+//    if ([text isEqualToString:_FLOP] || [text isEqualToString:_TURN] || [text isEqualToString:_RIVER]) {
+//        [self.pokerTable deal:self.currentState.game.communityCards];
+//    }
     
     NSString *one = self.infoTextView.text;
     NSString *new = [NSString stringWithFormat:@"%@\n%@", one, text];
@@ -339,38 +320,33 @@
 - (void)setMoveText:(PlayerMove*)move  {
     
     Player *player = [self.currentState.playerStateDict objectForKey:move.seat];
-    NSString *actionString = [NSString PlayerActionStringFromEnum:move.action];
-    
     PlayerAction action = move.action;
-    switch (move.action) {
-        case SET_DEALER:
-            <#statements#>
-            break;
-            
-        default:
-            break;
-    }
+    NSString *actionString = [NSString PlayerActionStringFromEnum:action];
+    NSString *seat = [move.seat description];
+    NSInteger amount = move.betAmount;
+    
     
     NSString *text;
     
-    if (action == FLOP || action == TURN || action == RIVER) {
-        //[self.pokerTable deal:self.currentState.game.communityCards];
-        
-        text = [NSString stringWithFormat:@"%@ dealt %@", player.name,  actionString];
+    switch (action) {
+        case SET_DEALER:
+            text = [NSString stringWithFormat:@"Dealer is %@", player.name];
+            break;
+        case SMALLBLIND:
+        case BIGBLIND:
+            text = [NSString stringWithFormat:@"%@ pays %@ of %d", player.name, actionString, amount];
+            break;
+        default:
+            break;
     }
-    
-    NSString *one = self.infoTextView.text;
-    NSString *new = [NSString stringWithFormat:@"%@\n%@", one, text];
-    self.infoTextView.text = new;
-    [self.infoTextView scrollRangeToVisible:NSMakeRange(new.length, 0)];
-    //[TextView scrollRangeToVisible:NSMakeRange([TextView.text length], 0)];
+    [self setInfoText:text];
     
 }
 
 - (IBAction)actionButtonPress:(id)sender {
     
-    Player *human = [self.currentState.playerStateDict objectAtIndex:humanSeatNumber];
-    Bot *bot = [self.currentState.playerStateDict objectAtIndex:botSeatNumber];
+    Player *human = [self.currentState.playerStateDict objectForKey:self.humanSeatNumber];
+    Bot *bot = [self.currentState.playerStateDict objectForKey:self.botSeatNumber];
     
     self.betRaiseButton.hidden = true;
     self.checkCallButton.hidden = true;

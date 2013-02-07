@@ -24,7 +24,7 @@
     _lastActionAmount = [[_lastAction objectAtIndex:1] integerValue];
 
     self.name = @"Sartre";
-    self.seat = 0;
+    self.seat = @0;
     
     
     return self;

@@ -30,8 +30,10 @@ typedef enum playerActionTypes
 @property NSNumber *seat;
 @property NSInteger betAmount;
 @property PlayerAction action;
+@property NSArray *cards;
 
 + (id) moveWithSeat:(NSNumber*)seat action:(PlayerAction)action amount:(NSInteger)amount;
++ (id) moveWithCards:(NSArray *)cards seat:(NSNumber*)seat action:(PlayerAction)action amount:(NSInteger)amount;
 @end
 
 

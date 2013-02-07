@@ -16,7 +16,7 @@
 @property (readonly) NSArray *holeCards;
 @property (readonly) NSUInteger stack;
 @property (readonly) NSUInteger currentStageContribution;
-@property NSUInteger seat;
+@property NSNumber *seat;
 
 - (id)initWithAttributes:(NSDictionary *)attributes;
 

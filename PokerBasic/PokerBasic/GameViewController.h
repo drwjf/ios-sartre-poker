@@ -9,11 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "PokerHTTPClient.h"
 #import "PlayerMove.h"
+#import "State.h"
+
 
 @interface GameViewController : UIViewController
 @property (strong, nonatomic) NSString *loginNameText;
 @property (strong, nonatomic) PokerHTTPClient *client;
+@property State *currentState;
 
-- (void)setActionText:(PlayerAction)action seat:(NSNumber*)seat amount:(NSInteger)amount;
+- (void)setMoveText:(PlayerMove*)move;
 
 @end

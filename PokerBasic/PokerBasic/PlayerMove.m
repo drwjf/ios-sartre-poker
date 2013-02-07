@@ -17,6 +17,19 @@
     move.seat = seat;
     move.action = action;
     move.betAmount = amount;
+    move.cards = nil;
+    
+    return move;
+}
+
++ (id) moveWithCards:(NSArray *)cards seat:(NSNumber*)seat action:(PlayerAction)action amount:(NSInteger)amount {
+    
+    PlayerMove *move = [[PlayerMove alloc]init];
+    
+    move.seat = seat;
+    move.action = action;
+    move.betAmount = amount;
+    move.cards = cards;
     
     return move;
 }
@@ -40,7 +53,7 @@
 + (NSString *) PlayerActionStringFromEnum: (NSUInteger) key{
     
     NSDictionary *Moves = [NSDictionary dictionaryWithObjectsAndKeys:
-                           nil, [NSNumber numberWithInteger:NONE],
+                           @"MOVE NONE", [NSNumber numberWithInteger:NONE],
                            @"Check",[NSNumber numberWithInteger:CHECK],
                            @"Call",[NSNumber numberWithInteger:CALL],
                            @"Bet",[NSNumber numberWithInteger:BET],
