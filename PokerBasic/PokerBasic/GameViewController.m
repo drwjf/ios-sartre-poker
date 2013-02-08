@@ -323,13 +323,14 @@
     
     PlayerAction action = [move PlayerActionEnumFromString];
     [actions addObject:[PlayerMove moveWithSeat:human.seat action:action amount:nil]];
-    [self.pokerTable animate:[actions objectEnumerator]];
+ //   [self.pokerTable animate:[actions objectEnumerator]];
     
     self.prevState = self.currentState;
     [self.client playerMove:move success:^(NSDictionary *JSON) {
         NSLog(@"Player move: %@ \n Game State after player move: \n %@", move, JSON);
         self.currentState = [[State alloc]initWithAttributes:JSON];
-        [self playerActed:move];        
+        [self playerActed:move actionArray:actions];
+
     }failure:^{
         NSLog(@"Failure in loadState block from gamecontroller");
     }];
@@ -339,14 +340,20 @@
     [self startNewHand];
 }
 
--(void) playerActed:(NSString *)move {
+-(void) playerActed:(NSString *)move actionArray:(NSMutableArray*)actions {
     
     [self setLabels];
     
     //else game has not ended
     
-    NSMutableArray *actions = [NSMutableArray array];    
+//    NSMutableArray *actions = [NSMutableArray array];    
     [self getOpponentLastActions:[move PlayerActionEnumFromString] actionArray:actions];
+    
+    PlayerMove *moveal;
+    for (moveal in actions) {
+        NSLog(@"%@", [NSString PlayerActionStringFromEnum:moveal.action]);
+    }
+    
     [self.pokerTable animate:[actions objectEnumerator]];
     
     //Game has ended
@@ -397,26 +404,30 @@
     NSString *text;
     
     switch (action) {
-        case SET_DEALER:
-            text = [NSString stringWithFormat:@"Dealer is %@.", player.name];
+        case CHECK:
+        case CALL:
+        case BET:
+        case RAISE:
+            text = [NSString stringWithFormat:@"%@ %@s.", player.name, actionString];
+            break;
+        case FOLD:
+            text = [NSString stringWithFormat:@"%@ %@s.", player.name, actionString];
             break;
         case SMALLBLIND:
         case BIGBLIND:
             text = [NSString stringWithFormat:@"%@ pays %@ of %d.", player.name, actionString, amount];
             break;
         case PREFLOP:
-        case FOLD:
-        case BET:
-        case RAISE:
-        case CALL:
-        case CHECK:
-            text = [NSString stringWithFormat:@"%@ %@s.", player.name, actionString];
-            break;
         case FLOP:
         case TURN:
         case RIVER:
             text = [NSString stringWithFormat:@"%@ deals %@.", player.name, actionString];
+            break;
+        case SET_DEALER:
+            text = [NSString stringWithFormat:@"Dealer is %@.", player.name];
+            break;
         default:
+            text = @"Action not found";
             break;
     }
     [self setInfoText:text];    

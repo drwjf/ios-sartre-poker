@@ -153,11 +153,19 @@ static int distanceOfDealerButtonFromPlayer = 100;
         NSNumber* seat = move.seat;
         NSInteger amount = move.betAmount;
         PlayerAction action = move.action;
-        NSLog(@"Doing animation for %@", [NSString PlayerActionStringFromEnum:action]);
+        NSLog(@"Doing animation for %@ %@", [seat description], [NSString PlayerActionStringFromEnum:action]);
         
         switch (action) {
-            case SET_DEALER:
-                [self setDealer:seat];
+            case CHECK:
+                [self doAnimations];
+                break;
+            case CALL:
+            case BET:
+            case RAISE:
+                [self bet:amount seat:seat];
+                break;
+            case FOLD:
+                [self fold:seat];
                 break;
             case SMALLBLIND:
             case BIGBLIND:
@@ -171,15 +179,11 @@ static int distanceOfDealerButtonFromPlayer = 100;
             case RIVER:
                 [self dealCommCards:action];
                 break;
-            case FOLD:
-                [self fold:seat];
-                break;
-            case RAISE:
-            case BET:
-            case CALL:
-                [self bet:amount seat:seat];
+            case SET_DEALER:
+                [self setDealer:seat];
                 break;
             default:
+                NSLog(@"action not found");
                 break;                
         }
         [self.scene setMoveText:move];
@@ -190,20 +194,26 @@ static int distanceOfDealerButtonFromPlayer = 100;
 }
 
 - (void)dealCommCards:(PlayerAction)action {
-    switch (action) {
-        case FLOP:
-            [self flop];
-            break;
-        case TURN:
-            [self turn];
-            break;
-        case RIVER:
-            [self river];
-            break;
-        default:
-            return;
-    }
-
+    [UIView animateWithDuration:0.8 delay:0 options:nil animations:^{
+        UIImageView *chip;
+        for (chip in self.tableChips) {
+            [chip setCenter:potLocation];
+        }
+    }completion:^(BOOL finished) {
+        switch (action) {
+            case FLOP:
+                [self flop];
+                break;
+            case TURN:
+                [self turn];
+                break;
+            case RIVER:
+                [self river];
+                break;
+            default:
+                return;
+        }
+    }];
 }
 
 - (void)fold:(NSNumber*) seat {
@@ -288,16 +298,18 @@ static int distanceOfDealerButtonFromPlayer = 100;
     CGPoint dealPoint = CGPointMake(screenWidth/2, screenHeight/2);
     dealPoint.x += 2*cardWidth;
     
-    UIImageView *card = [_tableCards objectAtIndex:0];
-    [self.table bringSubviewToFront:card];
+    //UIImageView *card = [_tableCards objectAtIndex:0];
+    UIImageView *card = [self makeCard];
+    //[self.table bringSubviewToFront:card];
     [UIView animateWithDuration:0.8 delay:(0.0) options:
-     UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveEaseIn animations:^{
+     UIViewAnimationCurveEaseIn animations:^{
          card.center = dealPoint;
          NSLog(@"Dealing river card ");
      }completion:^(BOOL done){
-         UIImageView *card = [_tableCards objectAtIndex:0];
+         //UIImageView *card = [_tableCards objectAtIndex:0];
          NSString* cardString = [communityCardValues objectAtIndex:4];
          [card setImage:[self getCardFrontImage:cardString]];
+         [self doAnimations];
      }];
     
 }
@@ -310,13 +322,14 @@ static int distanceOfDealerButtonFromPlayer = 100;
     
     UIImageView *card = [self makeCard];
     [UIView animateWithDuration:0.8 delay:(0.0) options:
-     UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveEaseIn animations:^{
+     UIViewAnimationCurveEaseIn animations:^{
 //         [self.table bringSubviewToFront:card];
          card.center = dealPoint;
          NSLog(@"Dealing turn card ");
      }completion:^(BOOL done){
          NSString* cardString = [communityCardValues objectAtIndex:3];
          [card setImage:[self getCardFrontImage:cardString]];
+         [self doAnimations];
      }];
     
 }
@@ -330,7 +343,7 @@ static int distanceOfDealerButtonFromPlayer = 100;
         UIImageView *card = [self makeCard];
         [flopCards addObject:card];
         [UIView animateWithDuration:0.8 delay:(0.2*i) options:
-         UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveEaseIn animations:^{
+         UIViewAnimationCurveEaseIn animations:^{
              card.center = dealPoint;
              NSLog(@"Dealing flop card %d: ", i+1);
          }completion:^(BOOL done){
@@ -341,6 +354,7 @@ static int distanceOfDealerButtonFromPlayer = 100;
                      [card setImage:[self getCardFrontImage:cardString]];
                  }
              }
+             [self doAnimations];
          }];        
         dealPoint.x -= cardWidth;
     }
