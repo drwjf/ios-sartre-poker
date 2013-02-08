@@ -45,6 +45,10 @@
                            [NSNumber numberWithInteger:BET], @"Bet",
                            [NSNumber numberWithInteger:RAISE], @"Raise",
                            [NSNumber numberWithInteger:FOLD], @"Fold",
+                           [NSNumber numberWithInteger:PREFLOP], @"PREFLOP",
+                           [NSNumber numberWithInteger:FLOP], @"FLOP",
+                           [NSNumber numberWithInteger:TURN], @"TURN",
+                           [NSNumber numberWithInteger:RIVER], @"RIVER",
                            nil
                            ];
     return (PlayerAction)[[Moves objectForKey:self] intValue];
@@ -61,7 +65,7 @@
                            @"Fold",[NSNumber numberWithInteger:FOLD],
                            @"Small Blind",[NSNumber numberWithInteger:SMALLBLIND],
                            @"Big Blind",[NSNumber numberWithInteger:BIGBLIND],
-                           @"Deal",[NSNumber numberWithInteger:DEAL],
+                           @"Deal",[NSNumber numberWithInteger:PREFLOP],
                            @"Flop",[NSNumber numberWithInteger:FLOP],
                            @"Turn",[NSNumber numberWithInteger:TURN],
                            @"River",[NSNumber numberWithInteger:RIVER],

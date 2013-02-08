@@ -19,7 +19,7 @@ typedef enum playerActionTypes
     FOLD,
     SMALLBLIND,
     BIGBLIND,
-    DEAL,
+    PREFLOP,     //DEAL,
     FLOP,
     TURN,
     RIVER,

@@ -7,13 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PlayerMove.h"
 
 static NSString * const _BOT = @"BOT";
 static NSString * const _PLAYER = @"PLAYER";
-static NSString * const _PREFLOP = @"PREFLOP";
-static NSString * const _FLOP = @"FLOP";
-static NSString * const _TURN = @"TURN";
-static NSString * const _RIVER = @"RIVER";
 
 @interface Game : NSObject
 
@@ -27,6 +24,7 @@ static NSString * const _RIVER = @"RIVER";
 @property (readonly) Boolean botIsDealer;
 @property (readonly) NSString *gameType;
 @property (readonly) NSString *gameStage;
+@property (readonly) PlayerAction gameStageEnum;
 @property (readonly) Boolean gameHasEnded;
 @property (readonly) NSArray *communityCards;
 @property (readonly) NSUInteger pot;

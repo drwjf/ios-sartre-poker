@@ -19,6 +19,7 @@
     _botIsDealer = [[attributes valueForKeyPath:@"Dealer"] isEqualToString:_BOT] ? true : false;
     _gameType = [attributes valueForKeyPath:@"GameType"];
     _gameStage = [attributes valueForKeyPath:@"GameStage"];
+    _gameStageEnum = [_gameStage PlayerActionEnumFromString];
 //  _gameHasEnded = (Boolean)[attributes valueForKeyPath:@"GameHasEnded"];
     _gameHasEnded = [[attributes valueForKeyPath:@"GameHasEnded"] boolValue]; //test this for when satre folds right at the start
     _communityCards = [attributes valueForKeyPath:@"CommunityCards"];
@@ -36,8 +37,8 @@
 - (NSString*) toString {
     NSString *state;
     
-    state = [NSString stringWithFormat:@"Game State \n Game has ended: %@ \n Bot is Dealer: %@ \n Game Stage is : %@ \n Community Cards are : %@ \n",
-             self.gameHasEnded ? @"YES" : @"NO", self.botIsDealer ? @"YES" : @"NO", self.gameStage, self.communityCards ];
+    state = [NSString stringWithFormat:@"Game State \n Game has ended: %@ \n Bot is Dealer: %@ \n Game Stage is : %@, Enum: %d \n Community Cards are : %@ \n",
+             self.gameHasEnded ? @"YES" : @"NO", self.botIsDealer ? @"YES" : @"NO", self.gameStage, self.gameStageEnum, self.communityCards ];
     
     return state;
 }

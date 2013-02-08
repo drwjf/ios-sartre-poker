@@ -145,7 +145,7 @@
     [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:SET_DEALER amount:nil]];
     [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:SMALLBLIND amount:sb]];
     [actions addObject:[PlayerMove moveWithSeat:bigBlind.seat action:BIGBLIND amount:bb]];
-    [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:DEAL amount:nil]];
+    [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:PREFLOP amount:nil]];
     [self getOpponentLastActions:NONE actionArray:actions];
     
     [self.pokerTable animate:[actions objectEnumerator]];
@@ -181,34 +181,35 @@
     //3 way condition. Game has ended, bot is dealer, or human is dealer.
     if (state.game.gameHasEnded) {
         if (bot.lastActionEnum == CALL) {
-            [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
+            [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:bot.lastActionAmount]];
         }
         //[actions addObject:state.game.gameStage]; !!!!!!!!!!! need to do something here
+        NSLog(state.game.gameStage); //starting to do something
         self.nextGameButton.hidden = false;
         
         //return;
     }
     else if (state.game.botIsDealer) //bot goes first preflop, human goes first postflop
     {
-        if ([state.game.gameStage isEqualToString:_PREFLOP]) {
-            [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
+        if (state.game.gameStageEnum == PREFLOP) {
+            [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:bot.lastActionAmount]];
         }
-        else if ([self.prevState.game.gameStage isEqualToString:_PREFLOP] && [state.game.gameStage isEqualToString:_FLOP]) {
+        else if (self.prevState.game.gameStageEnum == PREFLOP && state.game.gameStageEnum == FLOP) {
             if (humanLastAction == RAISE || humanLastAction == BET) {
-                [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
+                [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:bot.lastActionAmount]];
             }
-            //[actions addObject:state.game.gameStage];!!!!!!!!!!! need to do something here
+            [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:FLOP amount:nil]];
         }
         else if (stateChanged) {
             if ((humanLastAction == CALL || humanLastAction == CHECK) && bot.lastActionEnum != CHECK) {
-                [actions addObject:state.game.gameStage];
+                [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:state.game.gameStageEnum amount:nil]]; //doing it
             } else {
-                [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
-                //[actions addObject:state.game.gameStage]; !!!!!!!!!!! need to do something here
+                [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:bot.lastActionAmount]];
+                [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:state.game.gameStageEnum amount:nil]]; //doing it
             }
         }
         else { //else normal hand postflop with no stateChange
-            [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
+            [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:bot.lastActionAmount]];
         }
         
         //return;
@@ -219,7 +220,7 @@
         if (!self.prevState || humanLastAction == NONE) { //ie player makes very first move
             return ; //don't need to show bots last action. ie "Last Action: Big Blind""
         }
-        else if ([self.prevState.game.gameStage isEqualToString:_PREFLOP] && [state.game.gameStage isEqualToString:_FLOP]) {
+        else if (self.prevState.game.gameStageEnum == PREFLOP && state.game.gameStageEnum == FLOP) {
             if (humanLastAction == BET || humanLastAction == RAISE) {
                 //[actions addObject:[NSString stringWithFormat:@"22 %@ %@s", bot.name, @"Calls"]];
                 [actions addObject:[PlayerMove moveWithSeat:bot.seat action:CALL amount:2]]; // !!!!!!!!!!!!!!!!!amount
@@ -228,6 +229,7 @@
                 [actions addObject:[PlayerMove moveWithSeat:bot.seat action:CHECK amount:nil]];
             }
             //[actions addObject:state.game.gameStage]; !!!!!!!!!!! need to do something here
+            [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:FLOP amount:nil]];
         }
         else if (stateChanged) {
             if (humanLastAction == BET || humanLastAction == RAISE) {
@@ -235,11 +237,12 @@
                 [actions addObject:[PlayerMove moveWithSeat:bot.seat action:CALL amount:4]];
             }
             //[actions addObject:state.game.gameStage]; !!!!!!!!!!! need to do something here
+            [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:state.game.gameStageEnum amount:nil]]; //doing it
         }
         
         //then always show bots last move (unless player makes very first move)
         //[actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
-        [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastAction amount:bot.lastActionAmount]];
+        [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:bot.lastActionAmount]];
         
         //return;
     }
@@ -342,8 +345,7 @@
     
     //else game has not ended
     
-    NSMutableArray *actions = [NSMutableArray array];
-    
+    NSMutableArray *actions = [NSMutableArray array];    
     [self getOpponentLastActions:[move PlayerActionEnumFromString] actionArray:actions];
     [self.pokerTable animate:[actions objectEnumerator]];
     
@@ -402,7 +404,7 @@
         case BIGBLIND:
             text = [NSString stringWithFormat:@"%@ pays %@ of %d.", player.name, actionString, amount];
             break;
-        case DEAL:
+        case PREFLOP:
         case FOLD:
         case BET:
         case RAISE:
@@ -410,6 +412,10 @@
         case CHECK:
             text = [NSString stringWithFormat:@"%@ %@s.", player.name, actionString];
             break;
+        case FLOP:
+        case TURN:
+        case RIVER:
+            text = [NSString stringWithFormat:@"%@ deals %@.", player.name, actionString];
         default:
             break;
     }
