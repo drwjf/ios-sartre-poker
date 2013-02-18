@@ -196,7 +196,7 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
         [self.scene setMoveText:move];
         
     } else {
-        NSLog(@"BUTTONS!!!");
+        [self.scene animationsDone];
     }
 }
 
@@ -460,6 +460,7 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
     if (!chipImage) {
         chipImage = [UIImage imageNamed:@"blackChip.png"];
     }
+    
     UIImageView *chipView = [[UIImageView alloc]initWithImage:chipImage];
     [self.tableChips addObject:chipView];
     
@@ -477,6 +478,9 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
     }completion:^(BOOL done){
         bettor.betAmountLabel.text = [NSString stringWithFormat:@"%d",amount];
         
+//        if ([self.scene.potLabel.text isEqualToString:@"3"]) {
+//            self.scene.potLabel.text = @"0";
+//        }
         NSInteger pot = [self.scene.potLabel.text integerValue] + amount;
         self.scene.potLabel.text = [NSString stringWithFormat:@"%d",pot];
         

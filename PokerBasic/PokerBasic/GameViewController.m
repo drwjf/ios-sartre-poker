@@ -78,7 +78,7 @@ static NSInteger numPlayers = 2;
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
     self.infoTextView.editable = false;
-    self.potLabel.text = 0;
+    self.potLabel.text = nil;
     
     //logout buton replaced with an icon 18.02.2013
 //    NSString *logoutButtonText = [NSString stringWithFormat:@"Logout %@", self.loginNameText];
@@ -223,7 +223,11 @@ static NSInteger numPlayers = 2;
     else if (state.game.botIsDealer) //bot goes first preflop, human goes first postflop
     {
         if (state.game.gameStageEnum == PREFLOP) {
-            [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:bot.lastActionAmount]];
+            NSInteger amount = bot.lastActionAmount;
+//            if (humanLastAction == NONE && bot.lastActionEnum == RAISE) {
+//                amount += 1;
+//            }
+            [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:amount]];
         }
         else if (self.prevState.game.gameStageEnum == PREFLOP && state.game.gameStageEnum == FLOP) {
             if (humanLastAction == RAISE || humanLastAction == BET) {
@@ -289,7 +293,6 @@ static NSInteger numPlayers = 2;
     [self updateLabels];
     State *state = self.currentState;
     Human* human = [state.playerStateDict objectForKey:self.humanSeatNumber];
-//    Player *bot = [state.seats objectAtIndex:botSeatNumber];
     
     int arrayLength = [human.validMoves count];
     if (arrayLength == 2) {
@@ -319,8 +322,6 @@ static NSInteger numPlayers = 2;
     self.foldButton.hidden = true;
 
     NSString *move = [sender currentTitle];
-     
-    PlayerAction action = [move PlayerActionEnumFromString];
     
     [self.client playerMove:move success:^(NSDictionary *JSON) {
         NSLog(@"Player move: %@ \n Game State after player move: \n %@", move, JSON);
@@ -330,7 +331,12 @@ static NSInteger numPlayers = 2;
         NSMutableArray *actions = [NSMutableArray array]; //capactiy???
         [self getLastActions:[move PlayerActionEnumFromString] actionArray:actions];
         [self.pokerTable animate:[actions objectEnumerator]];
-        [self playerActed:move actionArray:actions];
+        
+        //debugging
+        PlayerMove *moveal;
+        for (moveal in actions) {
+            NSLog(@"So we get here ?  %@", [NSString PlayerActionStringFromEnum:moveal.action]);
+        }
 
     }failure:^{
         NSLog(@"Failure in loadState block from gamecontroller");
@@ -343,20 +349,8 @@ static NSInteger numPlayers = 2;
     [self startNewHand];
 }
 
--(void) playerActed:(NSString *)move actionArray:(NSMutableArray*)actions {
-    
-    //setLabels being moved to animations. 18.02.2013
-    //[self setLabels];
-    
-    //else game has not ended    
-//    NSMutableArray *actions = [NSMutableArray array];
-    
-    
-    
-    PlayerMove *moveal;
-    for (moveal in actions) {
-        NSLog(@"%@", [NSString PlayerActionStringFromEnum:moveal.action]);
-    }
+//-(void) playerActed:(NSString *)move actionArray:(NSMutableArray*)actions {
+-(void) animationsDone {
     
     //Game has ended
     if (self.currentState.game.gameHasEnded) {
