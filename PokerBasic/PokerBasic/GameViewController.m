@@ -10,8 +10,6 @@
 
 #import "PokerTableView.h"
 
-
-
 @interface GameViewController ()
 @property (weak, nonatomic) IBOutlet UITextView *infoTextView;
 @property (weak, nonatomic) IBOutlet UIButton *logoutButton;
@@ -21,16 +19,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *gameStageLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel *botNameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *botStackLabel;
-@property (weak, nonatomic) IBOutlet UILabel *botBetAmountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *botHoleCardsLabel;
 
-@property (weak, nonatomic) IBOutlet UILabel *potLabel;
 @property (weak, nonatomic) IBOutlet UILabel *commCardsLabel;
 
-@property (weak, nonatomic) IBOutlet UILabel *playerBetAmountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *playerHoleCardsLabel;
-@property (weak, nonatomic) IBOutlet UILabel *playerStackLabel;
 
 @property (weak, nonatomic) IBOutlet UIButton *checkCallButton;
 @property (weak, nonatomic) IBOutlet UIButton *betRaiseButton;
@@ -46,20 +39,15 @@
 @property PokerTableView *pokerTable;
 @property (weak, nonatomic) IBOutlet UIImageView *tableImage;
 
-//@property NSMutableArray *moveQueue;
-
-//@property NSArray *seats;
-//state.seats array //bot is seat 0, player is seat 1.
-//gonna try use botIsDealer to determine dealer. if botIsDealer is true, == 1, seat 0 is dealer. need reverse values.
-
-
 - (IBAction)actionButtonPress:(id)sender;
 - (IBAction)nextGameButtonPress:(id)sender;
 
 @end
 
 
+
 @implementation GameViewController
+static NSInteger numPlayers = 2;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -76,8 +64,7 @@
     [self.client loadInitialState:^(NSDictionary *JSON) {
         self.currentState = [[State alloc]initWithAttributes:JSON];
         NSLog(@"Initial state: \n %@", JSON);
-        [self newGame];
-        
+        [self newGame];        
     }failure:^{
         NSLog(@"Failure in loadState block from gamecontroller");
     }];
@@ -91,9 +78,14 @@
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
     self.infoTextView.editable = false;
+    self.potLabel.text = 0;
     
-    NSString *logoutButtonText = [NSString stringWithFormat:@"Logout %@", self.loginNameText];
-    [self.logoutButton setTitle:logoutButtonText forState:UIControlStateNormal];
+    //logout buton replaced with an icon 18.02.2013
+//    NSString *logoutButtonText = [NSString stringWithFormat:@"Logout %@", self.loginNameText];
+//    [self.logoutButton setTitle:logoutButtonText forState:UIControlStateNormal];
+    
+    self.botBetAmountLabel.text = @"";
+    self.humanBetAmountLabel.text = nil;
     
     self.infoTextView.text = [self.client description];
     //[self.client showState];
@@ -122,7 +114,7 @@
     self.checkCallButton.hidden = true;
     self.foldButton.hidden = true;
     
-    [self setLabels];
+    //[self setLabels]; moved to animations 18.02.2013 SG
     
     Player *bigBlind;
     Player *dealer;
@@ -146,37 +138,54 @@
     [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:SMALLBLIND amount:sb]];
     [actions addObject:[PlayerMove moveWithSeat:bigBlind.seat action:BIGBLIND amount:bb]];
     [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:PREFLOP amount:nil]];
-    [self getOpponentLastActions:NONE actionArray:actions];
+    [self getLastActions:NONE actionArray:actions];
     
     [self.pokerTable animate:[actions objectEnumerator]];
-    
-//    NSLog(@"getting last actions");
-//    [self getOpponentLastActions:NONE];
-//    NSLog(@"got last actions");
     
     if (!state.game.gameHasEnded) {
         [self displayMoves];
     }
-    
-    
-    //    for (int i =0; i<3; i++) {
-    //        PlayerMove *move = [[PlayerMove alloc]init];
-    //        move.seatNumber = i;
-    //        move.betAmount = i+((i+1)*2);
-    //        move.action = BET;
-    //        [self.moveQueue addObject:move];
-    //    }
-    //    NSEnumerator *e = [self.moveQueue objectEnumerator];
-    //    [self.pokerTable animate:e];
 }
 
--(void) getOpponentLastActions:(PlayerAction)humanLastAction actionArray:(NSMutableArray*)actions {
+-(void) getLastActions:(PlayerAction)humanLastAction actionArray:(NSMutableArray*)actions {
     
     State *state = self.currentState;
+    Human *human = [state.playerStateDict objectForKey:self.humanSeatNumber];
     Bot *bot = [state.playerStateDict objectForKey:self.botSeatNumber];
     Player *dealer = [state.playerStateDict objectForKey:self.dealerSeatNumber];
     
     Boolean stateChanged = ![self.currentState.game.gameStage isEqualToString:self.prevState.game.gameStage];
+    
+    //// Human move first
+    if (humanLastAction == FOLD) {
+        [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:nil]];
+    } else if (!stateChanged) {
+        [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:human.currentStageContribution]];
+    } else {//stage change
+        if (humanLastAction == CALL) {
+            NSInteger amount = [[self.prevState.playerStateDict objectForKey:self.botSeatNumber] currentStageContribution];
+            [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:amount]];
+        }else if (humanLastAction == CHECK) {
+            [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:nil]];
+        } else if (humanLastAction == BET) {
+            NSInteger amount = [[self.prevState.playerStateDict objectForKey:self.humanSeatNumber] currentStageContribution];
+            if (state.game.gameStageEnum == PREFLOP || state.game.gameStageEnum == FLOP) {
+                amount = amount + 2;
+            } else {
+                amount = amount + 4;
+            }
+            [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:amount]];
+        } else if (humanLastAction == RAISE) {
+            NSInteger amount = [[self.prevState.playerStateDict objectForKey:self.botSeatNumber] currentStageContribution];
+            if (state.game.gameStageEnum == PREFLOP || state.game.gameStageEnum == FLOP) {
+                amount = amount + 2;
+            } else {
+                amount = amount + 4;
+            }
+            [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:amount]];
+        }
+    }
+    ////
     
     //3 way condition. Game has ended, bot is dealer, or human is dealer.
     if (state.game.gameHasEnded) {
@@ -185,7 +194,7 @@
         }
         //[actions addObject:state.game.gameStage]; !!!!!!!!!!! need to do something here
         NSLog(state.game.gameStage); //starting to do something
-        self.nextGameButton.hidden = false;
+        self.nextGameButton.hidden = false; //need this to be set during animations.
         
         //return;
     }
@@ -247,12 +256,11 @@
         //return;
     }
     
-//    for (id action in actions) {
-//        [self setInfoText:action];
-//    }
+
     return ;
 }
 
+/*
 -(void)setLabels {
     State *state = self.currentState;
     Player *human = [state.playerStateDict objectForKey:self.humanSeatNumber];
@@ -270,25 +278,25 @@
     
     self.gameStageLabel.text = state.game.gameStage;
     
-//    NSString *commCards = [[[state.game.communityCards description] componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
-//    self.commCardsLabel.text = commCards;
-    
     self.botBetAmountLabel.text = [NSString stringWithFormat:@"%d", bot.currentStageContribution];
-    self.playerBetAmountLabel.text = [NSString stringWithFormat:@"%d", human.currentStageContribution];
+    self.humanBetAmountLabel.text = [NSString stringWithFormat:@"%d", human.currentStageContribution];
     
     self.botStackLabel.text = [NSString stringWithFormat:@"%d", bot.stack];
-    self.playerStackLabel.text = [NSString stringWithFormat:@"%d", human.stack];
+    self.humanStackLabel.text = [NSString stringWithFormat:@"%d", human.stack];
     
     if (state.game.gameHasEnded) {
         self.potLabel.text = [NSString stringWithFormat:@"%d", state.game.pot];
     } else {
     self.potLabel.text = [NSString stringWithFormat:@"%d", state.game.pot + bot.currentStageContribution + human.currentStageContribution];
     }
-    
+ 
     //deal cards
     self.botHoleCardsLabel.text = [bot.holeCards description];
     self.playerHoleCardsLabel.text = [human.holeCards description];
 }
+*/
+
+//TODO put buttons in an array and for loop through possible moves, setting text and making buttons visible as looping through.
 
 -(void)displayMoves {
     State *state = self.currentState;
@@ -302,6 +310,11 @@
         self.betRaiseButton.hidden = false;
         self.checkCallButton.hidden = false;
         self.foldButton.hidden = false;
+    } else if (arrayLength == 1) {
+        [self.checkCallButton setTitle:[human.validMoves objectAtIndex:0] forState:UIControlStateNormal];
+        self.betRaiseButton.hidden = true;
+        self.checkCallButton.hidden = false;
+        self.foldButton.hidden = false;
     }
     else
     {
@@ -311,24 +324,24 @@
 
 - (IBAction)actionButtonPress:(id)sender {
     if (![sender isKindOfClass:[UIButton class]])
-        return;    
-    Player *human = [self.currentState.playerStateDict objectForKey:self.humanSeatNumber];
-    NSString *move = [sender currentTitle];  
+        return;
     
     self.betRaiseButton.hidden = true;
     self.checkCallButton.hidden = true;
     self.foldButton.hidden = true;
-    
-    NSMutableArray *actions = [NSMutableArray array]; //capactiy???
-    
+
+    NSString *move = [sender currentTitle];
+     
     PlayerAction action = [move PlayerActionEnumFromString];
-    [actions addObject:[PlayerMove moveWithSeat:human.seat action:action amount:nil]];
- //   [self.pokerTable animate:[actions objectEnumerator]];
     
-    self.prevState = self.currentState;
     [self.client playerMove:move success:^(NSDictionary *JSON) {
         NSLog(@"Player move: %@ \n Game State after player move: \n %@", move, JSON);
+        self.prevState = self.currentState;
         self.currentState = [[State alloc]initWithAttributes:JSON];
+        
+        NSMutableArray *actions = [NSMutableArray array]; //capactiy???
+        [self getLastActions:[move PlayerActionEnumFromString] actionArray:actions];
+        [self.pokerTable animate:[actions objectEnumerator]];
         [self playerActed:move actionArray:actions];
 
     }failure:^{
@@ -342,19 +355,18 @@
 
 -(void) playerActed:(NSString *)move actionArray:(NSMutableArray*)actions {
     
-    [self setLabels];
+    //setLabels being moved to animations. 18.02.2013
+    //[self setLabels];
     
-    //else game has not ended
+    //else game has not ended    
+//    NSMutableArray *actions = [NSMutableArray array];
     
-//    NSMutableArray *actions = [NSMutableArray array];    
-    [self getOpponentLastActions:[move PlayerActionEnumFromString] actionArray:actions];
+    
     
     PlayerMove *moveal;
     for (moveal in actions) {
         NSLog(@"%@", [NSString PlayerActionStringFromEnum:moveal.action]);
     }
-    
-    [self.pokerTable animate:[actions objectEnumerator]];
     
     //Game has ended
     if (self.currentState.game.gameHasEnded) {

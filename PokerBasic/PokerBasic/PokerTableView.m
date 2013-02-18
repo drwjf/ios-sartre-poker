@@ -17,33 +17,31 @@
 //@property int holeCardTwoIndex;
 @property UIImageView *card1; //added 6.2.2013 - needs to be implemented
 @property UIImageView *card2;
-
+@property UILabel *stackLabel;
+@property UILabel *betAmountLabel;
+@property Player *playerState; //reference unnecessary????
 @end
 @implementation playerInfo
 @end
 
+
+
+
+
 @interface PokerTableView ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *table;
-
-
-
 @property NSMutableArray *tableChips;
 @property NSMutableArray *tableCards;
-//@property playerInfo *human;
-//@property playerInfo *bot;
-//@property NSNumber *dealerSeat;
-@property NSDictionary *playerInfoDict; //bot is seat 0, player is seat 1.  //playerinfo seat dict with seat as key.
-
+@property NSDictionary *playerInfoDict; //bot is seat 0, player is seat 1.
 @property NSEnumerator *animationEnumerator;
 @property GameViewController *scene;
 
 //Game state
-@property NSInteger gameStage;
-//@property NSInteger stageMoveCount;
-@property Boolean botIsDealer;
+//@property NSInteger gameStage;
 @property NSNumber *humanSeatNumber;
 @property NSNumber *botSeatNumber;
+@property NSNumber *dealerSeat;
 
 @property UIImageView *button;
 
@@ -61,11 +59,13 @@ static UIImage *chipImage;
 
 static CGPoint deckLocation;
 static CGPoint potLocation;
+static CGPoint communityCardsCentre;
+
 static CGFloat screenWidth;
 static CGFloat screenHeight;
 
-static int cardWidth = 35;
-static int cardHeight = 35;
+static int cardWidth = 42;
+static int cardHeight = 42;
 
 static int distanceBetweenCards = 30;
 static int edgeOffset = 25;
@@ -82,9 +82,10 @@ static int distanceOfDealerButtonFromPlayer = 100;
         NSLog(@"Init table controller with table");
         screenWidth = self.table.bounds.size.width;
         screenHeight = self.table.bounds.size.height;
+        communityCardsCentre = CGPointMake(screenWidth/2 - 20, screenHeight/2);
         
         deckLocation  = CGPointMake(25, screenHeight/2);
-        potLocation  = CGPointMake(screenWidth-50, screenHeight/2);
+        potLocation  = CGPointMake(screenWidth-100, screenHeight/2);
         
         self.botSeatNumber = @0;
         self.humanSeatNumber = @1;
@@ -92,14 +93,20 @@ static int distanceOfDealerButtonFromPlayer = 100;
         playerInfo *human;
         human = [[playerInfo alloc] init];
         human.centre = CGPointMake(screenWidth/2, screenHeight - edgeOffset); //height = 300 not 320 (when status bar is showing)
-        human.chipPoint = CGPointMake(human.centre.x +50, human.centre.y-50);
+        human.chipPoint = CGPointMake(human.centre.x - 15, human.centre.y-50);
         human.seat = self.humanSeatNumber;
+        human.betAmountLabel = scene.humanBetAmountLabel;
+        human.stackLabel = scene.humanStackLabel;
+        human.playerState = [scene.currentState.playerStateDict objectForKey:human.seat];
         
         playerInfo *bot;
         bot = [[playerInfo alloc] init];
         bot.centre = CGPointMake(screenWidth/2, 0 + edgeOffset);
-        bot.chipPoint = CGPointMake(bot.centre.x +50, bot.centre.y+50);
+        bot.chipPoint = CGPointMake(bot.centre.x + 15, bot.centre.y+50);
         bot.seat = self.botSeatNumber;
+        bot.betAmountLabel = scene.botBetAmountLabel;
+        bot.stackLabel = scene.botStackLabel;
+        bot.playerState = [scene.currentState.playerStateDict objectForKey:bot.seat];
         
         self.playerInfoDict = [NSDictionary dictionaryWithObjectsAndKeys: bot, bot.seat, human, human.seat, nil];
         
@@ -194,12 +201,19 @@ static int distanceOfDealerButtonFromPlayer = 100;
 }
 
 - (void)dealCommCards:(PlayerAction)action {
+    [UIView animateWithDuration:0.3 delay:1.0 options:nil animations:^{
+        self.scene.botBetAmountLabel.text = nil;
+        self.scene.humanBetAmountLabel.text = nil;
+    } completion:nil];
+     
     [UIView animateWithDuration:0.8 delay:0 options:nil animations:^{
         UIImageView *chip;
         for (chip in self.tableChips) {
             [chip setCenter:potLocation];
         }
     }completion:^(BOOL finished) {
+        
+        [self clearLabels];
         switch (action) {
             case FLOP:
                 [self flop];
@@ -214,6 +228,14 @@ static int distanceOfDealerButtonFromPlayer = 100;
                 return;
         }
     }];
+}
+
+- (void)clearLabels {
+    playerInfo *player;
+    for (NSString *key in self.playerInfoDict) {
+        player = [self.playerInfoDict objectForKey:key];
+        player.betAmountLabel.text = @"";
+    }
 }
 
 - (void)fold:(NSNumber*) seat {
@@ -241,9 +263,12 @@ static int distanceOfDealerButtonFromPlayer = 100;
     
 }
 
+//clears board for a new game and moves the dealer chip to the dealer.
 - (void)setDealer:(NSNumber*) seat {
     
+    self.dealerSeat = seat;
     playerInfo* dealer = [self.playerInfoDict objectForKey:seat];
+    
     CGPoint dealerCenter = dealer.centre;    
     CGPoint buttonLocation = CGPointMake(dealerCenter.x - distanceOfDealerButtonFromPlayer, dealerCenter.y);
     [UIView animateWithDuration:0.3 delay:0  options:UIViewAnimationOptionCurveEaseInOut animations:^{
@@ -295,7 +320,7 @@ static int distanceOfDealerButtonFromPlayer = 100;
 - (IBAction)river {
     
     NSArray *communityCardValues = self.scene.currentState.game.communityCards;
-    CGPoint dealPoint = CGPointMake(screenWidth/2, screenHeight/2);
+    CGPoint dealPoint = communityCardsCentre;
     dealPoint.x += 2*cardWidth;
     
     //UIImageView *card = [_tableCards objectAtIndex:0];
@@ -317,7 +342,7 @@ static int distanceOfDealerButtonFromPlayer = 100;
 - (IBAction)turn {
     NSArray *communityCardValues = self.scene.currentState.game.communityCards;
     
-    CGPoint dealPoint = CGPointMake(screenWidth/2, screenHeight/2);
+    CGPoint dealPoint = communityCardsCentre;
     dealPoint.x += cardWidth;
     
     UIImageView *card = [self makeCard];
@@ -338,7 +363,7 @@ static int distanceOfDealerButtonFromPlayer = 100;
     NSArray *flopCardValues = self.scene.currentState.game.communityCards;
     NSMutableArray *flopCards = [NSMutableArray arrayWithCapacity:3];
     
-    CGPoint dealPoint = CGPointMake(screenWidth/2, screenHeight/2);
+    CGPoint dealPoint = communityCardsCentre;
     for (int i = 0; i < 3; i++) {
         UIImageView *card = [self makeCard];
         [flopCards addObject:card];
@@ -360,16 +385,9 @@ static int distanceOfDealerButtonFromPlayer = 100;
     }
 }
 
+//animates hole cards being dealt. Once they are dealt, animates human players hole cards being revealed
 - (void)holeCards{
-    
-    NSNumber *dealerseat;
-    if (self.botIsDealer) {
-        dealerseat = self.botSeatNumber;
-    } else {
-        dealerseat = self.humanSeatNumber;
-        
-    }
-    NSInteger dealeeSeatInt = [dealerseat integerValue];
+    NSInteger dealeeSeatInt = [self.dealerSeat integerValue];
     
     int xoffset = -(distanceBetweenCards / 2);
     int count = 0;
@@ -400,10 +418,10 @@ static int distanceOfDealerButtonFromPlayer = 100;
                  NSLog(@"count: %d",count);
                  if (count==4) {
                      
-                     Player *player = [self.scene.currentState.playerStateDict objectForKey:@1];
+                     Player *player = [self.scene.currentState.playerStateDict objectForKey:self.humanSeatNumber];
                      NSArray *holeCards = player.holeCards;
                      
-                     playerInfo *human = [self.playerInfoDict objectForKey: @1];
+                     playerInfo *human = [self.playerInfoDict objectForKey: self.humanSeatNumber];
                      
                      NSString* humanHoleCard1 = [holeCards objectAtIndex:0];
                      NSString* humanHoleCard2 = [holeCards objectAtIndex:1];
@@ -413,12 +431,10 @@ static int distanceOfDealerButtonFromPlayer = 100;
                      
                      [UIView transitionWithView:cardView1 duration:0.4f options:UIViewAnimationOptionTransitionFlipFromLeft animations:^{
                          [cardView1 setImage:[self getCardFrontImage:humanHoleCard1]];
-                         //[_tableCards setObject:cardView1 atIndexedSubscript:humancardIndex.card1];
                      } completion:nil];
                      
                      [UIView transitionWithView:cardView2 duration:0.4f options:UIViewAnimationOptionTransitionFlipFromLeft animations:^{
                          [cardView2 setImage:[self getCardFrontImage:humanHoleCard2]];
-                         //[_tableCards setObject:cardView2 atIndexedSubscript:humancardIndex.card2];
                      } completion:^(BOOL done) {
                          NSLog(@"Card images set");
                          [self doAnimations];
@@ -449,6 +465,11 @@ static int distanceOfDealerButtonFromPlayer = 100;
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         [chipView setCenter:bettor.chipPoint];
     }completion:^(BOOL done){
+        bettor.betAmountLabel.text = [NSString stringWithFormat:@"%d",amount];
+        
+        NSInteger pot = [self.scene.potLabel.text integerValue] + amount;
+        self.scene.potLabel.text = [NSString stringWithFormat:@"%d",pot];
+        
        [self doAnimations];
     }];
     

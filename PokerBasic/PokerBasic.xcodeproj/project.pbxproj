@@ -81,6 +81,8 @@
 		562C9D3B16BB6180004C15BF /* PokerTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 562C9D3A16BB6180004C15BF /* PokerTableView.m */; };
 		562C9D3E16BB6474004C15BF /* Bot.m in Sources */ = {isa = PBXBuildFile; fileRef = 562C9D3D16BB6474004C15BF /* Bot.m */; };
 		56629B8816BCCB3B0064D687 /* infoPane.png in Resources */ = {isa = PBXBuildFile; fileRef = 56629B8716BCCB3B0064D687 /* infoPane.png */; };
+		56AA894716D1B36200B181B5 /* fileclose.png in Resources */ = {isa = PBXBuildFile; fileRef = 56AA894616D1B36200B181B5 /* fileclose.png */; };
+		56AA894916D1B5B300B181B5 /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = 56AA894816D1B5B300B181B5 /* close.png */; };
 		56C2868416B226DA00DEEA09 /* Game.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C2868316B226DA00DEEA09 /* Game.m */; };
 		56C2868C16B22DCC00DEEA09 /* Human.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C2868B16B22DCC00DEEA09 /* Human.m */; };
 		56D2E94616B0DF01007F3413 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D2E94516B0DF01007F3413 /* GameViewController.m */; };
@@ -175,6 +177,8 @@
 		562C9D3C16BB646C004C15BF /* Bot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bot.h; sourceTree = "<group>"; };
 		562C9D3D16BB6474004C15BF /* Bot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bot.m; sourceTree = "<group>"; };
 		56629B8716BCCB3B0064D687 /* infoPane.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = infoPane.png; sourceTree = "<group>"; };
+		56AA894616D1B36200B181B5 /* fileclose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fileclose.png; sourceTree = "<group>"; };
+		56AA894816D1B5B300B181B5 /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
 		56C2868216B226DA00DEEA09 /* Game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Game.h; sourceTree = "<group>"; };
 		56C2868316B226DA00DEEA09 /* Game.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Game.m; sourceTree = "<group>"; };
 		56C2868B16B22DCC00DEEA09 /* Human.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Human.m; sourceTree = "<group>"; };
@@ -240,6 +244,8 @@
 				56065F1116A3701100C4BA83 /* PokerBasicAppDelegate.h */,
 				56065F1216A3701100C4BA83 /* PokerBasicAppDelegate.m */,
 				56065F1A16A3701100C4BA83 /* MainStoryboard.storyboard */,
+				56AA894816D1B5B300B181B5 /* close.png */,
+				56AA894616D1B36200B181B5 /* fileclose.png */,
 				56065F1D16A3701100C4BA83 /* LoginViewController.h */,
 				56065F1E16A3701100C4BA83 /* LoginViewController.m */,
 				56A58B9216BF3F8E005D3B54 /* Poker Table */,
@@ -605,6 +611,8 @@
 				562C9D3616BB6121004C15BF /* redChip.png in Resources */,
 				562C9D3716BB6121004C15BF /* poker_table.png in Resources */,
 				56629B8816BCCB3B0064D687 /* infoPane.png in Resources */,
+				56AA894716D1B36200B181B5 /* fileclose.png in Resources */,
+				56AA894916D1B5B300B181B5 /* close.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
