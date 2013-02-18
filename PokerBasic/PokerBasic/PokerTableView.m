@@ -64,13 +64,13 @@ static CGPoint communityCardsCentre;
 static CGFloat screenWidth;
 static CGFloat screenHeight;
 
-static int cardWidth = 42;
-static int cardHeight = 42;
+static int cardWidth = 46;
+static int cardHeight = 46;
 
-static int distanceBetweenCards = 30;
-static int edgeOffset = 25;
+static int distanceBetweenHoleCards = 27;
+static int edgeOffset = 30;
 
-static int distanceOfDealerButtonFromPlayer = 100;
+static int xDistanceOfDealerButtonFromPlayer = 100;
 
 - (id)initWithImage:(UIImageView *) tableImage scene:(GameViewController *)scene
 {
@@ -251,11 +251,14 @@ static int distanceOfDealerButtonFromPlayer = 100;
         [player.card2 setImage:cardBackImage];
     }
     
-//    CGPoint buttonLocation = CGPointMake(playerCenter.x - distanceOfDealerButtonFromPlayer, playerCenter.y);
-    [UIView animateWithDuration:0.5 delay:0  options:UIViewAnimationOptionCurveLinear animations:^{
+    [self.table bringSubviewToFront:player.card1];
+    [self.table bringSubviewToFront:player.card2];
+    [UIView animateWithDuration:0.5 delay:0  options:UIViewAnimationOptionCurveEaseOut animations:^{
         
         [player.card1 setCenter:CGPointMake(currentPoint1.x, currentPoint1.y + foldYDist)];
+        player.card1.transform = CGAffineTransformMakeRotation(M_PI);
         [player.card2 setCenter:CGPointMake(currentPoint2.x, currentPoint2.y + foldYDist)];
+        player.card2.transform = CGAffineTransformMakeRotation(300);
         
     }completion:^(BOOL done) {
         [self doAnimations];
@@ -268,9 +271,13 @@ static int distanceOfDealerButtonFromPlayer = 100;
     
     self.dealerSeat = seat;
     playerInfo* dealer = [self.playerInfoDict objectForKey:seat];
+    NSInteger yOffset = -12;
+    if ([seat isEqualToNumber:self.botSeatNumber]) {
+        yOffset *= -1;
+    }
     
     CGPoint dealerCenter = dealer.centre;    
-    CGPoint buttonLocation = CGPointMake(dealerCenter.x - distanceOfDealerButtonFromPlayer, dealerCenter.y);
+    CGPoint buttonLocation = CGPointMake(dealerCenter.x - xDistanceOfDealerButtonFromPlayer, dealerCenter.y + yOffset);
     [UIView animateWithDuration:0.3 delay:0  options:UIViewAnimationOptionCurveEaseInOut animations:^{
         UIImageView *card;
         for (card in self.tableCards) {
@@ -389,7 +396,7 @@ static int distanceOfDealerButtonFromPlayer = 100;
 - (void)holeCards{
     NSInteger dealeeSeatInt = [self.dealerSeat integerValue];
     
-    int xoffset = -(distanceBetweenCards / 2);
+    int xoffset = -(distanceBetweenHoleCards / 2);
     int count = 0;
     for (int j=0; j < 2; j++) { //change the x offset every 2 cards dealt
         xoffset *= -1;
@@ -431,10 +438,13 @@ static int distanceOfDealerButtonFromPlayer = 100;
                      
                      [UIView transitionWithView:cardView1 duration:0.4f options:UIViewAnimationOptionTransitionFlipFromLeft animations:^{
                          [cardView1 setImage:[self getCardFrontImage:humanHoleCard1]];
+                         
                      } completion:nil];
                      
                      [UIView transitionWithView:cardView2 duration:0.4f options:UIViewAnimationOptionTransitionFlipFromLeft animations:^{
+                         [self.table bringSubviewToFront:cardView2];
                          [cardView2 setImage:[self getCardFrontImage:humanHoleCard2]];
+                         
                      } completion:^(BOOL done) {
                          NSLog(@"Card images set");
                          [self doAnimations];

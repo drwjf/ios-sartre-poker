@@ -28,5 +28,6 @@
 
 
 - (void)setMoveText:(PlayerMove*)move;
+- (void)updateLabels;
 
 @end

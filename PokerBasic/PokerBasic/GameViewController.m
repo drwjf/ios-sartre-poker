@@ -87,6 +87,12 @@ static NSInteger numPlayers = 2;
     self.botBetAmountLabel.text = @"";
     self.humanBetAmountLabel.text = nil;
     
+    self.humanStackLabel.text = @"1000";
+    self.botStackLabel.text = @"1000";
+    
+    self.nameOnServerLabel.text = @"";
+    self.botNameLabel.text = nil;
+    
     self.infoTextView.text = [self.client description];
     //[self.client showState];
     
@@ -147,6 +153,20 @@ static NSInteger numPlayers = 2;
     }
 }
 
+//only call this once all human and bot moves have been animated
+- (void) updateLabels {
+    State *state = self.currentState;
+    Human *human = [state.playerStateDict objectForKey:self.humanSeatNumber];
+    Bot *bot = [state.playerStateDict objectForKey:self.botSeatNumber];
+    
+    self.botStackLabel.text = [NSString stringWithFormat:@"%d",bot.stack];
+    self.humanStackLabel.text = [NSString stringWithFormat:@"%d",human.stack];
+    self.potLabel.text = [NSString stringWithFormat:@"%d",state.game.pot];
+    self.botNameLabel.text = bot.name;
+    self.nameOnServerLabel.text = human.name;
+}
+
+
 -(void) getLastActions:(PlayerAction)humanLastAction actionArray:(NSMutableArray*)actions {
     
     State *state = self.currentState;
@@ -157,32 +177,34 @@ static NSInteger numPlayers = 2;
     Boolean stateChanged = ![self.currentState.game.gameStage isEqualToString:self.prevState.game.gameStage];
     
     //// Human move first
-    if (humanLastAction == FOLD) {
-        [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:nil]];
-    } else if (!stateChanged) {
-        [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:human.currentStageContribution]];
-    } else {//stage change
-        if (humanLastAction == CALL) {
-            NSInteger amount = [[self.prevState.playerStateDict objectForKey:self.botSeatNumber] currentStageContribution];
-            [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:amount]];
-        }else if (humanLastAction == CHECK) {
+    if (humanLastAction != NONE) {
+        if (humanLastAction == FOLD) {
             [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:nil]];
-        } else if (humanLastAction == BET) {
-            NSInteger amount = [[self.prevState.playerStateDict objectForKey:self.humanSeatNumber] currentStageContribution];
-            if (state.game.gameStageEnum == PREFLOP || state.game.gameStageEnum == FLOP) {
-                amount = amount + 2;
-            } else {
-                amount = amount + 4;
+        } else if (!stateChanged) {
+            [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:human.currentStageContribution]];
+        } else {//stage change
+            if (humanLastAction == CALL) {
+                NSInteger amount = [[self.prevState.playerStateDict objectForKey:self.botSeatNumber] currentStageContribution];
+                [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:amount]];
+            }else if (humanLastAction == CHECK) {
+                [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:nil]];
+            } else if (humanLastAction == BET) {
+                NSInteger amount = [[self.prevState.playerStateDict objectForKey:self.humanSeatNumber] currentStageContribution];
+                if (state.game.gameStageEnum == PREFLOP || state.game.gameStageEnum == FLOP) {
+                    amount = amount + 2;
+                } else {
+                    amount = amount + 4;
+                }
+                [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:amount]];
+            } else if (humanLastAction == RAISE) {
+                NSInteger amount = [[self.prevState.playerStateDict objectForKey:self.botSeatNumber] currentStageContribution];
+                if (state.game.gameStageEnum == PREFLOP || state.game.gameStageEnum == FLOP) {
+                    amount = amount + 2;
+                } else {
+                    amount = amount + 4;
+                }
+                [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:amount]];
             }
-            [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:amount]];
-        } else if (humanLastAction == RAISE) {
-            NSInteger amount = [[self.prevState.playerStateDict objectForKey:self.botSeatNumber] currentStageContribution];
-            if (state.game.gameStageEnum == PREFLOP || state.game.gameStageEnum == FLOP) {
-                amount = amount + 2;
-            } else {
-                amount = amount + 4;
-            }
-            [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:amount]];
         }
     }
     ////
@@ -260,45 +282,11 @@ static NSInteger numPlayers = 2;
     return ;
 }
 
-/*
--(void)setLabels {
-    State *state = self.currentState;
-    Player *human = [state.playerStateDict objectForKey:self.humanSeatNumber];
-    Player *bot = [state.playerStateDict objectForKey:self.botSeatNumber];
-    
-    self.nameOnServerLabel.text = human.name;
-    self.botNameLabel.text = bot.name;
-    
-    //3rd try - could fix this up better using seat number text.
-    if (state.game.botIsDealer) {
-        self.dealerLabel.text = bot.name;
-    } else {
-        self.dealerLabel.text = human.name;
-    }
-    
-    self.gameStageLabel.text = state.game.gameStage;
-    
-    self.botBetAmountLabel.text = [NSString stringWithFormat:@"%d", bot.currentStageContribution];
-    self.humanBetAmountLabel.text = [NSString stringWithFormat:@"%d", human.currentStageContribution];
-    
-    self.botStackLabel.text = [NSString stringWithFormat:@"%d", bot.stack];
-    self.humanStackLabel.text = [NSString stringWithFormat:@"%d", human.stack];
-    
-    if (state.game.gameHasEnded) {
-        self.potLabel.text = [NSString stringWithFormat:@"%d", state.game.pot];
-    } else {
-    self.potLabel.text = [NSString stringWithFormat:@"%d", state.game.pot + bot.currentStageContribution + human.currentStageContribution];
-    }
- 
-    //deal cards
-    self.botHoleCardsLabel.text = [bot.holeCards description];
-    self.playerHoleCardsLabel.text = [human.holeCards description];
-}
-*/
 
 //TODO put buttons in an array and for loop through possible moves, setting text and making buttons visible as looping through.
 
 -(void)displayMoves {
+    [self updateLabels];
     State *state = self.currentState;
     Human* human = [state.playerStateDict objectForKey:self.humanSeatNumber];
 //    Player *bot = [state.seats objectAtIndex:botSeatNumber];
@@ -350,6 +338,8 @@ static NSInteger numPlayers = 2;
 }
 
 - (IBAction)nextGameButtonPress:(id)sender {
+    self.botBetAmountLabel.text = nil;
+    self.humanBetAmountLabel.text = nil;
     [self startNewHand];
 }
 
