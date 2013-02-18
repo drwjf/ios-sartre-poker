@@ -10,16 +10,18 @@
 #import "PlayerMove.h"
 
 @interface playerInfo:NSObject
+@property NSNumber *seat;
+@property NSInteger betAmount;
+@property NSInteger stackFromPreviousStreets;;
 @property CGPoint centre;
 @property CGPoint chipPoint;
-@property NSNumber *seat;
 //@property int holeCardOneIndex;
 //@property int holeCardTwoIndex;
 @property UIImageView *card1; //added 6.2.2013 - needs to be implemented
 @property UIImageView *card2;
 @property UILabel *stackLabel;
 @property UILabel *betAmountLabel;
-@property Player *playerState; //reference unnecessary????
+//@property Player *playerState; //reference unnecessary????
 @end
 @implementation playerInfo
 @end
@@ -38,7 +40,7 @@
 @property GameViewController *scene;
 
 //Game state
-//@property NSInteger gameStage;
+@property NSInteger potFromPreviousStreets;
 @property NSNumber *humanSeatNumber;
 @property NSNumber *botSeatNumber;
 @property NSNumber *dealerSeat;
@@ -50,6 +52,7 @@
 @implementation PokerTableView
 
 static int numPlayers = 2;
+static int startingStack = 1000;
 //static int BOT_SEAT = 0;
 //static int HUMAN_SEAT = 1;
 
@@ -97,7 +100,10 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
         human.seat = self.humanSeatNumber;
         human.betAmountLabel = scene.humanBetAmountLabel;
         human.stackLabel = scene.humanStackLabel;
-        human.playerState = [scene.currentState.playerStateDict objectForKey:human.seat];
+        human.betAmount = 0;
+        human.stackFromPreviousStreets = startingStack;
+        human.stackLabel.text = [NSString stringWithFormat:@"%d",human.stackFromPreviousStreets];
+        //human.playerState = [scene.currentState.playerStateDict objectForKey:human.seat];
         
         playerInfo *bot;
         bot = [[playerInfo alloc] init];
@@ -106,7 +112,10 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
         bot.seat = self.botSeatNumber;
         bot.betAmountLabel = scene.botBetAmountLabel;
         bot.stackLabel = scene.botStackLabel;
-        bot.playerState = [scene.currentState.playerStateDict objectForKey:bot.seat];
+        bot.betAmount = 0;
+        bot.stackFromPreviousStreets = startingStack;
+        bot.stackLabel.text = [NSString stringWithFormat:@"%d",bot.stackFromPreviousStreets];
+        //bot.playerState = [scene.currentState.playerStateDict objectForKey:bot.seat];
         
         self.playerInfoDict = [NSDictionary dictionaryWithObjectsAndKeys: bot, bot.seat, human, human.seat, nil];
         
@@ -164,9 +173,12 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
         
         switch (action) {
             case CHECK:
+                //needsomething here
                 [self doAnimations];
                 break;
             case CALL:
+                [self call:seat];
+                break;
             case BET:
             case RAISE:
                 [self bet:amount seat:seat];
@@ -200,12 +212,23 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
     }
 }
 
+//resets playerInfo betAmounts to 0.
+//moves all chips bet in current round to the side.
+//clear betAmountLabels when done.
 - (void)dealCommCards:(PlayerAction)action {
-    [UIView animateWithDuration:0.3 delay:1.0 options:nil animations:^{
-        self.scene.botBetAmountLabel.text = nil;
-        self.scene.humanBetAmountLabel.text = nil;
-    } completion:nil];
-     
+    
+    //update potsize with current bet amounts
+    self.potFromPreviousStreets = [self getPotSize];
+    
+    //THEN reset bet amounts
+    playerInfo *playerInfo;
+    for (NSNumber *key in self.playerInfoDict) {
+        playerInfo = [self.playerInfoDict objectForKey:key];
+        //update stackFromPreviousStreet using bet amount, before resetting betAmount
+        playerInfo.stackFromPreviousStreets -= playerInfo.betAmount;
+        playerInfo.betAmount = 0;
+    }
+    
     [UIView animateWithDuration:0.8 delay:0 options:nil animations:^{
         UIImageView *chip;
         for (chip in self.tableChips) {
@@ -213,7 +236,7 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
         }
     }completion:^(BOOL finished) {
         
-        [self clearLabels];
+        [self clearBetAmountLabels];
         switch (action) {
             case FLOP:
                 [self flop];
@@ -230,12 +253,24 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
     }];
 }
 
-- (void)clearLabels {
+- (void)clearBetAmountLabels {
     playerInfo *player;
     for (NSString *key in self.playerInfoDict) {
         player = [self.playerInfoDict objectForKey:key];
         player.betAmountLabel.text = @"";
     }
+}
+
+-(void)call:(NSNumber*) seat {
+    NSInteger amount = 0;
+    playerInfo *player;
+    for (NSString *key in self.playerInfoDict) {
+        player = [self.playerInfoDict objectForKey:key];
+        if (player.betAmount > amount) {
+            amount = player.betAmount;
+        }
+    }    
+    [self bet:amount seat:seat];
 }
 
 - (void)fold:(NSNumber*) seat {
@@ -268,6 +303,8 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
 
 //clears board for a new game and moves the dealer chip to the dealer.
 - (void)setDealer:(NSNumber*) seat {
+    
+    self.potFromPreviousStreets = 0;
     
     self.dealerSeat = seat;
     playerInfo* dealer = [self.playerInfoDict objectForKey:seat];
@@ -457,36 +494,39 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
 
 -(void)bet:(NSInteger)amount seat:(NSNumber*)seat {
     
+    playerInfo *bettor = [self.playerInfoDict objectForKey:seat];
+    bettor.betAmount = amount; //not += because amount is total current stage amount. ??? check
+    
     if (!chipImage) {
         chipImage = [UIImage imageNamed:@"blackChip.png"];
     }
     
     UIImageView *chipView = [[UIImageView alloc]initWithImage:chipImage];
     [self.tableChips addObject:chipView];
-    
-    playerInfo *bettor = [self.playerInfoDict objectForKey:seat];
-    
     chipView.contentMode = UIViewContentModeScaleAspectFill;
     [chipView setFrame:CGRectMake(0, 0, 30, 30)];
-    [chipView setCenter:bettor.centre];
-    
+    [chipView setCenter:bettor.centre];    
     [self.tableChips addObject:chipView];
     [self.table addSubview:chipView];
-    
+        
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         [chipView setCenter:bettor.chipPoint];
     }completion:^(BOOL done){
         bettor.betAmountLabel.text = [NSString stringWithFormat:@"%d",amount];
-        
-//        if ([self.scene.potLabel.text isEqualToString:@"3"]) {
-//            self.scene.potLabel.text = @"0";
-//        }
-        NSInteger pot = [self.scene.potLabel.text integerValue] + amount;
-        self.scene.potLabel.text = [NSString stringWithFormat:@"%d",pot];
-        
-       [self doAnimations];
+        self.scene.potLabel.text = [NSString stringWithFormat:@"%d",[self getPotSize]];
+        bettor.stackLabel.text = [NSString stringWithFormat:@"%d",bettor.stackFromPreviousStreets - bettor.betAmount];
+        [self doAnimations];
     }];
-    
+}
+
+-(NSInteger) getPotSize {
+    NSInteger potSize = self.potFromPreviousStreets;
+    playerInfo *playerInfo;
+    for (NSNumber *key in self.playerInfoDict) {
+        playerInfo = [self.playerInfoDict objectForKey:key];
+        potSize += playerInfo.betAmount;
+    }
+    return potSize;
 }
 
 //-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event

@@ -87,8 +87,8 @@ static NSInteger numPlayers = 2;
     self.botBetAmountLabel.text = @"";
     self.humanBetAmountLabel.text = nil;
     
-    self.humanStackLabel.text = @"1000";
-    self.botStackLabel.text = @"1000";
+    self.humanStackLabel.text = @"";
+    self.botStackLabel.text = nil;
     
     self.nameOnServerLabel.text = @"";
     self.botNameLabel.text = nil;
@@ -290,7 +290,7 @@ static NSInteger numPlayers = 2;
 //TODO put buttons in an array and for loop through possible moves, setting text and making buttons visible as looping through.
 
 -(void)displayMoves {
-    [self updateLabels];
+    //[self updateLabels]; //TODO use this to do a comparison of pot size from state with table.
     State *state = self.currentState;
     Human* human = [state.playerStateDict objectForKey:self.humanSeatNumber];
     
