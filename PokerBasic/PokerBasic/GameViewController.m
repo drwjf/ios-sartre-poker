@@ -14,11 +14,10 @@
 @property (weak, nonatomic) IBOutlet UITextView *infoTextView;
 @property (weak, nonatomic) IBOutlet UIButton *logoutButton;
 
-@property (weak, nonatomic) IBOutlet UILabel *nameOnServerLabel;
+
 @property (weak, nonatomic) IBOutlet UILabel *dealerLabel;
 @property (weak, nonatomic) IBOutlet UILabel *gameStageLabel;
 
-@property (weak, nonatomic) IBOutlet UILabel *botNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *botHoleCardsLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel *commCardsLabel;
@@ -47,7 +46,10 @@
 
 
 @implementation GameViewController
+
 static NSInteger numPlayers = 2;
+static NSUInteger smallBet = 2;
+static NSUInteger bigBet = 4;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -93,7 +95,7 @@ static NSInteger numPlayers = 2;
     self.nameOnServerLabel.text = @"";
     self.botNameLabel.text = nil;
     
-    self.infoTextView.text = [self.client description];
+    //self.infoTextView.text = [self.client description];
     //[self.client showState];
     
     self.botSeatNumber = @0;
@@ -113,6 +115,9 @@ static NSInteger numPlayers = 2;
     Player *human = [state.playerStateDict objectForKey:self.humanSeatNumber];
     Player *bot = [state.playerStateDict objectForKey:self.botSeatNumber];
     
+    self.nameOnServerLabel.text = human.name;
+    self.botNameLabel.text = bot.name;
+    
     self.nextGameButton.hidden = true;
     self.prevState = nil;
     
@@ -127,8 +132,7 @@ static NSInteger numPlayers = 2;
     
     if (state.game.botIsDealer) {
         self.dealerSeatNumber = bot.seat;
-        bigBlind = human;
-        
+        bigBlind = human;        
     } else {
         self.dealerSeatNumber = human.seat;
         bigBlind = bot;
@@ -144,28 +148,11 @@ static NSInteger numPlayers = 2;
     [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:SMALLBLIND amount:sb]];
     [actions addObject:[PlayerMove moveWithSeat:bigBlind.seat action:BIGBLIND amount:bb]];
     [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:PREFLOP amount:nil]];
+    
     [self getLastActions:NONE actionArray:actions];
     
-    [self.pokerTable animate:[actions objectEnumerator]];
-    
-    if (!state.game.gameHasEnded) {
-        [self displayMoves];
-    }
+    [self.pokerTable animate:[actions objectEnumerator]]; //this shows buttons at end
 }
-
-//only call this once all human and bot moves have been animated
-- (void) updateLabels {
-    State *state = self.currentState;
-    Human *human = [state.playerStateDict objectForKey:self.humanSeatNumber];
-    Bot *bot = [state.playerStateDict objectForKey:self.botSeatNumber];
-    
-    self.botStackLabel.text = [NSString stringWithFormat:@"%d",bot.stack];
-    self.humanStackLabel.text = [NSString stringWithFormat:@"%d",human.stack];
-    self.potLabel.text = [NSString stringWithFormat:@"%d",state.game.pot];
-    self.botNameLabel.text = bot.name;
-    self.nameOnServerLabel.text = human.name;
-}
-
 
 -(void) getLastActions:(PlayerAction)humanLastAction actionArray:(NSMutableArray*)actions {
     
@@ -183,27 +170,24 @@ static NSInteger numPlayers = 2;
         } else if (!stateChanged) {
             [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:human.currentStageContribution]];
         } else {//stage change
-            if (humanLastAction == CALL) {
-                NSInteger amount = [[self.prevState.playerStateDict objectForKey:self.botSeatNumber] currentStageContribution];
-                [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:amount]];
-            }else if (humanLastAction == CHECK) {
-                [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:nil]];
-            } else if (humanLastAction == BET) {
+            if (humanLastAction == BET) {
                 NSInteger amount = [[self.prevState.playerStateDict objectForKey:self.humanSeatNumber] currentStageContribution];
                 if (state.game.gameStageEnum == PREFLOP || state.game.gameStageEnum == FLOP) {
-                    amount = amount + 2;
+                    amount = amount + smallBet;
                 } else {
-                    amount = amount + 4;
+                    amount = amount + bigBet;
                 }
                 [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:amount]];
             } else if (humanLastAction == RAISE) {
                 NSInteger amount = [[self.prevState.playerStateDict objectForKey:self.botSeatNumber] currentStageContribution];
                 if (state.game.gameStageEnum == PREFLOP || state.game.gameStageEnum == FLOP) {
-                    amount = amount + 2;
+                    amount = amount + smallBet;
                 } else {
-                    amount = amount + 4;
+                    amount = amount + bigBet;
                 }
                 [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:amount]];
+            } else { //Human last action was Check or Call or FOLD
+                [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:nil]];
             }
         }
     }
@@ -211,86 +195,88 @@ static NSInteger numPlayers = 2;
     
     //3 way condition. Game has ended, bot is dealer, or human is dealer.
     if (state.game.gameHasEnded) {
-        if (bot.lastActionEnum == CALL) {
+        if (humanLastAction == FOLD) {            
+            [actions addObject:[PlayerMove moveWithSeat:self.botSeatNumber action:WIN amount:nil]]; //bot wins.
+        } else if (bot.lastActionEnum == FOLD) {
             [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:bot.lastActionAmount]];
+            [actions addObject:[PlayerMove moveWithSeat:self.humanSeatNumber action:WIN amount:nil]]; //human wins.             
+        } else { //went to showdown
+        //else if (bot.lastActionEnum == CALL || humanLastAction == CALL) { //bot called on river to end game
+            NSLog(@"Game ended with showdown");
+            if (!state.game.botIsDealer && humanLastAction==CHECK) {
+                //No bot move
+            }
+            else if (humanLastAction != CALL) { //if human didn;t call, bot made last move
+                [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:bot.lastActionAmount]];
+            }
+            [actions addObject:[PlayerMove moveWithSeat:nil action:SHOWDOWN amount:nil]]; //need win animation. Winnder undecided
         }
-        //[actions addObject:state.game.gameStage]; !!!!!!!!!!! need to do something here
-        NSLog(state.game.gameStage); //starting to do something
-        self.nextGameButton.hidden = false; //need this to be set during animations.
         
-        //return;
+//        if (bot.lastActionEnum == FOLD) {
+//            [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:bot.lastActionAmount]];
+//        }
+//        //[actions addObject:state.game.gameStage]; !!!!!!!!!!! need to do something here
+//        NSLog(state.game.gameStage); //starting to do something
+
+        return;
     }
     else if (state.game.botIsDealer) //bot goes first preflop, human goes first postflop
     {
         if (state.game.gameStageEnum == PREFLOP) {
             NSInteger amount = bot.lastActionAmount;
-//            if (humanLastAction == NONE && bot.lastActionEnum == RAISE) {
-//                amount += 1;
-//            }
             [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:amount]];
         }
         else if (self.prevState.game.gameStageEnum == PREFLOP && state.game.gameStageEnum == FLOP) {
             if (humanLastAction == RAISE || humanLastAction == BET) {
                 [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:bot.lastActionAmount]];
             }
-            [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:FLOP amount:nil]];
+            [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:FLOP amount:nil]]; //DEAL
         }
         else if (stateChanged) {
             if ((humanLastAction == CALL || humanLastAction == CHECK) && bot.lastActionEnum != CHECK) {
-                [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:state.game.gameStageEnum amount:nil]]; //doing it
+                [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:state.game.gameStageEnum amount:nil]]; //DEAL
             } else {
                 [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:bot.lastActionAmount]];
-                [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:state.game.gameStageEnum amount:nil]]; //doing it
+                [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:state.game.gameStageEnum amount:nil]]; //DEAL
             }
         }
         else { //else normal hand postflop with no stateChange
             [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:bot.lastActionAmount]];
         }
-        
-        //return;
+        return;
     }
     else //Human is dealer. human goes first preflop, bot goes first postflop
     {
         Bot *prevBotState = [self.prevState.playerStateDict objectForKey:self.botSeatNumber];
         if (!self.prevState || humanLastAction == NONE) { //ie player makes very first move
-            return ; //don't need to show bots last action. ie "Last Action: Big Blind""
+            return; //don't need to show bots last action. ie "Last Action: Big Blind""
         }
         else if (self.prevState.game.gameStageEnum == PREFLOP && state.game.gameStageEnum == FLOP) {
             if (humanLastAction == BET || humanLastAction == RAISE) {
-                //[actions addObject:[NSString stringWithFormat:@"22 %@ %@s", bot.name, @"Calls"]];
-                [actions addObject:[PlayerMove moveWithSeat:bot.seat action:CALL amount:2]]; // !!!!!!!!!!!!!!!!!amount
-            } else if (humanLastAction == CALL && prevBotState.lastActionEnum != BET && prevBotState.lastActionEnum != RAISE) { //special preflop case
-                //[actions addObject:[NSString stringWithFormat:@"24 %@ %@s bot prev state last action %@ %@", bot.name, @"Checks", prevBotState.lastActionString, [NSString PlayerActionStringFromEnum:prevBotState.lastActionEnum]]];
+                [actions addObject:[PlayerMove moveWithSeat:bot.seat action:CALL amount:smallBet]];
+            } else if (humanLastAction == CALL && prevBotState.lastActionEnum != BET && prevBotState.lastActionEnum != RAISE) {
+                //special preflop case. bot checks in big blind
                 [actions addObject:[PlayerMove moveWithSeat:bot.seat action:CHECK amount:nil]];
             }
-            //[actions addObject:state.game.gameStage]; !!!!!!!!!!! need to do something here
-            [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:FLOP amount:nil]];
+            [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:FLOP amount:nil]]; //DEAL
         }
         else if (stateChanged) {
             if (humanLastAction == BET || humanLastAction == RAISE) {
-                //[actions addObject:[NSString stringWithFormat:@"27 %@ %@s", bot.name, @"Calls"]];
-                [actions addObject:[PlayerMove moveWithSeat:bot.seat action:CALL amount:4]];
+                [actions addObject:[PlayerMove moveWithSeat:bot.seat action:CALL amount:bigBet]];
             }
-            //[actions addObject:state.game.gameStage]; !!!!!!!!!!! need to do something here
-            [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:state.game.gameStageEnum amount:nil]]; //doing it
+            [actions addObject:[PlayerMove moveWithSeat:dealer.seat action:state.game.gameStageEnum amount:nil]]; //DEAL
         }
-        
-        //then always show bots last move (unless player makes very first move)
-        //[actions addObject:[NSString stringWithFormat:@"1 %@ %@s", bot.name, bot.lastActionString]];
+        //then always show bots last move (unless player makes very first move, in which case we returned at the start of the outer else block)
         [actions addObject:[PlayerMove moveWithSeat:bot.seat action:bot.lastActionEnum amount:bot.lastActionAmount]];
         
-        //return;
+        return;
     }
-    
-
-    return ;
 }
 
 
-//TODO put buttons in an array and for loop through possible moves, setting text and making buttons visible as looping through.
-
+//OPTIONAL IMPROV put buttons in an array and for loop through possible moves, setting text and making buttons visible as looping through.
 -(void)displayMoves {
-    //[self updateLabels]; //TODO use this to do a comparison of pot size from state with table.
+    //TODO do a comparison of pot size from server state with table state.
     State *state = self.currentState;
     Human* human = [state.playerStateDict objectForKey:self.humanSeatNumber];
     
@@ -346,7 +332,16 @@ static NSInteger numPlayers = 2;
 - (IBAction)nextGameButtonPress:(id)sender {
     self.botBetAmountLabel.text = nil;
     self.humanBetAmountLabel.text = nil;
-    [self startNewHand];
+    self.potLabel.text = nil;
+    
+    [self setInfoText:@""];
+    
+    [self.client newGame:^(NSDictionary *JSON) {        
+        self.currentState = [[State alloc]initWithAttributes:JSON];
+        [self newGame];
+    }failure:^{
+        NSLog(@"Failure in loadState block from gamecontroller");
+    }];
 }
 
 //-(void) playerActed:(NSString *)move actionArray:(NSMutableArray*)actions {
@@ -360,17 +355,6 @@ static NSInteger numPlayers = 2;
     } else {
         [self displayMoves];
     }
-}
-
--(void) startNewHand {
-    [self.client newGame:^(NSDictionary *JSON) {
-        
-        self.currentState = [[State alloc]initWithAttributes:JSON];
-        [self newGame];
-        
-    }failure:^{
-        NSLog(@"Failure in loadState block from gamecontroller");
-    }];
 }
 
 - (void)setInfoText:(NSString *)text {
@@ -417,13 +401,17 @@ static NSInteger numPlayers = 2;
         case FLOP:
         case TURN:
         case RIVER:
-            text = [NSString stringWithFormat:@"%@ deals %@.", player.name, actionString];
+        case SHOWDOWN:
+            text = [NSString stringWithFormat:@"=== %@ ===", actionString];
             break;
         case SET_DEALER:
             text = [NSString stringWithFormat:@"Dealer is %@.", player.name];
             break;
+        case WIN:
+            text = [NSString stringWithFormat:@"Winner is %@.", player.name];
+            break;
         default:
-            text = @"Action not found";
+            text = @"Player Move Action not found in setMoveText";
             break;
     }
     [self setInfoText:text];    

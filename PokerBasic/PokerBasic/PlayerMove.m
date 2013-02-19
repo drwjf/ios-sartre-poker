@@ -65,11 +65,13 @@
                            @"Fold",[NSNumber numberWithInteger:FOLD],
                            @"Small Blind",[NSNumber numberWithInteger:SMALLBLIND],
                            @"Big Blind",[NSNumber numberWithInteger:BIGBLIND],
-                           @"Deal",[NSNumber numberWithInteger:PREFLOP],
+                           @"Preflop",[NSNumber numberWithInteger:PREFLOP],
                            @"Flop",[NSNumber numberWithInteger:FLOP],
                            @"Turn",[NSNumber numberWithInteger:TURN],
                            @"River",[NSNumber numberWithInteger:RIVER],
+                           @"Show Down",[NSNumber numberWithInteger:SHOWDOWN],
                            @"Set Dealer",[NSNumber numberWithInteger:SET_DEALER],
+                           @"Win",[NSNumber numberWithInteger:WIN],                           
                            nil
                            ];
     NSNumber* newKey = [NSNumber numberWithInteger:key];

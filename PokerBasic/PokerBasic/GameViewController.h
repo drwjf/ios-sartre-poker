@@ -18,9 +18,11 @@
 
 @property State *currentState;
 
+@property (weak, nonatomic) IBOutlet UILabel *nameOnServerLabel;
 @property (weak, nonatomic) IBOutlet UILabel *humanBetAmountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *humanStackLabel;
 
+@property (weak, nonatomic) IBOutlet UILabel *botNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *botBetAmountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *botStackLabel;
 
@@ -28,7 +30,7 @@
 
 
 - (void)setMoveText:(PlayerMove*)move;
-- (void)updateLabels;
+- (void)setInfoText:(NSString*)text;
 -(void) animationsDone;
 
 @end

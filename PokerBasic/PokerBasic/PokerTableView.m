@@ -12,12 +12,13 @@
 @interface playerInfo:NSObject
 @property NSNumber *seat;
 @property NSInteger betAmount;
-@property NSInteger stackFromPreviousStreets;;
+@property NSInteger stackFromPreviousStreets;
+@property NSInteger stackCurrent;
 @property CGPoint centre;
 @property CGPoint chipPoint;
 //@property int holeCardOneIndex;
 //@property int holeCardTwoIndex;
-@property UIImageView *card1; //added 6.2.2013 - needs to be implemented
+@property UIImageView *card1;
 @property UIImageView *card2;
 @property UILabel *stackLabel;
 @property UILabel *betAmountLabel;
@@ -101,8 +102,8 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
         human.betAmountLabel = scene.humanBetAmountLabel;
         human.stackLabel = scene.humanStackLabel;
         human.betAmount = 0;
-        human.stackFromPreviousStreets = startingStack;
-        human.stackLabel.text = [NSString stringWithFormat:@"%d",human.stackFromPreviousStreets];
+        human.stackCurrent = startingStack;
+        human.stackLabel.text = [NSString stringWithFormat:@"%d",human.stackCurrent];
         //human.playerState = [scene.currentState.playerStateDict objectForKey:human.seat];
         
         playerInfo *bot;
@@ -113,8 +114,8 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
         bot.betAmountLabel = scene.botBetAmountLabel;
         bot.stackLabel = scene.botStackLabel;
         bot.betAmount = 0;
-        bot.stackFromPreviousStreets = startingStack;
-        bot.stackLabel.text = [NSString stringWithFormat:@"%d",bot.stackFromPreviousStreets];
+        bot.stackCurrent = startingStack;
+        bot.stackLabel.text = [NSString stringWithFormat:@"%d",bot.stackCurrent];
         //bot.playerState = [scene.currentState.playerStateDict objectForKey:bot.seat];
         
         self.playerInfoDict = [NSDictionary dictionaryWithObjectsAndKeys: bot, bot.seat, human, human.seat, nil];
@@ -124,14 +125,8 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
         
         //card on bottom of deck, that is purely visual
         [self.table addSubview:[self makeCard]];
-        [self.tableCards removeLastObject]; //remove it from array so it always stays there.
-        
-        //        _tableCards = [NSMutableArray arrayWithCapacity:9];
-        //        for (int i=0; i < 9; i++) {
-        //            UIImageView *card = [self makeCard];
-        //            [self.table addSubview:card];
-        //            [_tableCards addObject:card];
-        //        }
+        [self.tableCards removeLastObject]; //remove card from array so it always stays on table. (Make card automatically adds it).
+    
         
         self.button = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"dealer_button.png"]];
         [self.button setFrame:CGRectMake(screenWidth/2, screenHeight/2,20,20)];
@@ -140,26 +135,16 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
     return self;    
 }
 
-//- (void)newGame:(NSArray*)holecards dealer:(Boolean)botIsDealer {
-//    
-//    self.gameStage = 0;
-//    NSLog(@"New game stage is %d", self.gameStage);
-//    
-//    playerInfo *dealer;
-//    self.botIsDealer = botIsDealer;
-//    if (self.botIsDealer) {
-//        dealer = [self.playerInfoDict objectForKey:@0];
-//    } else {
-//        dealer = [self.playerInfoDict objectForKey:@1];
-//    }
-//    
-//}
-
 - (void)animate:(NSEnumerator *)enumerator {
     self.animationEnumerator = enumerator;
     [self doAnimations];
 }
 
+/*
+Method that gets called by animte, and then again each time an animtion finishes.
+ Each time enumerates through a single animation.
+ When no more animtions calls back to th Game View Controller Scene.
+*/
 - (void)doAnimations {
     NSLog(@"Do animations");
 
@@ -173,8 +158,7 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
         
         switch (action) {
             case CHECK:
-                //needsomething here
-                [self doAnimations];
+                [self check:seat];
                 break;
             case CALL:
                 [self call:seat];
@@ -198,8 +182,14 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
             case RIVER:
                 [self dealCommCards:action];
                 break;
+            case SHOWDOWN:
+                [self showDown];
+                break;
             case SET_DEALER:
                 [self setDealer:seat];
+                break;
+            case WIN:
+                [self win:seat];
                 break;
             default:
                 NSLog(@"action not found");
@@ -212,99 +202,15 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
     }
 }
 
-//resets playerInfo betAmounts to 0.
-//moves all chips bet in current round to the side.
-//clear betAmountLabels when done.
-- (void)dealCommCards:(PlayerAction)action {
-    
-    //update potsize with current bet amounts
-    self.potFromPreviousStreets = [self getPotSize];
-    
-    //THEN reset bet amounts
-    playerInfo *playerInfo;
-    for (NSNumber *key in self.playerInfoDict) {
-        playerInfo = [self.playerInfoDict objectForKey:key];
-        //update stackFromPreviousStreet using bet amount, before resetting betAmount
-        playerInfo.stackFromPreviousStreets -= playerInfo.betAmount;
-        playerInfo.betAmount = 0;
-    }
-    
-    [UIView animateWithDuration:0.8 delay:0 options:nil animations:^{
-        UIImageView *chip;
-        for (chip in self.tableChips) {
-            [chip setCenter:potLocation];
-        }
-    }completion:^(BOOL finished) {
-        
-        [self clearBetAmountLabels];
-        switch (action) {
-            case FLOP:
-                [self flop];
-                break;
-            case TURN:
-                [self turn];
-                break;
-            case RIVER:
-                [self river];
-                break;
-            default:
-                return;
-        }
-    }];
-}
-
-- (void)clearBetAmountLabels {
-    playerInfo *player;
-    for (NSString *key in self.playerInfoDict) {
-        player = [self.playerInfoDict objectForKey:key];
-        player.betAmountLabel.text = @"";
-    }
-}
-
--(void)call:(NSNumber*) seat {
-    NSInteger amount = 0;
-    playerInfo *player;
-    for (NSString *key in self.playerInfoDict) {
-        player = [self.playerInfoDict objectForKey:key];
-        if (player.betAmount > amount) {
-            amount = player.betAmount;
-        }
-    }    
-    [self bet:amount seat:seat];
-}
-
-- (void)fold:(NSNumber*) seat {
-    
-    playerInfo* player = [self.playerInfoDict objectForKey:seat];
-    CGPoint currentPoint1 = player.card1.center;
-    CGPoint currentPoint2 = player.card2.center;
-    
-    NSInteger foldYDist = 20;
-    if ([seat isEqualToNumber:self.humanSeatNumber]) {
-        foldYDist *= -1;
-        [player.card1 setImage:cardBackImage];
-        [player.card2 setImage:cardBackImage];
-    }
-    
-    [self.table bringSubviewToFront:player.card1];
-    [self.table bringSubviewToFront:player.card2];
-    [UIView animateWithDuration:0.5 delay:0  options:UIViewAnimationOptionCurveEaseOut animations:^{
-        
-        [player.card1 setCenter:CGPointMake(currentPoint1.x, currentPoint1.y + foldYDist)];
-        player.card1.transform = CGAffineTransformMakeRotation(M_PI);
-        [player.card2 setCenter:CGPointMake(currentPoint2.x, currentPoint2.y + foldYDist)];
-        player.card2.transform = CGAffineTransformMakeRotation(300);
-        
-    }completion:^(BOOL done) {
-        [self doAnimations];
-    }];
-    
-}
-
 //clears board for a new game and moves the dealer chip to the dealer.
 - (void)setDealer:(NSNumber*) seat {
     
     self.potFromPreviousStreets = 0;
+    playerInfo *player;
+    for (NSNumber *seat in self.playerInfoDict) {
+        player = [self.playerInfoDict objectForKey:seat];
+        player.stackFromPreviousStreets = player.stackCurrent;
+    }
     
     self.dealerSeat = seat;
     playerInfo* dealer = [self.playerInfoDict objectForKey:seat];
@@ -313,7 +219,7 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
         yOffset *= -1;
     }
     
-    CGPoint dealerCenter = dealer.centre;    
+    CGPoint dealerCenter = dealer.centre;
     CGPoint buttonLocation = CGPointMake(dealerCenter.x - xDistanceOfDealerButtonFromPlayer, dealerCenter.y + yOffset);
     [UIView animateWithDuration:0.3 delay:0  options:UIViewAnimationOptionCurveEaseInOut animations:^{
         UIImageView *card;
@@ -326,107 +232,13 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
             [chip setAlpha:0];
         }
         [self.tableChips removeAllObjects];
-    }completion:^(BOOL done) {        
+    }completion:^(BOOL done) {
         [UIView animateWithDuration:0.5 animations:^{
-             self.button.center = buttonLocation;
+            self.button.center = buttonLocation;
         }completion:^(BOOL done) {
             [self doAnimations];
         }];
     }];
-
-}
-
-
-- (UIImageView*)makeCard{
-    if (!cardBackImage) {
-        cardBackImage = [UIImage imageNamed:@"card_back.png"];
-    }
-    UIImageView *card = [[UIImageView alloc]initWithImage:cardBackImage];
-    card.contentMode = UIViewContentModeScaleAspectFill;
-    [card setFrame:CGRectMake(0, 0, cardWidth, cardHeight)];
-    [card setCenter:deckLocation];
-    
-    [self.table addSubview:card];
-    [_tableCards addObject:card];
-    return card;
-}
-
-- (UIImage*)getCardFrontImage:(NSString*)name{
-    
-    NSString * newName = [[name stringByReplacingOccurrencesOfString:@"T" withString:@"10"] lowercaseString];
-    NSLog(@"making card %@", newName);
-    UIImage *card = [UIImage imageNamed:[NSString stringWithFormat:@"card_%@.png", newName]];
-    return card;
-}
-
-
-
-- (IBAction)river {
-    
-    NSArray *communityCardValues = self.scene.currentState.game.communityCards;
-    CGPoint dealPoint = communityCardsCentre;
-    dealPoint.x += 2*cardWidth;
-    
-    //UIImageView *card = [_tableCards objectAtIndex:0];
-    UIImageView *card = [self makeCard];
-    //[self.table bringSubviewToFront:card];
-    [UIView animateWithDuration:0.8 delay:(0.0) options:
-     UIViewAnimationCurveEaseIn animations:^{
-         card.center = dealPoint;
-         NSLog(@"Dealing river card ");
-     }completion:^(BOOL done){
-         //UIImageView *card = [_tableCards objectAtIndex:0];
-         NSString* cardString = [communityCardValues objectAtIndex:4];
-         [card setImage:[self getCardFrontImage:cardString]];
-         [self doAnimations];
-     }];
-    
-}
-
-- (IBAction)turn {
-    NSArray *communityCardValues = self.scene.currentState.game.communityCards;
-    
-    CGPoint dealPoint = communityCardsCentre;
-    dealPoint.x += cardWidth;
-    
-    UIImageView *card = [self makeCard];
-    [UIView animateWithDuration:0.8 delay:(0.0) options:
-     UIViewAnimationCurveEaseIn animations:^{
-//         [self.table bringSubviewToFront:card];
-         card.center = dealPoint;
-         NSLog(@"Dealing turn card ");
-     }completion:^(BOOL done){
-         NSString* cardString = [communityCardValues objectAtIndex:3];
-         [card setImage:[self getCardFrontImage:cardString]];
-         [self doAnimations];
-     }];
-    
-}
-
-- (IBAction)flop{
-    NSArray *flopCardValues = self.scene.currentState.game.communityCards;
-    NSMutableArray *flopCards = [NSMutableArray arrayWithCapacity:3];
-    
-    CGPoint dealPoint = communityCardsCentre;
-    for (int i = 0; i < 3; i++) {
-        UIImageView *card = [self makeCard];
-        [flopCards addObject:card];
-        [UIView animateWithDuration:0.8 delay:(0.2*i) options:
-         UIViewAnimationCurveEaseIn animations:^{
-             card.center = dealPoint;
-             NSLog(@"Dealing flop card %d: ", i+1);
-         }completion:^(BOOL done){
-             if (i==2) { //show cards once final card has been dealt
-                 for (int j = 0; j < 3; j++) {                     
-                     UIImageView *card = [flopCards objectAtIndex:j];
-                     NSString* cardString = [flopCardValues objectAtIndex:j];
-                     [card setImage:[self getCardFrontImage:cardString]];
-                 }
-             }
-             [self doAnimations];
-         }];        
-        dealPoint.x -= cardWidth;
-    }
 }
 
 //animates hole cards being dealt. Once they are dealt, animates human players hole cards being revealed
@@ -471,7 +283,7 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
                      NSString* humanHoleCard2 = [holeCards objectAtIndex:1];
                      
                      UIImageView* cardView1 = human.card1;
-                     UIImageView* cardView2 = human.card2;                     
+                     UIImageView* cardView2 = human.card2;
                      
                      [UIView transitionWithView:cardView1 duration:0.4f options:UIViewAnimationOptionTransitionFlipFromLeft animations:^{
                          [cardView1 setImage:[self getCardFrontImage:humanHoleCard1]];
@@ -489,13 +301,193 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
                  }
              }];
         }
+    }
+}
+
+- (void)clearBetAmountLabels {
+    //clearBetAmountLabels
+    playerInfo *player;
+    for (NSString *key in self.playerInfoDict) {
+        player = [self.playerInfoDict objectForKey:key];
+        player.betAmountLabel.text = @"";
+    }
+}
+
+//resets playerInfo betAmounts to 0.
+//moves all chips bet in current round to the side.
+//clear betAmountLabels when done.
+- (void)dealCommCards:(PlayerAction)action {
+    
+    //update potsize with current bet amounts
+    self.potFromPreviousStreets = [self getPotSize];
+    
+    //THEN reset bet amounts
+    playerInfo *player;
+    for (NSNumber *key in self.playerInfoDict) {
+        player = [self.playerInfoDict objectForKey:key];
+        //update stackFromPreviousStreet using bet amount, before resetting betAmount
+        player.stackFromPreviousStreets -= player.betAmount;
+        player.betAmount = 0;
+    }
+    
+    [UIView animateWithDuration:0.8 delay:0 options:nil animations:^{
+        UIImageView *chip;
+        for (chip in self.tableChips) {
+            [chip setCenter:potLocation];
+        }
+    }completion:^(BOOL finished) {        
+        [self clearBetAmountLabels];
+        switch (action) {
+            case FLOP:
+                [self flop];
+                break;
+            case TURN:
+                [self turn];
+                break;
+            case RIVER:
+                [self river];
+                break;
+            default:
+                return;
+        }
+    }];
+}
+
+- (IBAction)flop{
+    NSArray *flopCardValues = self.scene.currentState.game.communityCards;
+    NSMutableArray *flopCards = [NSMutableArray arrayWithCapacity:3];
+    
+    CGPoint dealPoint = communityCardsCentre;
+    for (int i = 0; i < 3; i++) {
+        UIImageView *card = [self makeCard];
+        [flopCards addObject:card];
+        [UIView animateWithDuration:0.8 delay:(0.2*i) options:
+         UIViewAnimationCurveEaseIn animations:^{
+             card.center = dealPoint;
+             NSLog(@"Dealing flop card %d: ", i+1);
+         }completion:^(BOOL done){
+             if (i==2) { //show cards once final card has been dealt
+                 for (int j = 0; j < 3; j++) {
+                     UIImageView *card = [flopCards objectAtIndex:j];
+                     NSString* cardString = [flopCardValues objectAtIndex:j];
+                     [card setImage:[self getCardFrontImage:cardString]];
+                 }
+             }
+             [self doAnimations];
+         }];
+        dealPoint.x -= cardWidth;
+    }
+}
+- (void)turn {
+    NSArray *communityCardValues = self.scene.currentState.game.communityCards;
+    
+    CGPoint dealPoint = communityCardsCentre;
+    dealPoint.x += cardWidth;
+    
+    UIImageView *card = [self makeCard];
+    [UIView animateWithDuration:0.8 delay:(0.0) options:
+     UIViewAnimationCurveEaseIn animations:^{
+         //         [self.table bringSubviewToFront:card];
+         card.center = dealPoint;
+         NSLog(@"Dealing turn card ");
+     }completion:^(BOOL done){
+         NSString* cardString = [communityCardValues objectAtIndex:3];
+         [card setImage:[self getCardFrontImage:cardString]];
+         [self doAnimations];
+     }];
+}
+- (void)river {    
+    NSArray *communityCardValues = self.scene.currentState.game.communityCards;
+    CGPoint dealPoint = communityCardsCentre;
+    dealPoint.x += 2*cardWidth;
+    
+    //UIImageView *card = [_tableCards objectAtIndex:0];
+    UIImageView *card = [self makeCard];
+    //[self.table bringSubviewToFront:card];
+    [UIView animateWithDuration:0.8 delay:(0.0) options:
+     UIViewAnimationCurveEaseIn animations:^{
+         card.center = dealPoint;
+         NSLog(@"Dealing river card ");
+     }completion:^(BOOL done){
+         //UIImageView *card = [_tableCards objectAtIndex:0];
+         NSString* cardString = [communityCardValues objectAtIndex:4];
+         [card setImage:[self getCardFrontImage:cardString]];
+         [self doAnimations];
+     }];
+}
+
+
+
+-(void)call:(NSNumber*) seat {
+    NSInteger amount = 0;
+    playerInfo *player;
+    for (NSString *key in self.playerInfoDict) {
+        player = [self.playerInfoDict objectForKey:key];
+        if (player.betAmount > amount) {
+            amount = player.betAmount;
+        }
     }    
+    [self bet:amount seat:seat];
+}
+
+- (void)fold:(NSNumber*) seat {
+    
+    playerInfo* player = [self.playerInfoDict objectForKey:seat];
+    CGPoint currentPoint1 = player.card1.center;
+    CGPoint currentPoint2 = player.card2.center;
+    
+    NSInteger foldYDist = 20;
+    if ([seat isEqualToNumber:self.humanSeatNumber]) {
+        foldYDist *= -1;
+        [player.card1 setImage:cardBackImage];
+        [player.card2 setImage:cardBackImage];
+    }
+    
+    [self.table bringSubviewToFront:player.card1];
+    [self.table bringSubviewToFront:player.card2];
+    [UIView animateWithDuration:0.5 delay:0  options:UIViewAnimationOptionCurveEaseOut animations:^{
+        
+        [player.card1 setCenter:CGPointMake(currentPoint1.x, currentPoint1.y + foldYDist)];
+        player.card1.transform = CGAffineTransformMakeRotation(M_PI);
+        [player.card2 setCenter:CGPointMake(currentPoint2.x, currentPoint2.y + foldYDist)];
+        player.card2.transform = CGAffineTransformMakeRotation(300);
+        
+    }completion:^(BOOL done) {
+        [self doAnimations];
+    }];
+    
+}
+
+-(void)check:(NSNumber*)seat {
+    
+    playerInfo* player = [self.playerInfoDict objectForKey:seat];
+    CGPoint currentPoint1 = player.card1.center;
+    CGPoint currentPoint2 = player.card2.center;
+    
+    NSInteger delay = 0;
+    if ([seat isEqualToNumber:self.botSeatNumber]) {
+        delay = 0.3;
+    }
+         
+    [UIView animateWithDuration:0.3 delay:delay  options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        
+        [player.card1 setCenter:CGPointMake(currentPoint1.x - 5, currentPoint1.y)];
+        [player.card2 setCenter:CGPointMake(currentPoint2.x - 5, currentPoint2.y)];
+        
+    }completion:^(BOOL done) {
+        [UIView animateWithDuration:0.3 delay:0.1  options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [player.card1 setCenter:currentPoint1];
+            [player.card2 setCenter:currentPoint2];
+        }completion:nil];
+        [self doAnimations];
+    }];
 }
 
 -(void)bet:(NSInteger)amount seat:(NSNumber*)seat {
     
     playerInfo *bettor = [self.playerInfoDict objectForKey:seat];
     bettor.betAmount = amount; //not += because amount is total current stage amount. ??? check
+    bettor.stackCurrent = bettor.stackFromPreviousStreets - bettor.betAmount;
     
     if (!chipImage) {
         chipImage = [UIImage imageNamed:@"blackChip.png"];
@@ -514,9 +506,150 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
     }completion:^(BOOL done){
         bettor.betAmountLabel.text = [NSString stringWithFormat:@"%d",amount];
         self.scene.potLabel.text = [NSString stringWithFormat:@"%d",[self getPotSize]];
-        bettor.stackLabel.text = [NSString stringWithFormat:@"%d",bettor.stackFromPreviousStreets - bettor.betAmount];
+        bettor.stackLabel.text = [NSString stringWithFormat:@"%d",bettor.stackCurrent];
         [self doAnimations];
     }];
+}
+
+//animations for winner
+- (void)win:(NSNumber*) seat {    
+    [self clearBetAmountLabels];
+    playerInfo *winner = [self.playerInfoDict objectForKey:seat];
+    static NSInteger yOffset = 10;
+    if ([seat isEqualToNumber:self.botSeatNumber]) {
+        yOffset *= -1;
+    }
+    CGPoint chipPoint = CGPointMake(winner.centre.x + 60, winner.centre.y + yOffset);
+    
+    for (NSInteger i=0; i < [self.tableChips count]; i++) {
+        [UIView animateWithDuration:0.5 delay:0.05*i  options:UIViewAnimationOptionCurveEaseOut animations:^{
+            UIImageView *chipView = [self.tableChips objectAtIndex:[self.tableChips count]-1-i];
+            [self.table bringSubviewToFront:chipView];            
+            [chipView setCenter:chipPoint];
+            
+        }completion:^(BOOL done) {
+            if (i==[self.tableChips count] - 1) {
+                winner.stackCurrent += [self getPotSize];
+                winner.stackLabel.text = [NSString stringWithFormat:@"%d" ,winner.stackCurrent];
+                self.scene.potLabel.text = nil;
+                [self doAnimations];
+            }
+        }];
+    }
+}
+
+/*
+ animations for split pot. 
+ Chips go to both players and both stack sizes increase by half pot.
+ */
+- (void)splitPot {
+    
+    [self clearBetAmountLabels];
+    
+    static NSInteger yOffset = 10;
+    playerInfo *bot = [self.playerInfoDict objectForKey:self.botSeatNumber];
+    CGPoint botChipPoint = CGPointMake(bot.centre.x + 60, bot.centre.y - yOffset);
+    playerInfo *human = [self.playerInfoDict objectForKey:self.humanSeatNumber];
+    CGPoint humanChipPoint = CGPointMake(human.centre.x + 60, human.centre.y + yOffset);
+    
+    
+    for (NSInteger i=0; i < [self.tableChips count]; i++) {
+        [UIView animateWithDuration:0.5 delay:0.05*i  options:UIViewAnimationOptionCurveEaseOut animations:^{
+            UIImageView *chipView = [self.tableChips objectAtIndex:[self.tableChips count]-1-i];
+            [self.table bringSubviewToFront:chipView];
+            
+            CGPoint chipPoint;
+            if (i%2==0) {
+                chipPoint = humanChipPoint;
+            } else {
+                chipPoint = botChipPoint;
+            }            
+            [chipView setCenter:chipPoint];
+            
+        }completion:^(BOOL done) {
+            if (i==[self.tableChips count] - 1) {
+                NSInteger pot = [self getPotSize];
+                human.stackCurrent += pot/2;
+                human.stackLabel.text = [NSString stringWithFormat:@"%d" ,human.stackCurrent];
+                bot.stackCurrent += pot/2;
+                bot.stackLabel.text = [NSString stringWithFormat:@"%d" ,bot.stackCurrent];
+                self.scene.potLabel.text = nil;
+                [self doAnimations];
+            }
+        }];
+    }
+}
+
+- (void)showDown {
+    NSLog(@"Showdown");
+    NSString *result = self.scene.currentState.game.gameStage;
+    NSNumber *winningSeat;
+    
+    //work out winner
+    Player *winner;
+    for (NSNumber* key in self.scene.currentState.playerStateDict) {
+        winner = [self.scene.currentState.playerStateDict objectForKey:key];
+        if ([result hasPrefix:winner.name]) {
+            winningSeat = winner.seat;
+            break;
+        }
+    }
+    
+    //move chips to pot.
+    [UIView animateWithDuration:0.8 delay:0 options:nil animations:^{
+        UIImageView *chip;
+        for (chip in self.tableChips) {
+            [chip setCenter:potLocation];
+        }
+    }completion:^(BOOL finished)
+    {
+        //show bots cards
+        Player *bot = [self.scene.currentState.playerStateDict objectForKey:self.botSeatNumber];
+        NSArray *holeCards = bot.holeCards;
+        NSString* botHoleCard1 = [holeCards objectAtIndex:0];
+        NSString* botHoleCard2 = [holeCards objectAtIndex:1];
+        
+        playerInfo *botInfo = [self.playerInfoDict objectForKey: self.botSeatNumber];
+        UIImageView* cardView1 = botInfo.card1;
+        UIImageView* cardView2 = botInfo.card2;
+        
+        [UIView transitionWithView:cardView1 duration:0.4f options:UIViewAnimationOptionTransitionFlipFromLeft animations:^{
+            [cardView1 setImage:[self getCardFrontImage:botHoleCard1]];            
+        } completion:nil];
+        
+        [UIView transitionWithView:cardView2 duration:0.4f options:UIViewAnimationOptionTransitionFlipFromLeft animations:^{
+            [self.table bringSubviewToFront:cardView2];
+            [cardView2 setImage:[self getCardFrontImage:botHoleCard2]];
+        
+        NSLog(@"Card images set for bot");
+        } completion:^(BOOL done) {
+            NSString* resultText = [result stringByReplacingOccurrencesOfString:@"<br>" withString:@""];
+            
+            [self.scene setInfoText:resultText]; //displays winning gamestate message (includes split pot)
+            
+            //ensure there is a winner
+            if (!winningSeat) { //otherwise split pot
+                NSLog(@"NO WINNER!!!!!!! DRAW??????");
+                [self splitPot];
+            } else { //reveal winning hand.
+                playerInfo *winnerInfo = [self.playerInfoDict objectForKey:winningSeat];
+                UIImageView* cardView1 = winnerInfo.card1;
+                UIImageView* cardView2 = winnerInfo.card2;
+                static NSInteger xOffset = 13;
+                NSInteger yOffset = -35;
+                if ([winningSeat isEqualToNumber:self.botSeatNumber]) {
+                    yOffset *= -1;
+                }
+                [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    cardView1.center = CGPointMake(cardView1.center.x - xOffset, cardView1.center.y+yOffset);
+                    cardView2.center = CGPointMake(cardView2.center.x + xOffset, cardView2.center.y+yOffset);
+                } completion:^(BOOL finished) {
+                    [self win:winningSeat];
+                }];
+            }
+            
+        }];
+    }];    
 }
 
 -(NSInteger) getPotSize {
@@ -527,6 +660,26 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
         potSize += playerInfo.betAmount;
     }
     return potSize;
+}
+- (UIImageView*)makeCard{
+    if (!cardBackImage) {
+        cardBackImage = [UIImage imageNamed:@"card_back.png"];
+    }
+    UIImageView *card = [[UIImageView alloc]initWithImage:cardBackImage];
+    card.contentMode = UIViewContentModeScaleAspectFill;
+    [card setFrame:CGRectMake(0, 0, cardWidth, cardHeight)];
+    [card setCenter:deckLocation];
+    
+    [self.table addSubview:card];
+    [_tableCards addObject:card];
+    return card;
+}
+- (UIImage*)getCardFrontImage:(NSString*)name{
+    
+    NSString * newName = [[name stringByReplacingOccurrencesOfString:@"T" withString:@"10"] lowercaseString];
+    NSLog(@"making card %@", newName);
+    UIImage *card = [UIImage imageNamed:[NSString stringWithFormat:@"card_%@.png", newName]];
+    return card;
 }
 
 //-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event

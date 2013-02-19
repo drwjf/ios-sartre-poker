@@ -23,7 +23,9 @@ typedef enum playerActionTypes
     FLOP,
     TURN,
     RIVER,
-    SET_DEALER
+    SHOWDOWN,
+    SET_DEALER,
+    WIN
 } PlayerAction;
 
 @interface PlayerMove : NSObject

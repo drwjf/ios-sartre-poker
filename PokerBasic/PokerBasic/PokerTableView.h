@@ -12,7 +12,6 @@
 @interface PokerTableView : NSObject//UIView
 
 - (id)initWithImage:(UIImageView *) tableImage scene:(GameViewController *)scene;
-- (void)newGame:(NSArray*)holecards dealer:(Boolean)botIsDealer;
 - (void)animate:(NSEnumerator *)enumerator;
 
 @end
