@@ -22,6 +22,7 @@
 @property UIImageView *card2;
 @property UILabel *stackLabel;
 @property UILabel *betAmountLabel;
+@property UILabel *winLabel;
 //@property Player *playerState; //reference unnecessary????
 @end
 @implementation playerInfo
@@ -104,6 +105,7 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
         human.betAmount = 0;
         human.stackCurrent = startingStack;
         human.stackLabel.text = [NSString stringWithFormat:@"%d",human.stackCurrent];
+        human.winLabel = scene.humanWinLabel;
         //human.playerState = [scene.currentState.playerStateDict objectForKey:human.seat];
         
         playerInfo *bot;
@@ -116,6 +118,7 @@ static int xDistanceOfDealerButtonFromPlayer = 100;
         bot.betAmount = 0;
         bot.stackCurrent = startingStack;
         bot.stackLabel.text = [NSString stringWithFormat:@"%d",bot.stackCurrent];
+        bot.winLabel = scene.botWinLabel;
         //bot.playerState = [scene.currentState.playerStateDict objectForKey:bot.seat];
         
         self.playerInfoDict = [NSDictionary dictionaryWithObjectsAndKeys: bot, bot.seat, human, human.seat, nil];
@@ -285,12 +288,13 @@ Method that gets called by animte, and then again each time an animtion finishes
                      UIImageView* cardView1 = human.card1;
                      UIImageView* cardView2 = human.card2;
                      
-                     [UIView transitionWithView:cardView1 duration:0.4f options:UIViewAnimationOptionTransitionFlipFromLeft animations:^{
+                     //[UIView transitionWithView:cardView1 duration:0.4f options:UIViewAnimationOptionTransitionFlipFromLeft animations:^{
+                     [UIView transitionWithView:cardView1 duration:0.4f options:UIViewAnimationOptionTransitionNone animations:^{
                          [cardView1 setImage:[self getCardFrontImage:humanHoleCard1]];
                          
                      } completion:nil];
                      
-                     [UIView transitionWithView:cardView2 duration:0.4f options:UIViewAnimationOptionTransitionFlipFromLeft animations:^{
+                     [UIView transitionWithView:cardView2 duration:0.4f options:UIViewAnimationOptionTransitionNone animations:^{
                          [self.table bringSubviewToFront:cardView2];
                          [cardView2 setImage:[self getCardFrontImage:humanHoleCard2]];
                          
@@ -522,7 +526,7 @@ Method that gets called by animte, and then again each time an animtion finishes
     CGPoint chipPoint = CGPointMake(winner.centre.x + 60, winner.centre.y + yOffset);
     
     for (NSInteger i=0; i < [self.tableChips count]; i++) {
-        [UIView animateWithDuration:0.5 delay:0.05*i  options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [UIView animateWithDuration:0.5 delay:0.05*i  options:UIViewAnimationOptionCurveEaseInOut animations:^{
             UIImageView *chipView = [self.tableChips objectAtIndex:[self.tableChips count]-1-i];
             [self.table bringSubviewToFront:chipView];            
             [chipView setCenter:chipPoint];
@@ -553,13 +557,16 @@ Method that gets called by animte, and then again each time an animtion finishes
     CGPoint humanChipPoint = CGPointMake(human.centre.x + 60, human.centre.y + yOffset);
     
     
+    
     for (NSInteger i=0; i < [self.tableChips count]; i++) {
         [UIView animateWithDuration:0.5 delay:0.05*i  options:UIViewAnimationOptionCurveEaseOut animations:^{
             UIImageView *chipView = [self.tableChips objectAtIndex:[self.tableChips count]-1-i];
             [self.table bringSubviewToFront:chipView];
             
+            NSUInteger chipToHuman = [self.tableChips indexOfObject:chipView];
+            
             CGPoint chipPoint;
-            if (i%2==0) {
+            if (chipToHuman%2 == 0) {
                 chipPoint = humanChipPoint;
             } else {
                 chipPoint = botChipPoint;
@@ -613,11 +620,12 @@ Method that gets called by animte, and then again each time an animtion finishes
         UIImageView* cardView1 = botInfo.card1;
         UIImageView* cardView2 = botInfo.card2;
         
-        [UIView transitionWithView:cardView1 duration:0.4f options:UIViewAnimationOptionTransitionFlipFromLeft animations:^{
+        //[UIView transitionWithView:cardView1 duration:0.4f options:UIViewAnimationOptionTransitionFlipFromLeft animations:^{
+        [UIView transitionWithView:cardView1 duration:0.4f options:UIViewAnimationOptionTransitionNone animations:^{
             [cardView1 setImage:[self getCardFrontImage:botHoleCard1]];            
         } completion:nil];
         
-        [UIView transitionWithView:cardView2 duration:0.4f options:UIViewAnimationOptionTransitionFlipFromLeft animations:^{
+        [UIView transitionWithView:cardView2 duration:0.4f options:UIViewAnimationOptionTransitionNone animations:^{
             [self.table bringSubviewToFront:cardView2];
             [cardView2 setImage:[self getCardFrontImage:botHoleCard2]];
         
@@ -633,6 +641,9 @@ Method that gets called by animte, and then again each time an animtion finishes
                 [self splitPot];
             } else { //reveal winning hand.
                 playerInfo *winnerInfo = [self.playerInfoDict objectForKey:winningSeat];
+                
+                NSString* resultText = [result stringByReplacingOccurrencesOfString:@"<br>" withString:@""];                
+                winnerInfo.winLabel.text = resultText;
                 UIImageView* cardView1 = winnerInfo.card1;
                 UIImageView* cardView2 = winnerInfo.card2;
                 static NSInteger xOffset = 13;
@@ -676,7 +687,8 @@ Method that gets called by animte, and then again each time an animtion finishes
 }
 - (UIImage*)getCardFrontImage:(NSString*)name{
     
-    NSString * newName = [[name stringByReplacingOccurrencesOfString:@"T" withString:@"10"] lowercaseString];
+    //NSString * newName = [[name stringByReplacingOccurrencesOfString:@"T" withString:@"10"] lowercaseString]; for non HiDP cards
+    NSString * newName = [name lowercaseString];
     NSLog(@"making card %@", newName);
     UIImage *card = [UIImage imageNamed:[NSString stringWithFormat:@"card_%@.png", newName]];
     return card;

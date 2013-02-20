@@ -95,6 +95,9 @@ static NSUInteger bigBet = 4;
     self.nameOnServerLabel.text = @"";
     self.botNameLabel.text = nil;
     
+    self.humanWinLabel.text = nil;
+    self.botWinLabel.text = nil;
+    
     //self.infoTextView.text = [self.client description];
     //[self.client showState];
     
@@ -332,7 +335,11 @@ static NSUInteger bigBet = 4;
 - (IBAction)nextGameButtonPress:(id)sender {
     self.botBetAmountLabel.text = nil;
     self.humanBetAmountLabel.text = nil;
-    self.potLabel.text = nil;
+    self.potLabel.text = nil;    
+    self.humanWinLabel.text = nil;
+    self.botWinLabel.text = nil;
+    
+    self.infoTextView.text = nil;
     
     [self setInfoText:@""];
     
@@ -366,6 +373,7 @@ static NSUInteger bigBet = 4;
     NSString *one = self.infoTextView.text;
     NSString *new = [NSString stringWithFormat:@"%@\n%@", one, text];
     self.infoTextView.text = new;
+    
     [self.infoTextView scrollRangeToVisible:NSMakeRange(new.length, 0)];
     //[TextView scrollRangeToVisible:NSMakeRange([TextView.text length], 0)];
     
