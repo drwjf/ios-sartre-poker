@@ -37,6 +37,7 @@
 
 @property PokerTableView *pokerTable;
 @property (weak, nonatomic) IBOutlet UIImageView *tableImage;
+@property BOOL scrollTextViewToEnd;
 
 - (IBAction)actionButtonPress:(id)sender;
 - (IBAction)nextGameButtonPress:(id)sender;
@@ -98,6 +99,7 @@ static NSUInteger bigBet = 4;
     self.humanWinLabel.text = nil;
     self.botWinLabel.text = nil;
     
+    self.infoTextView.text = nil;
     //self.infoTextView.text = [self.client description];
     //[self.client showState];
     
@@ -371,11 +373,20 @@ static NSUInteger bigBet = 4;
     //    }
     
     NSString *one = self.infoTextView.text;
-    NSString *new = [NSString stringWithFormat:@"%@\n%@", one, text];
+    NSString *new;
+    if (one.length > 0) {
+        new = [NSString stringWithFormat:@"%@\n%@", one, text];
+    } else {
+        new = text;
+    }
     self.infoTextView.text = new;
     
-    [self.infoTextView scrollRangeToVisible:NSMakeRange(new.length, 0)];
-    //[TextView scrollRangeToVisible:NSMakeRange([TextView.text length], 0)];
+    if (self.scrollTextViewToEnd) {
+        [self.infoTextView scrollRangeToVisible:NSMakeRange(new.length, 0)];
+        //[TextView scrollRangeToVisible:NSMakeRange([TextView.text length], 0)];
+    } else {
+        [self.infoTextView scrollRangeToVisible:NSMakeRange(0, 4)];
+    }
     
 }
 
@@ -388,7 +399,7 @@ static NSUInteger bigBet = 4;
 //    NSString *seat = [move.seat description];
     NSInteger amount = move.betAmount;
     
-    
+    self.scrollTextViewToEnd = true;
     NSString *text;
     
     switch (action) {
@@ -403,6 +414,7 @@ static NSUInteger bigBet = 4;
             break;
         case SMALLBLIND:
         case BIGBLIND:
+            self.scrollTextViewToEnd = false;
             text = [NSString stringWithFormat:@"%@ pays %@ of %d.", player.name, actionString, amount];
             break;
         case PREFLOP:
@@ -413,6 +425,7 @@ static NSUInteger bigBet = 4;
             text = [NSString stringWithFormat:@"=== %@ ===", actionString];
             break;
         case SET_DEALER:
+            self.scrollTextViewToEnd = false;
             text = [NSString stringWithFormat:@"Dealer is %@.", player.name];
             break;
         case WIN:

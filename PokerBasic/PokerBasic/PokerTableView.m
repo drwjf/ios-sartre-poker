@@ -674,7 +674,7 @@ Method that gets called by animte, and then again each time an animtion finishes
 }
 - (UIImageView*)makeCard{
     if (!cardBackImage) {
-        cardBackImage = [UIImage imageNamed:@"card_back.png"];
+        cardBackImage = [UIImage imageNamed:@"card_back3.png"];
     }
     UIImageView *card = [[UIImageView alloc]initWithImage:cardBackImage];
     card.contentMode = UIViewContentModeScaleAspectFill;

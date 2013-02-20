@@ -81,7 +81,10 @@
 		56B0B45716D42906005B43F6 /* card_td.png in Resources */ = {isa = PBXBuildFile; fileRef = 56B0B42316D42906005B43F6 /* card_td.png */; };
 		56B0B45816D42906005B43F6 /* card_th.png in Resources */ = {isa = PBXBuildFile; fileRef = 56B0B42416D42906005B43F6 /* card_th.png */; };
 		56B0B45916D42906005B43F6 /* card_ts.png in Resources */ = {isa = PBXBuildFile; fileRef = 56B0B42516D42906005B43F6 /* card_ts.png */; };
-		56B0B45C16D42A30005B43F6 /* card_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 56B0B45B16D42A30005B43F6 /* card_back.png */; };
+		56B0B45E16D4555E005B43F6 /* PokerTable.png in Resources */ = {isa = PBXBuildFile; fileRef = 56B0B45D16D4555E005B43F6 /* PokerTable.png */; };
+		56B0B46016D45A03005B43F6 /* table_felt.png in Resources */ = {isa = PBXBuildFile; fileRef = 56B0B45F16D45A03005B43F6 /* table_felt.png */; };
+		56B0B46216D46792005B43F6 /* black_lozenge.png in Resources */ = {isa = PBXBuildFile; fileRef = 56B0B46116D46792005B43F6 /* black_lozenge.png */; };
+		56B0B46416D479AA005B43F6 /* card_back3.png in Resources */ = {isa = PBXBuildFile; fileRef = 56B0B46316D479AA005B43F6 /* card_back3.png */; };
 		56C2868416B226DA00DEEA09 /* Game.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C2868316B226DA00DEEA09 /* Game.m */; };
 		56C2868C16B22DCC00DEEA09 /* Human.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C2868B16B22DCC00DEEA09 /* Human.m */; };
 		56D2E94616B0DF01007F3413 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D2E94516B0DF01007F3413 /* GameViewController.m */; };
@@ -176,7 +179,10 @@
 		56B0B42316D42906005B43F6 /* card_td.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_td.png; sourceTree = "<group>"; };
 		56B0B42416D42906005B43F6 /* card_th.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_th.png; sourceTree = "<group>"; };
 		56B0B42516D42906005B43F6 /* card_ts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_ts.png; sourceTree = "<group>"; };
-		56B0B45B16D42A30005B43F6 /* card_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_back.png; sourceTree = "<group>"; };
+		56B0B45D16D4555E005B43F6 /* PokerTable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PokerTable.png; sourceTree = "<group>"; };
+		56B0B45F16D45A03005B43F6 /* table_felt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = table_felt.png; sourceTree = "<group>"; };
+		56B0B46116D46792005B43F6 /* black_lozenge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = black_lozenge.png; sourceTree = "<group>"; };
+		56B0B46316D479AA005B43F6 /* card_back3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_back3.png; path = ../card_back3.png; sourceTree = "<group>"; };
 		56C2868216B226DA00DEEA09 /* Game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Game.h; sourceTree = "<group>"; };
 		56C2868316B226DA00DEEA09 /* Game.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Game.m; sourceTree = "<group>"; };
 		56C2868B16B22DCC00DEEA09 /* Human.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Human.m; sourceTree = "<group>"; };
@@ -267,9 +273,9 @@
 		562C9CB416BB6121004C15BF /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				56B0B46116D46792005B43F6 /* black_lozenge.png */,
 				56AA894616D1B36200B181B5 /* fileclose.png */,
 				56AA894816D1B5B300B181B5 /* close.png */,
-				56B0B45A16D42A30005B43F6 /* Card_back_HiDP */,
 				56B0B3F116D42906005B43F6 /* Cards_HiDP_WithGradient */,
 				562C9CF516BB6121004C15BF /* Chips */,
 				562C9CFB16BB6121004C15BF /* Table */,
@@ -300,6 +306,8 @@
 		562C9CFB16BB6121004C15BF /* Table */ = {
 			isa = PBXGroup;
 			children = (
+				56B0B45F16D45A03005B43F6 /* table_felt.png */,
+				56B0B45D16D4555E005B43F6 /* PokerTable.png */,
 				562C9CFC16BB6121004C15BF /* HiDP */,
 			);
 			path = Table;
@@ -329,6 +337,7 @@
 		56B0B3F116D42906005B43F6 /* Cards_HiDP_WithGradient */ = {
 			isa = PBXGroup;
 			children = (
+				56B0B46316D479AA005B43F6 /* card_back3.png */,
 				56B0B3F216D42906005B43F6 /* card_2c.png */,
 				56B0B3F316D42906005B43F6 /* card_2d.png */,
 				56B0B3F416D42906005B43F6 /* card_2h.png */,
@@ -383,15 +392,6 @@
 				56B0B42516D42906005B43F6 /* card_ts.png */,
 			);
 			path = Cards_HiDP_WithGradient;
-			sourceTree = "<group>";
-		};
-		56B0B45A16D42A30005B43F6 /* Card_back_HiDP */ = {
-			isa = PBXGroup;
-			children = (
-				56B0B45B16D42A30005B43F6 /* card_back.png */,
-			);
-			name = Card_back_HiDP;
-			path = HiDP;
 			sourceTree = "<group>";
 		};
 		56C2868016B2257C00DEEA09 /* Classes */ = {
@@ -537,7 +537,10 @@
 				56B0B45716D42906005B43F6 /* card_td.png in Resources */,
 				56B0B45816D42906005B43F6 /* card_th.png in Resources */,
 				56B0B45916D42906005B43F6 /* card_ts.png in Resources */,
-				56B0B45C16D42A30005B43F6 /* card_back.png in Resources */,
+				56B0B45E16D4555E005B43F6 /* PokerTable.png in Resources */,
+				56B0B46016D45A03005B43F6 /* table_felt.png in Resources */,
+				56B0B46216D46792005B43F6 /* black_lozenge.png in Resources */,
+				56B0B46416D479AA005B43F6 /* card_back3.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
