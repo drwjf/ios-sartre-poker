@@ -33,31 +33,31 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)testSegueButton:(id)sender {
-    [self performSegueWithIdentifier: @"SegueToGame" sender: self];
-}
-
-- (IBAction)testConnectionButton:(id)sender {
-    NSURL *url;
-    NSURLRequest *request;
-    AFJSONRequestOperation *operation;
-    
-    url = [NSURL URLWithString:@"http://httpbin.org/ip"];
-    request = [NSURLRequest requestWithURL:url];
-    operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        NSLog(@"IP Address: %@", [JSON valueForKeyPath:@"origin"]);
-        self.loginStatusLabel.text = [JSON valueForKeyPath:@"origin"];
-    } failure:nil];
-    self.loginStatusLabel.text = @"Establishing internet connection";
-    [operation start];
-    
-    url = [NSURL URLWithString:@"https://alpha-api.app.net/stream/0/posts/stream/global"];
-    request = [NSURLRequest requestWithURL:url];
-    operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        NSLog(@"App.net Global Stream: %@", JSON);
-    } failure:nil];
-    [operation start];
-}
+//- (IBAction)testSegueButton:(id)sender {
+//    [self performSegueWithIdentifier: @"SegueToGame" sender: self];
+//}
+//
+//- (IBAction)testConnectionButton:(id)sender {
+//    NSURL *url;
+//    NSURLRequest *request;
+//    AFJSONRequestOperation *operation;
+//    
+//    url = [NSURL URLWithString:@"http://httpbin.org/ip"];
+//    request = [NSURLRequest requestWithURL:url];
+//    operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+//        NSLog(@"IP Address: %@", [JSON valueForKeyPath:@"origin"]);
+//        self.loginStatusLabel.text = [JSON valueForKeyPath:@"origin"];
+//    } failure:nil];
+//    self.loginStatusLabel.text = @"Establishing internet connection";
+//    [operation start];
+//    
+//    url = [NSURL URLWithString:@"https://alpha-api.app.net/stream/0/posts/stream/global"];
+//    request = [NSURLRequest requestWithURL:url];
+//    operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+//        NSLog(@"App.net Global Stream: %@", JSON);
+//    } failure:nil];
+//    [operation start];
+//}
 
 - (IBAction)loginButton:(id)sender {
     

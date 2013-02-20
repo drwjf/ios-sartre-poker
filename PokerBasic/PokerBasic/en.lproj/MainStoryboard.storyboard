@@ -9,111 +9,105 @@
             <objects>
                 <viewController id="2" customClass="LoginViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3">
-                        <rect key="frame" x="0.0" y="20" width="568" height="300"/>
+                        <rect key="frame" x="0.0" y="20" width="480" height="300"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Qe-T8-2wE">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="HomeScreen.png" translatesAutoresizingMaskIntoConstraints="NO" id="YYE-k5-8oZ"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zum-0X-fBO">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="158" id="8MJ-Y8-Dax"/>
-                                    <constraint firstAttribute="height" constant="43" id="TpC-oQ-vGl"/>
+                                    <constraint firstAttribute="width" constant="70" id="fJf-Du-Wf1"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Connect">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Rules" backgroundImage="black_lozenge.png">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <action selector="loginButton:" destination="2" eventType="touchUpInside" id="XPH-BX-MyH"/>
-                                </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Welcome to UoA Poker" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ke0-pr-ua5">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Sartre Limit Poker" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ke0-pr-ua5">
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="vTV-bZ-FAb"/>
+                                    <constraint firstAttribute="height" constant="44" id="bu0-9O-Xee"/>
+                                    <constraint firstAttribute="width" constant="393" id="pdq-Yr-EBs"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
+                                <size key="shadowOffset" width="12" height="2"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="User name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VOF-33-faS">
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="bo2-wJ-8vC"/>
-                                    <constraint firstAttribute="width" constant="175" id="eH8-ri-rks"/>
+                                    <constraint firstAttribute="width" constant="175" id="efK-PC-sQI"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U1K-Gl-8Kb">
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Test Internet Connection">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="testConnectionButton:" destination="2" eventType="touchUpInside" id="cWL-We-iRY"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Status:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rmb-Md-fjE">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="HpJ-4m-LvB"/>
-                                    <constraint firstAttribute="width" constant="53" id="oup-x9-Xyg"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lPt-8g-Db9">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lPt-8g-Db9">
                                 <constraints>
                                     <constraint firstAttribute="width" constant="316" id="uIB-Nm-oqU"/>
                                     <constraint firstAttribute="height" constant="21" id="ziN-Nh-2Wp"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LI4-HX-yvb">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bGa-yy-ida">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="70" id="Ei5-Z7-vSa"/>
+                                    <constraint firstAttribute="height" constant="44" id="Eps-iD-Lxr"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Test Segue">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="About" backgroundImage="black_lozenge.png">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2OB-A5-aLj">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="MK9-uE-iaW"/>
+                                    <constraint firstAttribute="height" constant="44" id="oaE-Kc-ImD"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Play" backgroundImage="black_lozenge.png">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="testSegueButton:" destination="2" eventType="touchUpInside" id="SYD-jg-cMq"/>
+                                    <action selector="loginButton:" destination="2" eventType="touchUpInside" id="heQ-sI-64d"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="rmb-Md-fjE" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="3ge-fD-eoa"/>
-                            <constraint firstItem="LI4-HX-yvb" firstAttribute="baseline" secondItem="lPt-8g-Db9" secondAttribute="baseline" type="default" id="3gl-fk-ebW"/>
-                            <constraint firstItem="ke0-pr-ua5" firstAttribute="top" secondItem="3" secondAttribute="top" type="default" id="8Mo-UT-GOP"/>
-                            <constraint firstItem="VOF-33-faS" firstAttribute="top" secondItem="ke0-pr-ua5" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="FoH-HL-pyu"/>
-                            <constraint firstItem="ke0-pr-ua5" firstAttribute="centerX" secondItem="3" secondAttribute="centerX" type="default" id="Iq3-Wf-JNL"/>
-                            <constraint firstItem="2Qe-T8-2wE" firstAttribute="top" secondItem="3" secondAttribute="top" constant="45" id="JRS-bB-mGq"/>
-                            <constraint firstItem="U1K-Gl-8Kb" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="YGL-pf-at4"/>
-                            <constraint firstItem="rmb-Md-fjE" firstAttribute="top" secondItem="3" secondAttribute="top" constant="89" id="iv1-vv-2YU"/>
-                            <constraint firstItem="2Qe-T8-2wE" firstAttribute="leading" secondItem="VOF-33-faS" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="jGY-Zm-1Y0"/>
-                            <constraint firstItem="LI4-HX-yvb" firstAttribute="baseline" secondItem="2Qe-T8-2wE" secondAttribute="baseline" type="default" id="nTY-LV-nND"/>
-                            <constraint firstAttribute="bottom" secondItem="U1K-Gl-8Kb" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="oRf-Nf-zJq"/>
-                            <constraint firstItem="LI4-HX-yvb" firstAttribute="leading" secondItem="lPt-8g-Db9" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="qdh-TU-CB4"/>
-                            <constraint firstItem="lPt-8g-Db9" firstAttribute="top" secondItem="3" secondAttribute="top" constant="109" id="tys-Ki-Og1"/>
-                            <constraint firstItem="2Qe-T8-2wE" firstAttribute="baseline" secondItem="VOF-33-faS" secondAttribute="baseline" type="default" id="wtS-3P-3tP"/>
-                            <constraint firstItem="lPt-8g-Db9" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="xMb-Y5-gFe"/>
-                            <constraint firstItem="VOF-33-faS" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="88" id="y8o-Tp-2YX"/>
+                            <constraint firstItem="YYE-k5-8oZ" firstAttribute="bottom" secondItem="3" secondAttribute="bottom" type="default" id="06C-Rn-exi"/>
+                            <constraint firstItem="bGa-yy-ida" firstAttribute="leading" secondItem="VOF-33-faS" secondAttribute="leading" type="default" id="3ik-gY-wjD"/>
+                            <constraint firstItem="2OB-A5-aLj" firstAttribute="centerX" secondItem="lPt-8g-Db9" secondAttribute="centerX" type="default" id="4MK-IY-MRF"/>
+                            <constraint firstItem="Zum-0X-fBO" firstAttribute="trailing" secondItem="VOF-33-faS" secondAttribute="trailing" type="default" id="8pZ-nN-dHM"/>
+                            <constraint firstItem="VOF-33-faS" firstAttribute="centerX" secondItem="ke0-pr-ua5" secondAttribute="centerX" type="default" id="C2I-iY-dRG"/>
+                            <constraint firstItem="YYE-k5-8oZ" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="CqM-ra-esY"/>
+                            <constraint firstItem="VOF-33-faS" firstAttribute="top" secondItem="ke0-pr-ua5" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="GBa-LK-aqB"/>
+                            <constraint firstItem="YYE-k5-8oZ" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="H6U-Aj-uKl"/>
+                            <constraint firstItem="2OB-A5-aLj" firstAttribute="centerX" secondItem="VOF-33-faS" secondAttribute="centerX" type="default" id="JO0-C2-YMJ"/>
+                            <constraint firstItem="YYE-k5-8oZ" firstAttribute="top" secondItem="3" secondAttribute="top" type="default" id="dU3-aK-Uy7"/>
+                            <constraint firstItem="2OB-A5-aLj" firstAttribute="top" secondItem="VOF-33-faS" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="f65-jv-Hja"/>
+                            <constraint firstItem="ke0-pr-ua5" firstAttribute="top" secondItem="3" secondAttribute="top" constant="10" id="iv2-7c-myr"/>
+                            <constraint firstItem="VOF-33-faS" firstAttribute="centerX" secondItem="YYE-k5-8oZ" secondAttribute="centerX" type="default" id="jP8-Mv-hut"/>
+                            <constraint firstItem="Zum-0X-fBO" firstAttribute="top" secondItem="bGa-yy-ida" secondAttribute="top" type="default" id="jcR-Yv-FBN"/>
+                            <constraint firstAttribute="bottom" secondItem="bGa-yy-ida" secondAttribute="bottom" constant="43" id="jno-5a-GZF"/>
+                            <constraint firstItem="lPt-8g-Db9" firstAttribute="top" secondItem="2OB-A5-aLj" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="t5p-dW-y5A"/>
+                            <constraint firstItem="Zum-0X-fBO" firstAttribute="bottom" secondItem="bGa-yy-ida" secondAttribute="bottom" type="default" id="v88-pm-4tW"/>
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
-                        <outlet property="loginButton" destination="2Qe-T8-2wE" id="eK7-m9-YLe"/>
                         <outlet property="loginStatusLabel" destination="lPt-8g-Db9" id="atJ-ze-dwv"/>
                         <outlet property="userNameField" destination="VOF-33-faS" id="P3q-Q8-eD8"/>
                         <segue destination="ibq-cX-bdl" kind="modal" identifier="SegueToGame" id="wXf-xe-9M6"/>
@@ -128,7 +122,7 @@
             <objects>
                 <viewController id="ibq-cX-bdl" customClass="GameViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DHQ-1f-BjS">
-                        <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="320"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" alpha="0.94999999999999996" contentMode="scaleToFill" image="PokerTable.png" translatesAutoresizingMaskIntoConstraints="NO" id="jeq-gH-WP2"/>
@@ -398,6 +392,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="HomeScreen.png" width="972" height="518"/>
         <image name="PokerTable.png" width="960" height="640"/>
         <image name="black_lozenge.png" width="38" height="38"/>
         <image name="close.png" width="64" height="64"/>
@@ -435,6 +430,8 @@
         <class className="LoginViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/LoginViewController.h"/>
             <relationships>
+                <relationship kind="action" name="loginButton:"/>
+                <relationship kind="action" name="returned:" candidateClass="UIStoryboardSegue"/>
                 <relationship kind="outlet" name="loginButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="loginStatusLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="userNameField" candidateClass="UITextField"/>
@@ -443,10 +440,13 @@
         <class className="NSLayoutConstraint" superclassName="NSObject">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
         </class>
+        <class className="UIStoryboardSegue" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UIStoryboardSegue.h"/>
+        </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
+        <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
 </document>
