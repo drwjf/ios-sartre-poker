@@ -25,6 +25,9 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <segue destination="6Fa-os-peC" kind="modal" modalTransitionStyle="partialCurl" id="koU-OH-ugw"/>
+                                </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Sartre Limit Poker" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ke0-pr-ua5">
                                 <constraints>
@@ -42,6 +45,9 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="2" id="GNe-Hr-F5W"/>
+                                </connections>
                             </textField>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lPt-8g-Db9">
                                 <constraints>
@@ -65,6 +71,9 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <segue destination="x0n-zK-u3T" kind="modal" identifier="AboutSegue" modalTransitionStyle="partialCurl" id="XSL-h4-Ja7"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2OB-A5-aLj">
                                 <constraints>
@@ -110,12 +119,108 @@
                     <connections>
                         <outlet property="loginStatusLabel" destination="lPt-8g-Db9" id="atJ-ze-dwv"/>
                         <outlet property="userNameField" destination="VOF-33-faS" id="P3q-Q8-eD8"/>
-                        <segue destination="ibq-cX-bdl" kind="modal" identifier="SegueToGame" id="wXf-xe-9M6"/>
+                        <segue destination="ibq-cX-bdl" kind="modal" identifier="SegueToGame" modalTransitionStyle="flipHorizontal" id="wXf-xe-9M6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="293" y="-73"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="6Lw-A7-im0">
+            <objects>
+                <viewController id="6Fa-os-peC" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5dh-Ie-ynP">
+                        <rect key="frame" x="0.0" y="20" width="480" height="300"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="green.png" translatesAutoresizingMaskIntoConstraints="NO" id="sdi-RJ-e8w"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="68i-Io-OKE">
+                                <string key="text">        The Rules
+
+The game of Texas hold'em is played in four stages, these include the preflop, flop, turn and the river. During each round all active players need to make a betting decision. Each betting decision is summarised below:
+
+Fold: A player discards their hand and contributes no money to the pot. Once a player folds they are no longer involved in the current hand, but can still participate in any future hands.
+
+Check/Call: A player contributes the least amount possible to stay in the hand. A check means that the player invests nothing, whereas a call means the player invests the least amount required, greater than $0.
+
+Bet/Raise: A player can invest their own money to the pot over and above what is needed to stay in the current round. If the player is able to check, but they decide to add money to the pot this is called a bet. If a player is able to call, but decides to add more money to the pot this is called a raise.
+
+All betting is controlled by two imposed limits known as the small bet and the big bet. For example, in a $1/$2 game, the small bet is $1 and all betting that occurs during the preflop and the flop are in increments of the small bet. During the turn and the river all betting is in increments of the big bet, $2. The number of bets made within each stage of the game is capped at a maximum of 4 per player. Before the hand begins two forced bets are made, known as the small blind (half the small bet) and the big blind (one full small bet), to ensure that there is something in the pot to begin with. Each of the four game stages are summarised below:
+
+Preflop: The game of Texas hold'em begins with each player being dealt two hole cards which only they can see. A round of betting occurs. Once a player has made their decision play continues in a clockwise fashion round the table. As long as there are at least two players left then play continues to the next stage. During any stage of the game if all players, except one, fold their hand then the player who did not fold their hand wins the pot and the hand is over.
+
+Flop: Once the preflop betting has completed three community cards are dealt. Community cards are shared by all players at the table. Players use their hole cards along with the community cards to make their best hand. Another round of betting occurs.
+
+Turn: The turn involves the drawing of one more community card. Once again players use any combination of their hole cards and the community cards to make their best hand. Another round of betting occurs and as long as there are at least two players left then play continues to the final stage.
+
+River: During the river the final community card is dealt proceeded by a final round of betting. If at least two players are still active in the hand a showdown occurs in which all players reveal their hole cards and the player with the highest ranking hand wins the entire pot (in the event that more than one player holds the winning hand then the pot is split evenly between these players). </string>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="68i-Io-OKE" firstAttribute="bottom" secondItem="5dh-Ie-ynP" secondAttribute="bottom" type="default" id="HmK-Ux-Zxq"/>
+                            <constraint firstItem="sdi-RJ-e8w" firstAttribute="trailing" secondItem="5dh-Ie-ynP" secondAttribute="trailing" type="default" id="KgF-CW-C7T"/>
+                            <constraint firstItem="sdi-RJ-e8w" firstAttribute="bottom" secondItem="5dh-Ie-ynP" secondAttribute="bottom" type="default" id="Ptk-8v-fqA"/>
+                            <constraint firstItem="68i-Io-OKE" firstAttribute="leading" secondItem="5dh-Ie-ynP" secondAttribute="leading" type="default" id="k8c-go-QfR"/>
+                            <constraint firstItem="68i-Io-OKE" firstAttribute="trailing" secondItem="5dh-Ie-ynP" secondAttribute="trailing" type="default" id="mzr-ZL-0UQ"/>
+                            <constraint firstItem="68i-Io-OKE" firstAttribute="top" secondItem="5dh-Ie-ynP" secondAttribute="top" constant="20" symbolic="YES" type="default" id="tK2-6X-nQN"/>
+                            <constraint firstItem="sdi-RJ-e8w" firstAttribute="leading" secondItem="5dh-Ie-ynP" secondAttribute="leading" type="default" id="uae-2q-iSj"/>
+                            <constraint firstItem="sdi-RJ-e8w" firstAttribute="top" secondItem="5dh-Ie-ynP" secondAttribute="top" type="default" id="usH-Wr-Fvc"/>
+                        </constraints>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9Qv-Sa-BY9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="360" y="510"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="EXK-cs-68H">
+            <objects>
+                <viewController id="x0n-zK-u3T" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="PhD-gF-hws">
+                        <rect key="frame" x="0.0" y="20" width="480" height="300"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="green.png" translatesAutoresizingMaskIntoConstraints="NO" id="pqv-p8-5jk"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="YuV-dO-RDo">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="172" id="2BT-ks-Oxj"/>
+                                </constraints>
+                                <string key="text">iOS App devloped by Sam Grace
+
+Sartre Poker Bot developed by Jonathan Rubin
+
+University of Auckland Game AI Group
+http://www.cs.auckland.ac.nz/research/gameai/ </string>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="pqv-p8-5jk" firstAttribute="top" secondItem="PhD-gF-hws" secondAttribute="top" type="default" id="3zl-bg-q7a"/>
+                            <constraint firstItem="pqv-p8-5jk" firstAttribute="trailing" secondItem="PhD-gF-hws" secondAttribute="trailing" type="default" id="EkV-Pq-OBy"/>
+                            <constraint firstItem="YuV-dO-RDo" firstAttribute="top" secondItem="PhD-gF-hws" secondAttribute="top" constant="66" id="Jus-zw-7jF"/>
+                            <constraint firstItem="YuV-dO-RDo" firstAttribute="leading" secondItem="PhD-gF-hws" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="Ley-nD-hP4"/>
+                            <constraint firstAttribute="trailing" secondItem="YuV-dO-RDo" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="R3e-dP-6hG"/>
+                            <constraint firstItem="pqv-p8-5jk" firstAttribute="leading" secondItem="PhD-gF-hws" secondAttribute="leading" type="default" id="cwK-BF-veD"/>
+                            <constraint firstItem="pqv-p8-5jk" firstAttribute="bottom" secondItem="PhD-gF-hws" secondAttribute="bottom" type="default" id="jzM-Db-kj2"/>
+                        </constraints>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FeE-hu-o8q" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="977" y="261"/>
         </scene>
         <!--Game View Controller-->
         <scene sceneID="L9s-Eg-mKW">
@@ -175,6 +280,22 @@
                                     <action selector="actionButtonPress:" destination="ibq-cX-bdl" eventType="touchUpInside" id="cNU-Wq-6vA"/>
                                 </connections>
                             </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kjp-Ke-BBC">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="101" id="pIr-1H-aAc"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="New Game" backgroundImage="black_lozenge.png">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="nextGameButtonPress:" destination="ibq-cX-bdl" eventType="touchUpInside" id="Jxa-fy-MzP"/>
+                                </connections>
+                            </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" text="Text View" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="mWo-ja-Mfr">
                                 <constraints>
                                     <constraint firstAttribute="width" constant="231" id="nL0-dj-yPx"/>
@@ -200,7 +321,7 @@
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="botStackLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KQm-HK-DCs">
                                 <constraints>
                                     <constraint firstAttribute="width" constant="186" id="GtQ-EX-ztx"/>
-                                    <constraint firstAttribute="height" constant="21" id="gZA-kw-C4Y"/>
+                                    <constraint firstAttribute="height" constant="21" id="dTP-Xn-sAZ"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -215,22 +336,6 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kjp-Ke-BBC">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="101" id="pIr-1H-aAc"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="New Game" backgroundImage="black_lozenge.png">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="nextGameButtonPress:" destination="ibq-cX-bdl" eventType="touchUpInside" id="Jxa-fy-MzP"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="playerStackLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kTw-Gt-iIt">
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="oi6-vi-mYW"/>
@@ -274,18 +379,18 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button autoresizesSubviews="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pXK-e5-h2i">
+                            <button autoresizesSubviews="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pXK-e5-h2i">
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <accessibilityTraits key="traits" none="YES" button="YES" image="YES"/>
                                 </accessibility>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="19" id="EyX-oh-lrW"/>
-                                    <constraint firstAttribute="width" constant="19" id="xCs-Kk-8em"/>
+                                    <constraint firstAttribute="height" constant="20" id="Va3-Kf-uHJ"/>
+                                    <constraint firstAttribute="width" constant="53" id="Vdp-Cc-YJO"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
-                                <state key="normal" backgroundImage="close.png">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="Leave" backgroundImage="black_lozenge.png">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted">
@@ -315,8 +420,9 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="pXK-e5-h2i" firstAttribute="leading" secondItem="DHQ-1f-BjS" secondAttribute="leading" type="default" id="23f-VO-dN6"/>
                             <constraint firstAttribute="bottom" secondItem="lTc-sb-Y2P" secondAttribute="bottom" constant="125" id="3Uc-Vk-dcs"/>
-                            <constraint firstItem="yVP-Js-dy3" firstAttribute="leading" secondItem="DHQ-1f-BjS" secondAttribute="leading" constant="5" id="5Wh-oW-czK"/>
+                            <constraint firstAttribute="trailing" secondItem="hRx-0H-mjf" secondAttribute="trailing" constant="17" id="3h9-8N-PBr"/>
                             <constraint firstItem="kTw-Gt-iIt" firstAttribute="leading" secondItem="KQm-HK-DCs" secondAttribute="leading" type="default" id="5oW-0J-04x"/>
                             <constraint firstItem="lTc-sb-Y2P" firstAttribute="leading" secondItem="DHQ-1f-BjS" secondAttribute="leading" type="default" id="6Od-lm-1rQ"/>
                             <constraint firstItem="jeq-gH-WP2" firstAttribute="trailing" secondItem="DHQ-1f-BjS" secondAttribute="trailing" type="default" id="AMu-O2-FPG"/>
@@ -325,41 +431,40 @@
                             <constraint firstItem="RgI-mx-51u" firstAttribute="bottom" secondItem="d1o-nl-S3a" secondAttribute="bottom" type="default" id="BXo-Dz-iWR"/>
                             <constraint firstItem="hRx-0H-mjf" firstAttribute="top" secondItem="Pb2-rx-OPk" secondAttribute="top" type="default" id="CDD-Om-3M2"/>
                             <constraint firstItem="lTc-sb-Y2P" firstAttribute="trailing" secondItem="DHQ-1f-BjS" secondAttribute="trailing" type="default" id="CaQ-gg-gwc"/>
+                            <constraint firstAttribute="trailing" secondItem="y7R-O9-VAu" secondAttribute="trailing" constant="60" id="DNg-s4-Xm3"/>
                             <constraint firstItem="Y3i-Sq-CMr" firstAttribute="trailing" secondItem="DHQ-1f-BjS" secondAttribute="trailing" type="default" id="GC0-KV-j1C"/>
-                            <constraint firstItem="kTw-Gt-iIt" firstAttribute="centerX" secondItem="y7R-O9-VAu" secondAttribute="centerX" type="default" id="Gvm-F4-z08"/>
+                            <constraint firstItem="kTw-Gt-iIt" firstAttribute="centerX" secondItem="cwM-r1-BO4" secondAttribute="centerX" type="default" id="GDA-VT-69j"/>
+                            <constraint firstItem="pXK-e5-h2i" firstAttribute="top" secondItem="DHQ-1f-BjS" secondAttribute="top" type="default" id="HHQ-sJ-ARf"/>
                             <constraint firstItem="TLQ-PJ-vGt" firstAttribute="leading" secondItem="DHQ-1f-BjS" secondAttribute="leading" constant="56" id="HKd-an-13k"/>
+                            <constraint firstItem="CkH-6h-qMX" firstAttribute="centerX" secondItem="y7R-O9-VAu" secondAttribute="centerX" type="default" id="I9B-YO-MTp"/>
                             <constraint firstItem="RgI-mx-51u" firstAttribute="leading" secondItem="DHQ-1f-BjS" secondAttribute="leading" constant="177" id="IM6-ni-gGs"/>
-                            <constraint firstItem="KQm-HK-DCs" firstAttribute="centerX" secondItem="CkH-6h-qMX" secondAttribute="centerX" type="default" id="KpK-50-XXh"/>
                             <constraint firstItem="d1o-nl-S3a" firstAttribute="top" secondItem="RgI-mx-51u" secondAttribute="top" type="default" id="MuQ-gP-JcE"/>
                             <constraint firstItem="jeq-gH-WP2" firstAttribute="top" secondItem="DHQ-1f-BjS" secondAttribute="top" type="default" id="Ojr-xl-SF2"/>
                             <constraint firstItem="jeq-gH-WP2" firstAttribute="bottom" secondItem="DHQ-1f-BjS" secondAttribute="bottom" type="default" id="Pr5-3P-9pR"/>
                             <constraint firstItem="mVG-lz-gla" firstAttribute="trailing" secondItem="DHQ-1f-BjS" secondAttribute="trailing" type="default" id="QTa-vH-Yk6"/>
                             <constraint firstAttribute="bottom" secondItem="y7R-O9-VAu" secondAttribute="bottom" constant="85" id="QVF-1B-XsF"/>
                             <constraint firstAttribute="bottom" secondItem="cwM-r1-BO4" secondAttribute="bottom" constant="123" id="Tnv-lL-lpG"/>
+                            <constraint firstAttribute="trailing" secondItem="mWo-ja-Mfr" secondAttribute="trailing" constant="5" id="VZh-uZ-KKt"/>
                             <constraint firstItem="yVP-Js-dy3" firstAttribute="bottom" secondItem="d1o-nl-S3a" secondAttribute="bottom" type="default" id="X87-d2-FDZ"/>
                             <constraint firstAttribute="bottom" secondItem="mWo-ja-Mfr" secondAttribute="bottom" constant="6" id="XIT-1O-Bw2"/>
                             <constraint firstItem="CkH-6h-qMX" firstAttribute="top" secondItem="DHQ-1f-BjS" secondAttribute="top" constant="28" id="XKd-uV-I0Y"/>
-                            <constraint firstItem="pXK-e5-h2i" firstAttribute="leading" secondItem="DHQ-1f-BjS" secondAttribute="leading" constant="8" id="Yqe-FK-eWc"/>
-                            <constraint firstAttribute="trailing" secondItem="hRx-0H-mjf" secondAttribute="trailing" constant="17" id="ZrY-xN-cs1"/>
-                            <constraint firstItem="pXK-e5-h2i" firstAttribute="top" secondItem="DHQ-1f-BjS" secondAttribute="top" constant="8" id="ag3-Af-6mb"/>
                             <constraint firstItem="jeq-gH-WP2" firstAttribute="leading" secondItem="DHQ-1f-BjS" secondAttribute="leading" type="default" id="cW4-lJ-mus"/>
                             <constraint firstItem="Y3i-Sq-CMr" firstAttribute="leading" secondItem="DHQ-1f-BjS" secondAttribute="leading" type="default" id="dDE-pc-e2D"/>
                             <constraint firstAttribute="bottom" secondItem="yVP-Js-dy3" secondAttribute="bottom" constant="4" id="dhf-f6-as2"/>
                             <constraint firstItem="Kjp-Ke-BBC" firstAttribute="top" secondItem="d1o-nl-S3a" secondAttribute="top" type="default" id="eGU-xO-vaB"/>
                             <constraint firstItem="Y3i-Sq-CMr" firstAttribute="top" secondItem="DHQ-1f-BjS" secondAttribute="top" constant="80" id="f5Z-IB-U3V"/>
+                            <constraint firstAttribute="trailing" secondItem="KQm-HK-DCs" secondAttribute="trailing" constant="45" id="fRn-s4-fpW"/>
                             <constraint firstItem="Kjp-Ke-BBC" firstAttribute="bottom" secondItem="d1o-nl-S3a" secondAttribute="bottom" type="default" id="gUx-T6-nyz"/>
+                            <constraint firstItem="KQm-HK-DCs" firstAttribute="top" secondItem="DHQ-1f-BjS" secondAttribute="top" constant="8" id="gl5-Jt-CYI"/>
                             <constraint firstItem="Kjp-Ke-BBC" firstAttribute="leading" secondItem="DHQ-1f-BjS" secondAttribute="leading" constant="80" id="gsF-dH-uNw"/>
+                            <constraint firstItem="yVP-Js-dy3" firstAttribute="leading" secondItem="DHQ-1f-BjS" secondAttribute="leading" constant="5" id="jJU-DC-YsW"/>
                             <constraint firstItem="d1o-nl-S3a" firstAttribute="leading" secondItem="DHQ-1f-BjS" secondAttribute="leading" constant="92" id="ldL-cn-ilz"/>
-                            <constraint firstItem="KQm-HK-DCs" firstAttribute="top" secondItem="pXK-e5-h2i" secondAttribute="top" type="default" id="mCR-vX-bIc"/>
-                            <constraint firstAttribute="trailing" secondItem="KQm-HK-DCs" secondAttribute="trailing" constant="45" id="mVz-0W-vAG"/>
                             <constraint firstItem="mVG-lz-gla" firstAttribute="top" secondItem="DHQ-1f-BjS" secondAttribute="top" type="default" id="qyU-e0-Vv6"/>
                             <constraint firstItem="hRx-0H-mjf" firstAttribute="baseline" secondItem="Pb2-rx-OPk" secondAttribute="baseline" type="default" id="r1e-nQ-oI4"/>
                             <constraint firstAttribute="trailing" secondItem="Pb2-rx-OPk" secondAttribute="trailing" constant="52" id="rAf-2T-ioG"/>
                             <constraint firstItem="yVP-Js-dy3" firstAttribute="top" secondItem="d1o-nl-S3a" secondAttribute="top" type="default" id="rC4-MB-YGa"/>
                             <constraint firstItem="kTw-Gt-iIt" firstAttribute="trailing" secondItem="KQm-HK-DCs" secondAttribute="trailing" type="default" id="wmH-Au-ena"/>
-                            <constraint firstItem="y7R-O9-VAu" firstAttribute="centerX" secondItem="cwM-r1-BO4" secondAttribute="centerX" type="default" id="xnS-oK-KKe"/>
                             <constraint firstAttribute="bottom" secondItem="kTw-Gt-iIt" secondAttribute="bottom" constant="65" id="yrd-pk-mBL"/>
-                            <constraint firstAttribute="trailing" secondItem="mWo-ja-Mfr" secondAttribute="trailing" constant="5" id="zQG-aJ-aiG"/>
                             <constraint firstItem="TLQ-PJ-vGt" firstAttribute="top" secondItem="DHQ-1f-BjS" secondAttribute="top" constant="66" id="zfz-MF-m6U"/>
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
@@ -388,14 +493,14 @@
                 <exit id="B0I-Hk-3g7" userLabel="Exit" sceneMemberID="exit"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6gF-0p-dwz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="903" y="199"/>
+            <point key="canvasLocation" x="977" y="-317"/>
         </scene>
     </scenes>
     <resources>
         <image name="HomeScreen.png" width="972" height="518"/>
         <image name="PokerTable.png" width="960" height="640"/>
         <image name="black_lozenge.png" width="38" height="38"/>
-        <image name="close.png" width="64" height="64"/>
+        <image name="green.png" width="972" height="518"/>
         <image name="table_felt.png" width="972" height="518"/>
     </resources>
     <classes>
@@ -430,8 +535,6 @@
         <class className="LoginViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/LoginViewController.h"/>
             <relationships>
-                <relationship kind="action" name="loginButton:"/>
-                <relationship kind="action" name="returned:" candidateClass="UIStoryboardSegue"/>
                 <relationship kind="outlet" name="loginButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="loginStatusLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="userNameField" candidateClass="UITextField"/>
@@ -439,9 +542,6 @@
         </class>
         <class className="NSLayoutConstraint" superclassName="NSObject">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="UIStoryboardSegue" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/UIStoryboardSegue.h"/>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

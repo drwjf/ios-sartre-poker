@@ -155,17 +155,27 @@ Method that gets called by animte, and then again each time an animtion finishes
     if (move = [self.animationEnumerator nextObject]) {
         
         NSNumber* seat = move.seat;
-        NSInteger amount = move.betAmount;
         PlayerAction action = move.action;
         NSLog(@"Doing animation for %@ %@", [seat description], [NSString PlayerActionStringFromEnum:action]);
+        
+        NSInteger amount = 0;
+        if (action != CALL) {
+            amount = move.betAmount;
+        } else {
+            playerInfo *player;
+            for (NSString *key in self.playerInfoDict) {
+                player = [self.playerInfoDict objectForKey:key];
+                if (player.betAmount > amount) {
+                    amount = player.betAmount;
+                }
+            }    
+        }        
         
         switch (action) {
             case CHECK:
                 [self check:seat];
                 break;
             case CALL:
-                [self call:seat];
-                break;
             case BET:
             case RAISE:
                 [self bet:amount seat:seat];
@@ -376,8 +386,8 @@ Method that gets called by animte, and then again each time an animtion finishes
                      NSString* cardString = [flopCardValues objectAtIndex:j];
                      [card setImage:[self getCardFrontImage:cardString]];
                  }
+                 [self doAnimations];
              }
-             [self doAnimations];
          }];
         dealPoint.x -= cardWidth;
     }
@@ -418,20 +428,6 @@ Method that gets called by animte, and then again each time an animtion finishes
          [card setImage:[self getCardFrontImage:cardString]];
          [self doAnimations];
      }];
-}
-
-
-
--(void)call:(NSNumber*) seat {
-    NSInteger amount = 0;
-    playerInfo *player;
-    for (NSString *key in self.playerInfoDict) {
-        player = [self.playerInfoDict objectForKey:key];
-        if (player.betAmount > amount) {
-            amount = player.betAmount;
-        }
-    }    
-    [self bet:amount seat:seat];
 }
 
 - (void)fold:(NSNumber*) seat {
@@ -482,8 +478,10 @@ Method that gets called by animte, and then again each time an animtion finishes
         [UIView animateWithDuration:0.3 delay:0.1  options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [player.card1 setCenter:currentPoint1];
             [player.card2 setCenter:currentPoint2];
-        }completion:nil];
-        [self doAnimations];
+        }completion:^(BOOL done) {
+            [self doAnimations];
+        }];
+        
     }];
 }
 
@@ -501,8 +499,7 @@ Method that gets called by animte, and then again each time an animtion finishes
     [self.tableChips addObject:chipView];
     chipView.contentMode = UIViewContentModeScaleAspectFill;
     [chipView setFrame:CGRectMake(0, 0, 30, 30)];
-    [chipView setCenter:bettor.centre];    
-    [self.tableChips addObject:chipView];
+    [chipView setCenter:bettor.centre];
     [self.table addSubview:chipView];
         
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
@@ -556,25 +553,20 @@ Method that gets called by animte, and then again each time an animtion finishes
     playerInfo *human = [self.playerInfoDict objectForKey:self.humanSeatNumber];
     CGPoint humanChipPoint = CGPointMake(human.centre.x + 60, human.centre.y + yOffset);
     
-    
-    
-    for (NSInteger i=0; i < [self.tableChips count]; i++) {
-        [UIView animateWithDuration:0.5 delay:0.05*i  options:UIViewAnimationOptionCurveEaseOut animations:^{
-            UIImageView *chipView = [self.tableChips objectAtIndex:[self.tableChips count]-1-i];
-            [self.table bringSubviewToFront:chipView];
-            
-            NSUInteger chipToHuman = [self.tableChips indexOfObject:chipView];
-            
-            CGPoint chipPoint;
-            if (chipToHuman%2 == 0) {
-                chipPoint = humanChipPoint;
-            } else {
-                chipPoint = botChipPoint;
-            }            
+    for (UIImageView *chipView in self.tableChips) {
+        [self.table bringSubviewToFront:chipView];
+        NSUInteger chipIndex = [self.tableChips indexOfObject:chipView];
+        CGPoint chipPoint;
+        if (chipIndex%2 == 0) {
+            chipPoint = humanChipPoint;
+        } else {
+            chipPoint = botChipPoint;
+        }
+        NSTimeInterval delay = 0.05*chipIndex;
+        [UIView animateWithDuration:0.5 delay:delay options:UIViewAnimationOptionCurveEaseOut animations:^{
             [chipView setCenter:chipPoint];
-            
         }completion:^(BOOL done) {
-            if (i==[self.tableChips count] - 1) {
+            if (chipIndex==[self.tableChips count] - 1) {                
                 NSInteger pot = [self getPotSize];
                 human.stackCurrent += pot/2;
                 human.stackLabel.text = [NSString stringWithFormat:@"%d" ,human.stackCurrent];

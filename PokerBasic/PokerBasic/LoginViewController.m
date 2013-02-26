@@ -23,7 +23,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    self.loginStatusLabel.text = @"should be blank";
+    self.loginStatusLabel.text = @"";
     self.client = [PokerHTTPClient sharedClient];
 }
 
@@ -61,45 +61,87 @@
 
 - (IBAction)loginButton:(id)sender {
     
-    self.loginStatusLabel.text = @"Logging in...";
+    [self.userNameField resignFirstResponder];
     
+    if ([self checkUserName]) {
     
-
-    [self.client login:self.userNameField.text success:^(NSString *response){
-        NSLog(@"This is the successful login block");
-        self.loginStatusLabel.text = response;
+        self.loginStatusLabel.text = @"Logging in...";
         
-        if (![[[response substringToIndex:11] lowercaseString] isEqualToString:@"loginfailed"]) {
-             [self performSegueWithIdentifier: @"SegueToGame" sender: self];
-        }
-            
-    } failure:^{
-        NSLog(@"This is the fail login block");
-        self.loginStatusLabel.text = @"Unable to login. Check Internet connection";
-    }];
+        NSString *username = self.userNameField.text;
+        //NSString* resultText = [result stringByReplacingOccurrencesOfString:@"<br>" withString:@""];
+        NSString *loginName = [username stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding ];
+        NSLog(@"Percent escape login name: %@", loginName);
 
+        [self.client login:loginName success:^(NSString *response){
+            NSLog(@"This is the successful login block");
+            //self.loginStatusLabel.text = response;
+            
+            if (![[[response substringToIndex:11] lowercaseString] isEqualToString:@"loginfailed"]) {
+                 [self performSegueWithIdentifier: @"SegueToGame" sender: self];
+            } else if ([response rangeOfString:@"InvalidUserName"].location != NSNotFound) {
+                self.loginStatusLabel.text = @"User name cannot contain special characters.";
+            } else {
+                self.loginStatusLabel.text = response;
+            }
+        } failure:^{
+            NSLog(@"This is the fail login block");
+            self.loginStatusLabel.text = @"Unable to connect. Check Internet connection.";
+        }];
+    }
 }
 
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    //gives this class a reference to the viewController it is about to segue to.
-    GameViewController *destination = [segue destinationViewController];
-    destination.loginNameText = self.userNameField.text;
-    destination.client = self.client;
     
-    
-    
+    if ([[segue identifier] isEqualToString:@"SegueToGame"]) {
+        //gives this class a reference to the viewController it is about to segue to.
+        GameViewController *destination = [segue destinationViewController];
+        destination.loginNameText = self.userNameField.text;
+        destination.client = self.client;
+    }
 }
 
 -(IBAction)returned:(UIStoryboardSegue *)segue {
+    self.loginStatusLabel.text = nil;
     [self.client logout:^(NSString *response){
         NSLog(@"This is the successful logout block");
-        self.loginStatusLabel.text = response;
+        //self.loginStatusLabel.text = response;
+        //self.loginStatusLabel.text = @"Thank-you for playing.";
+        
         
     } failure:^{
         NSLog(@"This is the fail login block");
-        self.loginStatusLabel.text = @"Unable to LOGOUT. Check Internet connection";
+        self.loginStatusLabel.text = @"Unable to log out. Check Internet connection";
     }];
+    
+    
+    if ([[segue identifier] isEqualToString:@"SegueToGame"]) {
+        
+    }
+    
+    
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
+    
+    if (theTextField == self.userNameField) {        
+        [theTextField resignFirstResponder];
+        [self checkUserName];
+    }
+    return YES;
+}
+
+- (BOOL) checkUserName {
+    if([self.userNameField.text length] == 0) {
+        self.loginStatusLabel.text = @"Please enter a user name.";
+        return false;
+    }
+    else if ([self.userNameField.text length] > 15)
+    {
+        self.loginStatusLabel.text = @"User Name must be less than 16 characters.";
+        return false;
+    }
+    return true;
+}
 
 @end

@@ -35,6 +35,8 @@
 @property NSNumber *humanSeatNumber;
 @property NSNumber *botSeatNumber;
 
+@property NSInteger handCount;
+
 @property PokerTableView *pokerTable;
 @property (weak, nonatomic) IBOutlet UIImageView *tableImage;
 @property BOOL scrollTextViewToEnd;
@@ -67,7 +69,8 @@ static NSUInteger bigBet = 4;
     [self.client loadInitialState:^(NSDictionary *JSON) {
         self.currentState = [[State alloc]initWithAttributes:JSON];
         NSLog(@"Initial state: \n %@", JSON);
-        [self newGame];        
+        [self newGame];
+
     }failure:^{
         NSLog(@"Failure in loadState block from gamecontroller");
     }];
@@ -82,6 +85,7 @@ static NSUInteger bigBet = 4;
     
     self.infoTextView.editable = false;
     self.potLabel.text = nil;
+    self.handCount = 1;
     
     //logout buton replaced with an icon 18.02.2013
 //    NSString *logoutButtonText = [NSString stringWithFormat:@"Logout %@", self.loginNameText];
@@ -280,15 +284,15 @@ static NSUInteger bigBet = 4;
 
 
 //OPTIONAL IMPROV put buttons in an array and for loop through possible moves, setting text and making buttons visible as looping through.
--(void)displayMoves {
+-(void)displayMoves {    
     //TODO do a comparison of pot size from server state with table state.
     State *state = self.currentState;
     Human* human = [state.playerStateDict objectForKey:self.humanSeatNumber];
     
     int arrayLength = [human.validMoves count];
     if (arrayLength == 2) {
-        [self.checkCallButton setTitle:[human.validMoves objectAtIndex:0] forState:UIControlStateNormal];
-        [self.betRaiseButton setTitle:[human.validMoves objectAtIndex:1] forState:UIControlStateNormal];
+        [self.checkCallButton setTitle:[human.validMoves objectAtIndex:0] forState:UIControlStateNormal]; //index is 0 is bet raise
+        [self.betRaiseButton setTitle:[human.validMoves objectAtIndex:1] forState:UIControlStateNormal]; // index 1 is check call
         self.betRaiseButton.hidden = false;
         self.checkCallButton.hidden = false;
         self.foldButton.hidden = false;
@@ -331,10 +335,11 @@ static NSUInteger bigBet = 4;
 
     }failure:^{
         NSLog(@"Failure in loadState block from gamecontroller");
-    }];
+    }];        
 }
 
 - (IBAction)nextGameButtonPress:(id)sender {
+    self.handCount++;    
     self.botBetAmountLabel.text = nil;
     self.humanBetAmountLabel.text = nil;
     self.potLabel.text = nil;    
@@ -360,9 +365,11 @@ static NSUInteger bigBet = 4;
     if (self.currentState.game.gameHasEnded) {
         //[self setInfoText:self.currentState.game.gameStage];
         self.nextGameButton.hidden = false;
+        [self showhumanWinRate];
         return;
     } else {
         [self displayMoves];
+        
     }
 }
 
@@ -392,14 +399,13 @@ static NSUInteger bigBet = 4;
 
 //- (void)setActionText:(PlayerAction)action seat:(NSNumber*)seat amount:(NSInteger)amount {
 - (void)setMoveText:(PlayerMove*)move  {
-    
     Player *player = [self.currentState.playerStateDict objectForKey:move.seat];
     PlayerAction action = move.action;
     NSString *actionString = [NSString PlayerActionStringFromEnum:action];
-//    NSString *seat = [move.seat description];
     NSInteger amount = move.betAmount;
     
-    self.scrollTextViewToEnd = true;
+    self.scrollTextViewToEnd = true; //used to stop first text scrolling to bottom
+    
     NSString *text;
     
     switch (action) {
@@ -426,7 +432,7 @@ static NSUInteger bigBet = 4;
             break;
         case SET_DEALER:
             self.scrollTextViewToEnd = false;
-            text = [NSString stringWithFormat:@"Dealer is %@.", player.name];
+            text = [NSString stringWithFormat:@"Hand #%d. Dealer is %@.", self.handCount, player.name];
             break;
         case WIN:
             text = [NSString stringWithFormat:@"Winner is %@.", player.name];
@@ -436,6 +442,15 @@ static NSUInteger bigBet = 4;
             break;
     }
     [self setInfoText:text];    
+}
+
+- (void)showhumanWinRate {
+    //Player *human = [self.currentState.playerStateDict objectForKey:self.humanSeatNumber];
+    float profit = [self.humanStackLabel.text integerValue] - 1000;
+    float winrate = (profit / smallBet) /self.handCount;
+    //NSString *text = [NSString stringWithFormat:@"\n%@ Win Rate: %.2f SB/Hand.", human.name, winrate];
+    NSString *text = [NSString stringWithFormat:@"Win Rate: %.2f SB/Hand.", winrate];
+    [self setInfoText:text];
 }
     
 @end

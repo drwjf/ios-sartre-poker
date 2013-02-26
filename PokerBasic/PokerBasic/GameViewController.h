@@ -33,6 +33,6 @@
 
 - (void)setMoveText:(PlayerMove*)move;
 - (void)setInfoText:(NSString*)text;
--(void) animationsDone;
+- (void) animationsDone;
 
 @end
