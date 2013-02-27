@@ -65,7 +65,7 @@
     
     if ([self checkUserName]) {
     
-        self.loginStatusLabel.text = @"Logging in...";
+        self.loginStatusLabel.text = @"Connecting…";
         
         NSString *username = self.userNameField.text;
         //NSString* resultText = [result stringByReplacingOccurrencesOfString:@"<br>" withString:@""];
