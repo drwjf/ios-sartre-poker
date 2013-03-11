@@ -50,7 +50,6 @@
 
 @implementation GameViewController
 
-static NSInteger numPlayers = 2;
 static NSUInteger smallBet = 2;
 static NSUInteger bigBet = 4;
 
@@ -170,9 +169,9 @@ static NSUInteger bigBet = 4;
     Bot *bot = [state.playerStateDict objectForKey:self.botSeatNumber];
     Player *dealer = [state.playerStateDict objectForKey:self.dealerSeatNumber];
     
-    Boolean stateChanged = ![self.currentState.game.gameStage isEqualToString:self.prevState.game.gameStage];
+    Boolean stateChanged = ![self.currentState.game.gameStage isEqualToString:self.prevState.game.gameStage];//final bot move happens in a new state.
     
-    //// Human move first
+    //// ALways get the human move first
     if (humanLastAction != NONE) {
         if (humanLastAction == FOLD) {
             [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:nil]];
@@ -181,7 +180,8 @@ static NSUInteger bigBet = 4;
         } else {//stage change
             if (humanLastAction == BET) {
                 NSInteger amount = [[self.prevState.playerStateDict objectForKey:self.humanSeatNumber] currentStageContribution];
-                if (state.game.gameStageEnum == PREFLOP || state.game.gameStageEnum == FLOP) {
+                //if (state.game.gameStageEnum == PREFLOP || state.game.gameStageEnum == FLOP) {
+                if (self.prevState.game.gameStageEnum == PREFLOP || self.prevState.game.gameStageEnum == FLOP) {
                     amount = amount + smallBet;
                 } else {
                     amount = amount + bigBet;
@@ -189,7 +189,8 @@ static NSUInteger bigBet = 4;
                 [actions addObject:[PlayerMove moveWithSeat:human.seat action:humanLastAction amount:amount]];
             } else if (humanLastAction == RAISE) {
                 NSInteger amount = [[self.prevState.playerStateDict objectForKey:self.botSeatNumber] currentStageContribution];
-                if (state.game.gameStageEnum == PREFLOP || state.game.gameStageEnum == FLOP) {
+                //if (state.game.gameStageEnum == PREFLOP || state.game.gameStageEnum == FLOP) {
+                if (self.prevState.game.gameStageEnum == PREFLOP || self.prevState.game.gameStageEnum == FLOP) {
                     amount = amount + smallBet;
                 } else {
                     amount = amount + bigBet;

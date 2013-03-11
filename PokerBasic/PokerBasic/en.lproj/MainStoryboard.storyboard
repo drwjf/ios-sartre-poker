@@ -529,54 +529,6 @@ http://www.cs.auckland.ac.nz/research/gameai/ </string>
         <image name="green.png" width="972" height="518"/>
         <image name="table_felt.png" width="972" height="518"/>
     </resources>
-    <classes>
-        <class className="GameViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/GameViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="actionButtonPress:"/>
-                <relationship kind="action" name="nextGameButtonPress:"/>
-                <relationship kind="outlet" name="betRaiseButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="botBetAmountLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="botChipView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="botHoleCardsLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="botNameLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="botStackLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="botWinLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="checkCallButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="commCardsLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="dealerLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="foldButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="gameStageLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="humanBetAmountLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="humanChipView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="humanStackLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="humanWinLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="infoTextView" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="logoutButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="nameOnServerLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="nextGameButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="playerHoleCardsLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="potLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="tableImage" candidateClass="UIImageView"/>
-            </relationships>
-        </class>
-        <class className="LoginViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/LoginViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="loginButton:"/>
-                <relationship kind="action" name="returned:" candidateClass="UIStoryboardSegue"/>
-                <relationship kind="outlet" name="loginButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="loginStatusLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="userNameField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="UIStoryboardSegue" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/UIStoryboardSegue.h"/>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
